@@ -9,16 +9,17 @@ public class Main {
 		
 		int N = Integer.parseInt(br.readLine());
 		
-		for(int i = 1; i < N+1; i++) {
-			for(int j = 0; j < N-i; j++) {
+		for (int i = 1; i < N+1; i++) {
+			for (int j = 0; j < N-i; j++) {
 				System.out.print(" ");
-				}
-			for(int k = 0; k<i; k++) {
-				
+			}
+			for (int j = 0; j < i; j++) {
 				System.out.print("*");
 			}
-			System.out.println();
-			}
+			
+			
+		System.out.println();
 		}
+	}
 		
 }
