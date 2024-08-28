@@ -24,23 +24,14 @@ public class Main {
 			int a = Integer.parseInt(st.nextToken()); //처음 인덱스
 			int b = Integer.parseInt(st.nextToken()); //끝 인덱스
 			
-//			while(a<b) {
-//				int temp = bucket[a];
-//				bucket[a] = bucket[b];
-//				bucket[b] = temp;
-//				
-//				a++;
-//				b--;
-//			}
-			
-			for(int j = a; j<b; j++) {
+			while(a<b) {
 				int temp = bucket[a];
 				bucket[a] = bucket[b];
 				bucket[b] = temp;
+				
 				a++;
 				b--;
-			}
-			
+			}			
 			
 						
 		}
