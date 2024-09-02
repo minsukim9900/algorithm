@@ -17,11 +17,12 @@ public class Main {
 			
 			for(int j =0; j<s.length(); j++) {
 				for(int k=0; k<a; k++) {
-					System.out.print(s.charAt(j));
+					sb.append(s.charAt(j));
+					}
 				}
-			}
-			System.out.println();
-		}		
+			sb.append("\n");
+			}		
+		System.out.println(sb.toString());
 		
 	}
 }
