@@ -13,7 +13,6 @@ public class Main {
 		String N = st.nextToken();
 		int[] number = new int[N.length()];
 		int B = Integer.parseInt(st.nextToken());
-		int[] C = new int [N.length()];
 		
 		for(int i = 0; i<N.length(); i++) {
 			if(N.charAt(i) >= 'A' && N.charAt(i) <= 'Z') {
@@ -25,22 +24,13 @@ public class Main {
 		}
 		
 		int square = 1;
-		
-		for(int i = N.length(); i>0; i--) {
-			if(i == N.length()) {
-				C[i-1] = 1;
-			}
-			else{
-				square *= B;
-				C[i-1] = square;
-			}
-		}
-		
 		int sum = 0;
 		
-		for(int i = 0; i<N.length(); i++) {
-				sum += number[i]*C[i];
+		for (int i = number.length-1; i >= 0; i--) {
+			sum += number[i]*square;
+			square *= B;
 		}
+		
 		System.out.println(sum);
 	}
 }
