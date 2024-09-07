@@ -13,27 +13,19 @@ public class Main {
 		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
 		int[][] A = new int[N][M];
-		int[][] B = new int[N][M];
-		int[][] sum = new int[N][M];
 		
-		for(int i = 0; i<N; i++) {
-			st = new StringTokenizer(br.readLine());
-			for(int j = 0; j<M; j++) {
-				A[i][j] = Integer.parseInt(st.nextToken());
+		for(int t=1;t<=2;t++) {
+			for(int i =0; i<N; i++) {
+				st = new StringTokenizer(br.readLine());
+				for(int j = 0; j<M; j++) {
+					A[i][j] += Integer.parseInt(st.nextToken());
+				}
 			}
 		}
 		
 		for(int i = 0; i<N; i++) {
-			st = new StringTokenizer(br.readLine());
 			for(int j = 0; j<M; j++) {
-				B[i][j] = Integer.parseInt(st.nextToken());
-			}
-		}
-		
-		for (int i=0; i<N; i++) {
-			for(int j=0; j<M; j++) {
-				sum[i][j] = A[i][j]+B[i][j];
-				System.out.print(sum[i][j]+" ");
+				System.out.print(A[i][j] + " ");
 			}
 			System.out.println();
 		}
