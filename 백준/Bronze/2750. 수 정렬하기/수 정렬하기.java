@@ -6,6 +6,7 @@ import java.util.Arrays;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
+		StringBuilder sb = new StringBuilder();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		int N = Integer.parseInt(br.readLine());
@@ -15,9 +16,12 @@ public class Main {
 		}
 		
 		Arrays.sort(nums);
+		
+		
 		for(int i = 0; i<nums.length; i++) {
-			System.out.println(nums[i]);
+			sb.append(nums[i]).append("\n");
 		}
+		System.out.println(sb.toString());
 		
 	}
 }
