@@ -15,13 +15,10 @@ public class Main {
 			int weight = 1;
 			int sum = 0;
 			for (int j = 0; j < quiz.length(); j++) {
-				if (j > 0 && quiz.charAt(j - 1) == 'O' && quiz.charAt(j) == 'O') {
-					weight++;
-					sum +=weight;
-				}
-				else if(quiz.charAt(j)=='O') {
-					weight = 1;
+
+				if(quiz.charAt(j)=='O') {
 					sum+=weight;
+					weight++;
 				}
 				else {
 					weight = 1;
