@@ -26,42 +26,42 @@ public class Main {
 
 			if (method[i].contains("push")) {
 				arr[index] = Integer.parseInt(method[i].substring(5));
-				index++; // 이것은 다음 인덱스를 불러오겠다는거야
+				index++;
 			}
 			else if(method[i].equals("pop")) {
 				if(index<= 0) {
-					System.out.println(-1);
+					sb.append(-1).append("\n");
 				}
 				else {
 					index--;
-					System.out.println(arr[index]);
+					sb.append(arr[index]).append("\n");
 				}
 			}
 			else if(method[i].equals("size")) {
-				System.out.println(index);
+				sb.append(index).append("\n");
 			}
 			else if(method[i].equals("empty")) {
 				if(index <= 0) {
-					System.out.println(1);
+					sb.append(1).append("\n");
 				}
 				else {
-					System.out.println(0);
+					sb.append(0).append("\n");
 				}
 			}
 			else if(method[i].equals("top")) {
 				if(index <=0) {
-					System.out.println(-1);
+					sb.append(-1).append("\n");
 				}
 				else {
 					--index;
-					System.out.println(arr[index]);
+					sb.append(arr[index]).append("\n");
 					index++;
 				}
 			}
 			
-			
 
 		}
+		System.out.println(sb.toString());
 		
 	}
 
