@@ -13,9 +13,10 @@ public class Main {
 				count[n]=1;
 			}
 			if(count[i]==0) {
-				System.out.println(i);
+				sb.append(i).append("\n");
 			}
 		}
+		System.out.println(sb);
 	}
 	
 	public static int d(int num) {
