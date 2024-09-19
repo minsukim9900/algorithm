@@ -12,22 +12,25 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-		int line = Integer.parseInt(br.readLine());
-		Stack<Integer> nums = new Stack<>();
-
-		for (int i = 1; i <= line; i++) {
-			int number = Integer.parseInt(br.readLine());
-			if (number == 0) {
-				nums.pop();
+		
+		int num = Integer.parseInt(br.readLine());
+		Stack<Integer> stack = new Stack<>();
+		
+		for(int i = 0; i<num; i++) {
+			int a = Integer.parseInt(br.readLine());
+			
+			if(a == 0) {
+				stack.pop();
 			}
-			else if (number != 0) {
-				nums.add(number);
+			else {
+				stack.push(a);
 			}
 		}
-		int sum = 0;
-		for (int i = 0; i < nums.size(); i++) {
-			sum += nums.get(i);
+		
+		int sum =0;
+		
+		for(int i:stack) {
+			sum += i;
 		}
 		System.out.println(sum);
 	}
