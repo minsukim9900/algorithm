@@ -19,17 +19,15 @@ public class Main {
 
 		for (int i = 0; i < N; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			for (int j = 0; j < weight[i].length; j++) {
-				weight[i][j] = Integer.parseInt(st.nextToken());
-			}
+			weight[i][0] = Integer.parseInt(st.nextToken());
+			weight[i][1] = Integer.parseInt(st.nextToken());
 		}
 
 		for (int i = 0; i < N; i++) {
-			
+
 			for (int j = 0; j < N; j++) {
-				
-				
-				if(weight[i][0] < weight[j][0] && weight[i][1] < weight[j][1]) {
+
+				if (weight[i][0] < weight[j][0] && weight[i][1] < weight[j][1]) {
 					rank[i]++;
 				}
 			}
