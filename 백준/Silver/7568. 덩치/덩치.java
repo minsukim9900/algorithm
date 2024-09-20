@@ -28,9 +28,6 @@ public class Main {
 			
 			for (int j = 0; j < N; j++) {
 				
-				if (i == j) {
-					continue;
-				}
 				
 				if(weight[i][0] < weight[j][0] && weight[i][1] < weight[j][1]) {
 					rank[i]++;
