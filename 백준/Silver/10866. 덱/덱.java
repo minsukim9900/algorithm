@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
@@ -42,23 +43,24 @@ public class Main {
 
 			else if (options.equals("pop_front")) {
 				if (mInt.isEmpty()) { // 덱에 정수가 없는 경우 -1
-					System.out.println(-1);
+					sb.append(-1).append("\n");//System.out.println(-1);
 				} else {
-					System.out.println(mInt.poll());
+					//System.out.println(mInt.poll());
+					sb.append(mInt.poll()).append("\n");
 				}
 			}
 
 			else if (options.equals("pop_back")) {
 				if (mInt.isEmpty()) { // 덱에 정수가 없는 경우 -1
-					System.out.println(-1);
+					sb.append(-1).append("\n");//System.out.println(-1);
 				} else if (mInt.size() == 1) {
-					System.out.println(mInt.poll());
+					sb.append(mInt.poll()).append("\n");//System.out.println(mInt.poll());
 				} else {
 					int temp = mInt.size() - 1;
 					for (int i = 0; i < temp; i++) {
 						tempfront.add(mInt.poll());
 					}
-					System.out.println(mInt.poll());
+					sb.append(mInt.poll()).append("\n");//System.out.println(mInt.poll());
 					for (int i = 0; i < temp; i++) {
 						mInt.add(tempfront.poll());
 					}
@@ -66,34 +68,34 @@ public class Main {
 			}
 
 			else if (options.equals("size")) {
-				System.out.println(mInt.size());
+				sb.append(mInt.size()).append("\n");//System.out.println(mInt.size());
 			}
 
 			else if (options.equals("empty")) {
 				if (mInt.isEmpty()) {
-					System.out.println(1);
+					sb.append(1).append("\n");//System.out.println(1);
 				} else {
-					System.out.println(0);
+					sb.append(0).append("\n"); //System.out.println(0);
 				}
 			}
 
 			else if (options.equals("front")) {
 				if (mInt.isEmpty()) { // 덱에 정수가 없는 경우 -1
-					System.out.println(-1);
+					sb.append(-1).append("\n");//System.out.println(-1);
 				} else {
-					System.out.println(mInt.peek());
+					sb.append(mInt.peek()).append("\n");//System.out.println(mInt.peek());
 				}
 			} else if (options.equals("back")) {
 				if (mInt.isEmpty()) { // 덱에 정수가 없는 경우 -1
-					System.out.println(-1);
+					sb.append(-1).append("\n");//System.out.println(-1);
 				} else if (mInt.size() == 1) {
-					System.out.println(mInt.peek());
+					sb.append(mInt.peek()).append("\n");//System.out.println(mInt.peek());
 				} else {
 					int temp = mInt.size() - 1;
 					for (int i = 0; i < temp; i++) {
 						tempfront.add(mInt.poll());
 					}
-					System.out.println(mInt.peek());
+					sb.append(mInt.peek()).append("\n");//System.out.println(mInt.peek());
 					tempfront.add(mInt.poll());
 					int temp2 = tempfront.size();
 					for (int i = 0; i < temp2; i++) {
@@ -102,6 +104,8 @@ public class Main {
 				}
 			}
 		}
+		
+		System.out.println(sb.toString());
 
 	}
 }
