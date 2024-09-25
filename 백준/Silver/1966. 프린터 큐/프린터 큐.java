@@ -1,8 +1,7 @@
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
@@ -19,10 +18,10 @@ public class Main {
 			int index = Integer.parseInt(st.nextToken()); // 언제 나오는지 궁금해 하는 종이의 인덱스
 			
 			st = new StringTokenizer(br.readLine());
-			Queue<Integer> papers = new LinkedList<>();
-			Queue<Integer> indexTunnel = new LinkedList<>();
-			Queue<Integer> tunnel1 = new LinkedList<>(); //문서 임시 터널
-			Queue<Integer> tunnel2 = new LinkedList<>(); //인덱스 임시 터널
+			Queue<Integer> papers = new ArrayDeque<>();
+			Queue<Integer> indexTunnel = new ArrayDeque<>();
+			Queue<Integer> tunnel1 = new ArrayDeque<>(); //문서 임시 터널
+			Queue<Integer> tunnel2 = new ArrayDeque<>(); //인덱스 임시 터널
 			
 			for(int i = 0; i<c_paper; i++) {
 				indexTunnel.add(i);
@@ -36,6 +35,7 @@ public class Main {
 				}
 				papers.add(num);
 			}
+			
 			int count = 0;
 			int size = 0; //임시 터널들의 길이
 			while(true) {
@@ -45,9 +45,10 @@ public class Main {
 					papers.poll();
 					indexTunnel.poll();
 					size = tunnel1.size();
+					
 					for(int j = 0; j<size; j++) {
-						papers.add(tunnel1.poll());
-						indexTunnel.add(tunnel2.poll());
+						papers.add(tunnel1.poll()); // max보다 작고 앞에 있었던 종이들을 임시로 넣어놨던 공간
+						indexTunnel.add(tunnel2.poll()); //max의 인덱스 앞에 있었던 인덱스들을 임시로 넣어놨던 공간
 					}
 					
 					//max 값 재할당
@@ -58,11 +59,12 @@ public class Main {
 						if(max < num) {
 							max = num;
 						}
-						tunnel1.add(num);
+						tunnel1.add(num); // 종이 임시터널에 넣으면서 max 값을 찾아
 					}
+					
 					size = tunnel1.size();
 					for(int j = 0; j<size; j++) {
-						papers.add(tunnel1.poll());
+						papers.add(tunnel1.poll()); // 임시터널에 있는 값들을 종이큐엤다가 다시 넣어
 					}
 					
 				}
