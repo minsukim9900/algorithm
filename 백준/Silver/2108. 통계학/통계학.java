@@ -42,9 +42,10 @@ public class Main {
 		}
 		
 		int range =  (arr.get(N-1)) - (arr.get(0));
-		System.out.println(Math.round(sum/N));
-		System.out.println(arr.get(N/2));
-		System.out.println(mode);
-		System.out.println(range);
+		sb.append(Math.round(sum/N)).append("\n");
+		sb.append(arr.get(N/2)).append("\n");
+		sb.append(mode).append("\n");
+		sb.append(range).append("\n");
+		System.out.println(sb.toString());
 	}
 }
