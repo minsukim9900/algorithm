@@ -52,9 +52,6 @@ public class Main {
 
 		}
 
-		if ( !score.isEmpty() && !time.isEmpty() && time.peek() == 0 && totalTime>=0) {
-			totalScore += score.pop();
-		}
 		// System.out.println(score + " " + time);
 		System.out.println(totalScore);
 
