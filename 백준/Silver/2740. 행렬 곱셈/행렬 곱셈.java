@@ -7,6 +7,7 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 		
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		int N = Integer.parseInt(st.nextToken());
@@ -44,11 +45,12 @@ public class Main {
 		
 		for(int r = 0; r<N; r++) {
 			for(int c = 0; c<K; c++) {
-				System.out.print(result[r][c]+" ");
+				sb.append(result[r][c]).append(" ");
 			}
-			System.out.println();
+			sb.append("\n");
 		}
 		
+		System.out.println(sb.toString());
 		
 
 	}
