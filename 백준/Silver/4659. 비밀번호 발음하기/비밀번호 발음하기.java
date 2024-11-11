@@ -20,6 +20,8 @@ public class Main {
 			}
 		}
 		
+		System.out.println(sb.toString());
+		
 
 	}
 
@@ -58,9 +60,9 @@ public class Main {
 	
 	public static void output(String str) {
 		if(check) {
-			System.out.println("<"+str+"> is acceptable.");
+			sb.append("<").append(str).append("> is acceptable.").append("\n");
 		}else {
-			System.out.println("<"+str+"> is not acceptable.");
+			sb.append("<").append(str).append("> is not acceptable.").append("\n");
 		}
 	}
 }
