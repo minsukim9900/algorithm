@@ -19,19 +19,16 @@ public class Main {
 		}
 
 		int idx = -1;
+		
 		while (idx != 0) {
-			int max = 0;
-			for (int i = N - 1; i >= 0; i--) {
-				if (max < nums[i]) {
-					max = nums[i];
-					idx = i;
-				}
-			}
+			
+			idx = maxIdx();
 
 			if (idx != 0) {
 				opt(idx);
 				cnt++;
 			}
+			
 		}
 
 		System.out.println(cnt);
@@ -41,6 +38,19 @@ public class Main {
 	public static void opt(int idx) {
 		nums[idx]--;
 		nums[0]++;
+	}
+	
+	public static int maxIdx() {
+		int max = 0;
+		int idx = -1;
+		for(int i = N-1; i>=0; i--) {
+			if(max < nums[i]) {
+				max = nums[i];
+				idx = i;
+			}
+		}
+		
+		return idx;
 	}
 
 }
