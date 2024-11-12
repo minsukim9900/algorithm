@@ -7,10 +7,10 @@ public class Main {
 	private static List<Integer>[] adj;
 	private static int[] depth;
 	private static int len = 0;
+	private static StringBuilder sb = new StringBuilder();
 	
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = new StringTokenizer(br.readLine());
 	
 		N = Integer.parseInt(st.nextToken());
@@ -33,20 +33,9 @@ public class Main {
 			adj[to].add(from);
 		}
 		
-//		for(int i = 1; i<=N; i++) {
-//			Collections.sort(adj[i]);
-//		}
-		
 		bfs(R);
 		
-		for(int i = 1; i<=N; i++) {
-			if(depth[i] == 0 && i != R) {
-				depth[i] = -1;
-			}
-			sb.append(depth[i]).append("\n");
-		}
-		
-		System.out.println(sb.toString());
+		output();
 		
 		
 	}
@@ -66,6 +55,18 @@ public class Main {
 				}
 			}
 		}
+	}
+	
+	
+	public static void output() {
+		for(int i = 1; i<=N; i++) {
+			if(depth[i] == 0 && i != R) {
+				depth[i] = -1;
+			}
+			sb.append(depth[i]).append("\n");
+		}
+		
+		System.out.println(sb.toString());
 	}
 	
 	
