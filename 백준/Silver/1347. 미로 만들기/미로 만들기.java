@@ -53,18 +53,10 @@ public class Main {
 	public static void move(int dir, int[] max, int[] min) {
 		currR = currR + dr[dir];
 		currC = currC + dc[dir];
-		if(max[0] < currR) {
-			max[0] = currR;
-		}
-		if(max[1] < currC) {
-			max[1] = currC;
-		}
-		if(min[0] > currR) {
-			min[0] = currR;
-		}
-		if(min[1] > currC) {
-			min[1] = currC;
-		}
+		max[0] = Math.max(max[0], currR);
+		max[1] = Math.max(max[1], currC);
+		min[0] = Math.min(min[0], currR);
+		min[1] = Math.min(min[1], currC);
 		maze[currR][currC] = '.';
 	}
 	
