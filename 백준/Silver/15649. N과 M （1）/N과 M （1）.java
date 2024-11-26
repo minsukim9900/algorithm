@@ -13,30 +13,30 @@ public class Main {
 
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
-		result= new int[M+1];
-		visited = new boolean[N+1];
-		
+		result = new int[M + 1];
+		visited = new boolean[N + 1];
+
 		perm(1);
 		System.out.println(sb.toString());
-		
+
 	}
-	
+
 	public static void perm(int idx) {
-		if(idx == M+1	) {
-			for(int i = 1; i<=M; i++) {
+		if (idx == M + 1) {
+			for (int i = 1; i <= M; i++) {
 				sb.append(result[i]).append(" ");
 			}
 			sb.append("\n");
-		}else {
-			for(int i = 1; i<=N; i++) {
-				if(visited[i]) continue;
+		} else {
+			for (int i = 1; i <= N; i++) {
+				if (visited[i])
+					continue;
 				visited[i] = true;
 				result[idx] = i;
-				perm(idx+1);
-				visited[i]=false;
+				perm(idx + 1);
+				visited[i] = false;
 			}
 		}
 	}
-	
 
 }
