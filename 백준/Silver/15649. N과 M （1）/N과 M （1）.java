@@ -14,28 +14,25 @@ public class Main {
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		result= new int[M+1];
+		visited = new boolean[N+1];
 		
-		for(int i = 1; i<=N; i++) {
-			visited = new boolean[N+1];
-			perm(i,1);
-		}
+		perm(1);
+		System.out.println(sb.toString());
 		
 	}
 	
-	public static void perm(int num, int idx) {
-		visited[num] = true;
-		if(idx == M	) {
-			System.out.print(num+" ");
-			for(int i = 1; i<M; i++) {
-				System.out.print(result[i]+" ");
+	public static void perm(int idx) {
+		if(idx == M+1	) {
+			for(int i = 1; i<=M; i++) {
+				sb.append(result[i]).append(" ");
 			}
-			System.out.println();
+			sb.append("\n");
 		}else {
 			for(int i = 1; i<=N; i++) {
 				if(visited[i]) continue;
 				visited[i] = true;
 				result[idx] = i;
-				perm(num, idx+1);
+				perm(idx+1);
 				visited[i]=false;
 			}
 		}
