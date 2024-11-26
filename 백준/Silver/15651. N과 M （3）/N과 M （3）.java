@@ -20,17 +20,24 @@ public class Main {
 	}
 
 	private static void permutation(int depth) {
+		
 		if(depth == M+1) {
+			
 			for(int i = 1; i<=M; i++) {
 				sb.append(result[i]).append(" ");
 			}
+			
 			sb.append("\n");
 		}
 		else {
+			
 			for(int i = 1; i<=N; i++) {
 				result[depth] = i; 
 				permutation(depth+1);
 			}
+			
 		}
+		
 	}
+	
 }
