@@ -2,7 +2,6 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	// 북 동 남 서
 	private static int[] dr = { -1, 0, 1, 0 };
 	private static int[] dc = { 0, -1, 0, 1 };
 	private static int N, M, sr, sc, curr_dir;
@@ -62,11 +61,8 @@ public class Main {
 		
 		int br = r - dr[dir];
 		int bc = c - dc[dir];
-		if(room[br][bc] == 1) return;
 		
 		if (br >= 0 && br < N && bc >= 0 && bc < M && room[br][bc] != 1) {
-			
-			
 			clean(br, bc, dir);
 			
 		}
