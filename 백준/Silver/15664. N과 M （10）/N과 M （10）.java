@@ -5,7 +5,6 @@ public class Main {
 
 	private static int N, M;
 	private static int[] nums;
-	private static boolean[] visited;
 	private static int[] result;
 
 	public static void main(String[] args) throws Exception {
@@ -15,7 +14,6 @@ public class Main {
 		M = Integer.parseInt(st.nextToken());
 
 		nums = new int[N];
-		visited = new boolean[N];
 		result = new int[M];
 
 		st = new StringTokenizer(br.readLine());
