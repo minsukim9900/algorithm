@@ -29,7 +29,7 @@ public class Main {
 			}
 			room[i] = tmp;
 		}
-		
+
 		leftSide();
 		rightSide();
 		System.out.println(result);
@@ -38,22 +38,20 @@ public class Main {
 
 	private static void leftSide() {
 		int idx = 0;
-		int max = 0;
+		int maxNum = 0;
 		while (idx < max_idx) {
-			if (max < room[idx])
-				max = room[idx];
-			result += (max - room[idx]);
+			maxNum = Math.max(maxNum, room[idx]);
+			result += (maxNum - room[idx]);
 			idx++;
 		}
 	}
 
 	private static void rightSide() {
 		int idx = W - 1;
-		int max = 0;
+		int maxNum = 0;
 		while (idx > max_idx) {
-			if (max < room[idx])
-				max = room[idx];
-			result += (max - room[idx]);
+			maxNum = Math.max(maxNum, room[idx]);
+			result += (maxNum - room[idx]);
 			idx--;
 		}
 	}
