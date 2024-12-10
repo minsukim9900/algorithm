@@ -76,13 +76,13 @@ public class Main {
 			return;
 		}
 
-		if (comp1 != num1 && comp2 == num1 || comp3 == num1) {
+		if ( comp2 == num1 || comp3 == num1) {
 			ball++;
 		}
-		if (comp2 != num2 && comp1 == num2 || comp3 == num2) {
+		if (comp1 == num2 || comp3 == num2) {
 			ball++;
 		}
-		if (comp3 != num3 && comp1 == num3 || comp2 == num3) {
+		if (comp1 == num3 || comp2 == num3) {
 			ball++;
 		}
 
