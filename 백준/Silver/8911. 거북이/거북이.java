@@ -9,6 +9,7 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 
 		int T = Integer.parseInt(br.readLine());
 
@@ -29,8 +30,10 @@ public class Main {
 			
 			int totalX = Math.abs(maxX) + Math.abs(minX);
 			int totalY = Math.abs(maxY) + Math.abs(minY);
-			System.out.println(totalX * totalY);
+			sb.append(totalX * totalY).append("\n");
 		}
+		
+		System.out.println(sb.toString());
 
 	}
 
