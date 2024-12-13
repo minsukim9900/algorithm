@@ -33,10 +33,6 @@ public class Main {
 			int rotate = Integer.parseInt(st.nextToken());
 			process(idx, rotate);
 
-//			for(int i = 1; i<=4; i++) {
-//				System.out.println(wheel[i]);
-//			}
-//			System.out.println();
 		}
 
 		int result = 0;
