@@ -53,7 +53,7 @@ public class Main {
 
 		} else {
 			
-			for(int i = num; i<wall.size(); i++) {
+			for(int i = num; i<=wall.size()-3+depth; i++) {
 				int[] curr = wall.get(i);
 				lab[curr[0]][curr[1]] = 1;
 				bruteforce(i+1, depth+1);
