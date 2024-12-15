@@ -27,36 +27,18 @@ public class Main {
 		}
 		int years = 0;
 		
-		out : while (true) {
+		while (true) {
 			visited = new boolean[N + 2][M + 2];
-			boolean check = false;
-			int[] start = null;
-
-			for (int r = 1; r <= N; r++) {
-				for (int c = 1; c <= M; c++) {
-					if (!check && ocean[r][c] > 0) {
-						start = new int[] { r, c };
-					}
-
-				}
-			}
+			int[] start = new int[2];
+			
+			set(start);
 			dfs(start);
 			
-			for(int r = 1; r<=N; r++ ) {
-				for(int c = 1; c<=M; c++) {
-					if( !visited[r][c] && ocean[r][c] > 0) {
-						break out;
-					}
-				}
-			}
+			if(!verify1()) break;
+			
 			bfs();
-			int sum = 0;
-			for(int r = 1; r<=N; r++ ) {
-				for(int c = 1; c<=M; c++) {
-					sum += ocean[r][c];
-				}
-			}
-			if(sum == 0) {
+			
+			if(!verify2()) {
 				years = 0;
 				break;
 			}
@@ -69,10 +51,64 @@ public class Main {
 
 
 	}
+	
+	private static void set(int[] start) {
+		boolean check = false;
+		
+		for (int r = 1; r <= N; r++) {
+			
+			for (int c = 1; c <= M; c++) {
+				
+				if (!check && ocean[r][c] > 0) {
+					start[0] = r;
+					start[1] = c;
+				}
+
+			}
+			
+		}
+		
+	}
+	
+	private static boolean verify1() {
+		
+		for(int r = 1; r<=N; r++ ) {
+			
+			for(int c = 1; c<=M; c++) {
+				
+				if( !visited[r][c] && ocean[r][c] > 0) {
+					return false;
+				}
+				
+			}
+			
+		}
+		return true;
+		
+	}
+	
+	private static boolean verify2() {
+		int sum = 0;
+		
+		for(int r = 1; r<=N; r++ ) {
+			
+			for(int c = 1; c<=M; c++) {
+				sum += ocean[r][c];
+			}
+			
+		}
+		
+		if(sum == 0) {
+			return false;
+		}
+		return true;
+	}
 
 	private static void dfs(int[] start) {
+		
 		ice.add(start);
 		visited[start[0]][start[1]] = true;
+		
 		for (int i = 0; i < 4; i++) {
 			int nr = start[0] + dr[i];
 			int nc = start[1] + dc[i];
@@ -81,13 +117,14 @@ public class Main {
 				int[] iceMount = new int[] { nr, nc };
 				dfs(iceMount);
 			}
+			
 		}
 
 	}
 
 	private static void bfs() {
 
-		Queue<int[]> years = new ArrayDeque<>();
+		Queue<int[]> changeIce = new ArrayDeque<>();
 
 		while (!ice.isEmpty()) {
 			int cnt = 0;
@@ -102,18 +139,18 @@ public class Main {
 				}
 			}
 
-			years.add(new int[] { curr[0], curr[1], cnt });
+			changeIce.add(new int[] { curr[0], curr[1], cnt });
 
 		}
 
-		process(years);
+		process(changeIce);
 
 	}
 
-	private static void process(Queue<int[]> years) {
+	private static void process(Queue<int[]> changeIce) {
 
-		while (!years.isEmpty()) {
-			int[] curr = years.poll();
+		while (!changeIce.isEmpty()) {
+			int[] curr = changeIce.poll();
 			ocean[curr[0]][curr[1]] -= curr[2];
 			if (ocean[curr[0]][curr[1]] < 0) {
 				ocean[curr[0]][curr[1]] = 0;
