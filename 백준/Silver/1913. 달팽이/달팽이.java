@@ -1,54 +1,67 @@
 import java.io.*;
+import java.util.*;
 
 public class Main {
 
+	private static int N, findNum;
+	private static int[] dx = { 1, 0, -1, 0 };
+	private static int[] dy = { 0, 1, 0, -1 };
+	private static int[][] board;
+	private static int[] result = new int[2];
+
 	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
-
-		int N = Integer.parseInt(br.readLine());
-		int value = Integer.parseInt(br.readLine());
-		int[][] snail = new int[N][N];
-
-		int number = N;
-		int num = N * N;
-		int direction = 1;
-		int c = 0;
-		int r = -1;
-
-		for (int i = 0; i < N; i++) {
-
-			// 열
-			for (int j = 0; j < number; j++) {
-				r += direction;
-				snail[r][c] = num--;
-			}
-
-			number--;
-
-			// 행
-			for (int j = 0; j < number; j++) {
-				c += direction;
-				snail[r][c] = num--;
-			}
-
-			direction *= -1;
-		}
+		N = Integer.parseInt(br.readLine());
+		findNum = Integer.parseInt(br.readLine());
 		
-		int x = 0;
-		int y = 0;
-		for(int i = 0; i<N; i++) {
-			for(int j = 0; j<N; j++) {
-				if(snail[i][j] == value) {
-					x = i+1;
-					y = j+1;
+		board = new int[N+2][N+2];
+		int nums = N * N;
+		int boundary = N;
+		int dir = 0;
+		int r = 0, c = 1;
+		
+		
+		
+			while(nums != 0) {
+				
+				for(int i = 0; i<boundary; i++) {
+					r += dx[dir];
+					board[r][c] = nums--;
+					if(board[r][c] == findNum) {
+						result[0] = r;
+						result[1] = c;
+					}
 				}
-				sb.append(snail[i][j]).append(" ");
+				
+				boundary--;
+				dir = (dir + 1 ) % 4;
+				
+				for(int i = 0; i<boundary; i++) {
+					c += dy[dir];
+					board[r][c] = nums--;
+					if(board[r][c] == findNum) {
+						result[0] = r;
+						result[1] = c;
+					}
+				}
+				dir = (dir + 1 ) % 4;
+				
+				
+				
+			}
+			
+			
+		
+		for(int i = 1; i<=N; i++) {
+			for(int j = 1; j<=N; j++) {
+				sb.append(board[i][j]).append(" ");
 			}
 			sb.append("\n");
 		}
-		sb.append(x).append(" ").append(y);
+		sb.append(result[0]).append(" ").append(result[1]);
 		System.out.println(sb.toString());
-
 	}
+
 }
