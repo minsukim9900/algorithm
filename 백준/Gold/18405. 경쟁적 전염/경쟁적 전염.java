@@ -21,7 +21,7 @@ public class Main {
 
 	}
 
-	private static int N, K, S, X, Y;
+	private static int S;
 	private static int[][] board;
 	private static int[] dr = { -1, 1, 0, 0 };
 	private static int[] dc = { 0, 0, -1, 1 };
@@ -58,8 +58,8 @@ public class Main {
 
 		st = new StringTokenizer(br.readLine());
 		S = Integer.parseInt(st.nextToken());
-		X = Integer.parseInt(st.nextToken());
-		Y = Integer.parseInt(st.nextToken());
+		int X = Integer.parseInt(st.nextToken());
+		int Y = Integer.parseInt(st.nextToken());
 
 		Queue<int[]> Virus = new ArrayDeque<>();
 
@@ -67,7 +67,9 @@ public class Main {
 			Virus.add(new int[] { w.level, w.r, w.c });
 		}
 		
-		process(Virus);
+		if(S != 0) {
+			process(Virus);
+		}
 		System.out.println(board[X][Y]);
 
 	}
@@ -76,9 +78,6 @@ public class Main {
 		int time = 0;
 		while (!Virus.isEmpty()) {
 			
-			if(time == S) {
-				return;
-			}
 			
 			int size = Virus.size();
 			
@@ -100,6 +99,10 @@ public class Main {
 			}
 			
 			time++;
+			
+			if(time == S) {
+				return;
+			}
 			
 		}
 
