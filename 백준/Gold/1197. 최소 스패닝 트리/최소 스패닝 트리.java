@@ -3,8 +3,6 @@ import java.util.*;
 
 public class Main {
 
-	private static int[] p;
-
 	private static class Edge implements Comparable<Edge> {
 		int x, y, w;
 
@@ -22,23 +20,24 @@ public class Main {
 
 	}
 
+	private static int[] p;
+
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
+		
 		StringTokenizer st = new StringTokenizer(br.readLine());
-
 		int V = Integer.parseInt(st.nextToken());
 		int E = Integer.parseInt(st.nextToken());
 
 		p = new int[V + 1];
-
 		for (int i = 1; i <= V; i++) {
 			p[i] = i;
 		}
 
 		Edge[] edges = new Edge[E];
-		
+
 		for (int i = 0; i < E; i++) {
 			st = new StringTokenizer(br.readLine());
 			int x = Integer.parseInt(st.nextToken());
@@ -46,15 +45,15 @@ public class Main {
 			int w = Integer.parseInt(st.nextToken());
 			edges[i] = new Edge(x, y, w);
 		}
-		
+
 		Arrays.sort(edges);
 		
-		int ans = 0;
+		long ans = 0;
 		int pick = 0;
-		for(int i = 0; i<E; i++) {
-			int px = findSet(edges[i].x);
-			int py = findSet(edges[i].y);
-			
+
+		for (int i = 0; i < E; i++) {
+			int px = findP(edges[i].x);
+			int py = findP(edges[i].y);
 			if(px != py) {
 				union(px, py);
 				ans += edges[i].w;
@@ -64,16 +63,15 @@ public class Main {
 			if(pick >= V-1) {
 				break;
 			}
-			
 		}
 		
 		System.out.println(ans);
-		
+
 	}
 
-	private static int findSet(int x) {
+	private static int findP(int x) {
 		if (x != p[x]) {
-			p[x] = findSet(p[x]);
+			p[x] = findP(p[x]);
 		}
 
 		return p[x];
