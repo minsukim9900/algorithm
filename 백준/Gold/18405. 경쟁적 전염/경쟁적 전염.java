@@ -1,109 +1,96 @@
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Main {
 
-	private static class virus implements Comparable<virus> {
-		int level;
-		int r;
-		int c;
+	private static int[][] board;
+	private static int[] dr = { -1, 1, 0, 0 };
+	private static int[] dc = { 0, 0, -1, 1 };
 
-		public virus(int level, int r, int c) {
+	private static class Virus implements Comparable<Virus> {
+		int level, r, c;
+
+		public Virus(int level, int r, int c) {
+			super();
 			this.level = level;
 			this.r = r;
 			this.c = c;
 		}
 
-		public int compareTo(virus o) {
+		@Override
+		public int compareTo(Virus o) {
+			// TODO Auto-generated method stub
 			return this.level - o.level;
 		}
 
 	}
 
-	private static int S;
-	private static int[][] board;
-	private static int[] dr = { -1, 1, 0, 0 };
-	private static int[] dc = { 0, 0, -1, 1 };
-
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-		StringTokenizer st;
-		st = new StringTokenizer(br.readLine());
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		int N = Integer.parseInt(st.nextToken());
 		int K = Integer.parseInt(st.nextToken());
-		board = new int[N + 2][N + 2];
-		for (int i = 0; i < N + 2; i++) {
-			board[0][i] = 1;
-			board[N + 1][i] = 1;
-			board[i][0] = 1;
-			board[i][N + 1] = 1;
-		}
 
-		ArrayList<virus> adj = new ArrayList<>();
+		board = new int[N][N];
+		ArrayList<Virus> virus = new ArrayList<>();
 
-		for (int r = 1; r <= N; r++) {
+		for (int r = 0; r < N; r++) {
 			st = new StringTokenizer(br.readLine());
-			for (int c = 1; c <= N; c++) {
-				board[r][c] = Integer.parseInt(st.nextToken());
-				if (board[r][c] != 0) {
-					adj.add(new virus(board[r][c], r, c));
+			for (int c = 0; c < N; c++) {
+				int level = Integer.parseInt(st.nextToken());
+				if (level != 0) {
+					virus.add(new Virus(level, r, c));
 				}
+				board[r][c] = level;
 			}
 		}
 
-		Collections.sort(adj);
+		Collections.sort(virus);
+		Queue<int[]> sortVirus = new ArrayDeque<>();
+
+		for (Virus v : virus) {
+			sortVirus.offer(new int[] { v.level, v.r, v.c });
+		}
 
 		st = new StringTokenizer(br.readLine());
-		S = Integer.parseInt(st.nextToken());
-		int X = Integer.parseInt(st.nextToken());
-		int Y = Integer.parseInt(st.nextToken());
-
-		Queue<int[]> Virus = new ArrayDeque<>();
-
-		for (virus w : adj) {
-			Virus.add(new int[] { w.level, w.r, w.c });
-		}
+		int S = Integer.parseInt(st.nextToken());
+		int x = Integer.parseInt(st.nextToken()) - 1;
+		int y = Integer.parseInt(st.nextToken()) - 1;
 		
-		if(S != 0) {
-			process(Virus);
-		}
-		System.out.println(board[X][Y]);
+		spread(N, S, sortVirus);
+		System.out.println(board[x][y]);
 
 	}
 
-	private static void process(Queue<int[]> Virus) {
+	private static void spread(int N, int S, Queue<int[]> virus) {
+
 		int time = 0;
-		while (!Virus.isEmpty()) {
-			
-			
-			int size = Virus.size();
-			
-			for(int t = 0; t<size; t++) {
-				int[] curr = Virus.poll();
-				
-				for (int i = 0; i < 4; i++) {
-					int level = curr[0];
-					int nr = curr[1] + dr[i];
-					int nc = curr[2] + dc[i];
-					
-					if(board[nr][nc] == 0) {
-						board[nr][nc] = level;
-						Virus.add(new int[] {level, nr, nc});
+		while (time != S) {
+
+			int size = virus.size();
+			for (int i = 0; i < size; i++) {
+				int[] curr = virus.poll();
+
+				for (int j = 0; j < 4; j++) {
+					int nr = curr[1] + dr[j];
+					int nc = curr[2] + dc[j];
+
+					if (nr >= 0 && nr < N && nc >= 0 && nc < N && board[nr][nc] == 0) {
+						board[nr][nc] = curr[0];
+						virus.offer(new int[] {curr[0], nr, nc});
 					}
-					
+
 				}
-				
+
 			}
 			
 			time++;
-			
 			if(time == S) {
-				return;
+				break;
 			}
-			
+
 		}
 
 	}
