@@ -4,117 +4,117 @@ import java.util.*;
 public class Main {
 
 	private static int N, M;
-	private static int[] dx = { -1, 1, 0, 0 };
-	private static int[] dy = { 0, 0, -1, 1 };
+	private static int[] dr = { -1, 1, 0, 0 };
+	private static int[] dc = { 0, 0, -1, 1 };
 	private static int[][] lab;
-	private static ArrayList<int[]> virus = new ArrayList<>();
-	private static ArrayList<int[]> wall = new ArrayList<>();
-	
+	private static int[] result = new int[3];
+	private static ArrayList<int[]> virus, empty;
 	private static int max = Integer.MIN_VALUE;
 
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
-
-		StringTokenizer st = new StringTokenizer(br.readLine());
-
+		StringTokenizer st;
+		st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		lab = new int[N][M];
 
-		for (int n = 0; n < N; n++) {
+		virus = new ArrayList<>();
+		empty = new ArrayList<>();
+
+		for (int r = 0; r < N; r++) {
 			st = new StringTokenizer(br.readLine());
-
-			for (int m = 0; m < M; m++) {
-				int state = Integer.parseInt(st.nextToken());
-
-				if (state == 2) {
-					virus.add(new int[] { n, m });
-				}else if(state == 0) {
-					wall.add(new int[] {n, m});
+			for (int c = 0; c < M; c++) {
+				int tmp = Integer.parseInt(st.nextToken());
+				if (tmp == 0) {
+					empty.add(new int[] { r, c });
+				} else if (tmp == 2) {
+					virus.add(new int[] { r, c });
 				}
-				lab[n][m] = state;
+				lab[r][c] = tmp;
 			}
 		}
-		
-		
 
-		bruteforce(0, 0);
+		comb(0, 0);
 		System.out.println(max);
 
 	}
 
-	private static void bruteforce(int num, int depth) {
-
+	public static void comb(int num, int depth) {
 		if (depth == 3) {
 
-			infectViruse();
+			int[][] copyLab = new int[N][M];
+			for (int i = 0; i < N; i++) {
+				for (int j = 0; j < M; j++) {
+					copyLab[i][j] = lab[i][j];
+				}
+			}
+
+			for (int i = 0; i < 3; i++) {
+				int idx = result[i];
+				int nr = empty.get(idx)[0];
+				int nc = empty.get(idx)[1];
+				copyLab[nr][nc] = 1;
+			}
+
+
+			spreadVirus(copyLab);
 
 		} else {
-			
-			for(int i = num; i<=wall.size()-3+depth; i++) {
-				int[] curr = wall.get(i);
-				lab[curr[0]][curr[1]] = 1;
-				bruteforce(i+1, depth+1);
-				lab[curr[0]][curr[1]] = 0;
-				
+			for (int i = num; i < empty.size(); i++) {
+				result[depth] = i;
+				comb(i + 1, depth + 1);
 			}
-			
 		}
-
 	}
 
-	private static void infectViruse() {
-		
-		int[][] cloneLab = new int[N][M];
-
-		for (int i = 0; i < N; i++) {
-			cloneLab[i] = lab[i].clone();
-		}
-
-		Queue<int[]> copyVirus = new ArrayDeque<>();
-		
-		for(int r = 0; r<virus.size(); r++) {
-			int[] tmp = virus.get(r);
-			copyVirus.add(tmp);
+	public static void spreadVirus(int[][] copyLab) {
+		ArrayList<int[]> copyVirus = new ArrayList<>();
+		for(int[] w : virus) {
+			copyVirus.add(new int[] {w[0], w[1]});
 		}
 		
-		
-		while (!copyVirus.isEmpty()) {
-			int[] curr = copyVirus.poll();
+		int idx = 0;
 
+		while (idx < copyVirus.size()) {
+			int[] curr = copyVirus.get(idx);
 			for (int i = 0; i < 4; i++) {
-				int nx = curr[0] + dx[i];
-				int ny = curr[1] + dy[i];
+				int nr = curr[0] + dr[i];
+				int nc = curr[1] + dc[i];
 
-				if (nx >= 0 && nx < N && ny >= 0 && ny < M) {
-					if (cloneLab[nx][ny] == 0) {
-						cloneLab[nx][ny] = 2;
-						copyVirus.add(new int[] { nx, ny });
-					}
+				if (nr >= 0 && nr < N && nc >= 0 && nc < M && copyLab[nr][nc] == 0) {
+					copyLab[nr][nc] = 2;
+					copyVirus.add(new int[] { nr, nc });
 				}
+
 			}
 
+			idx++;
+
 		}
-		
-		compareMax(cloneLab);
+
+
+		cntVirus(copyLab);
+
 	}
-	
-	private static void compareMax(int[][] cloneLab) {
+
+	private static void cntVirus(int[][] copyLab) {
 		int cnt = 0;
 
-		for(int r = 0; r<N; r++) {
-			
-			for(int c = 0; c<M; c++) {
-				
-				if(cloneLab[r][c] == 0) {
+		for (int r = 0; r < N; r++) {
+
+			for (int c = 0; c < M; c++) {
+
+				if (copyLab[r][c] == 0) {
 					cnt++;
 				}
-				
+
 			}
-			
+
 		}
+
 		max = Math.max(max, cnt);
 	}
 
