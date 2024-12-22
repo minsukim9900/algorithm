@@ -3,12 +3,14 @@ import java.util.*;
 
 public class Main {
 
-	private static int[] p;
+	private static int N, M;
+	private static List<Node>[] adj;
+	private static PriorityQueue<Node> pq = new PriorityQueue<>();
 
-	private static class Edge implements Comparable<Edge> {
+	private static class Node implements Comparable<Node> {
 		int x, y, w;
 
-		public Edge(int x, int y, int w) {
+		private Node(int x, int y, int w) {
 			super();
 			this.x = x;
 			this.y = y;
@@ -16,9 +18,16 @@ public class Main {
 		}
 
 		@Override
-		public int compareTo(Edge o) {
-			return this.w - o.w;
+		public int compareTo(Node o) {
+			return Integer.compare(this.w, o.w);
 		}
+
+		@Override
+		public String toString() {
+			return "Node [x=" + x + ", y=" + y + ", w=" + w + "]";
+		}
+		
+		
 
 	}
 
@@ -26,62 +35,51 @@ public class Main {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
+		StringTokenizer st;
 
-		int N = Integer.parseInt(br.readLine());
-		int M = Integer.parseInt(br.readLine());
+		N = Integer.parseInt(br.readLine());
+		M = Integer.parseInt(br.readLine());
 
-		p = new int[N + 1];
-
+		adj = new ArrayList[N + 1];
+		
 		for (int i = 1; i <= N; i++) {
-			p[i] = i;
+			adj[i] = new ArrayList<>();
 		}
-
-		Edge[] edges = new Edge[M];
-
-		for (int i = 0; i < M; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		for(int i = 0; i<M; i++) {
+			st = new StringTokenizer(br.readLine());
 			int x = Integer.parseInt(st.nextToken());
 			int y = Integer.parseInt(st.nextToken());
 			int w = Integer.parseInt(st.nextToken());
-
-			edges[i] = new Edge(x, y, w);
+			
+			adj[x].add(new Node(x, y, w));
+			adj[y].add(new Node(y, x, w));
 		}
+		
+		System.out.println(prim(1));
 
-		Arrays.sort(edges);
-
-		int pick = 0;
+	}
+	
+	private static int prim(int st) {
+		
+		boolean[] visited = new boolean[N+1];
+		pq.addAll(adj[st]);
+		visited[st] = true;
+		int pick = 1;
 		int ans = 0;
-
-		for (int i = 0; i < M; i++) {
-			int px = findParent(edges[i].x);
-			int py = findParent(edges[i].y);
-
-			if (px != py) {
+		while(pick != N	) {
+			Node node = pq.poll();
+			
+			if(!visited[node.y]) {
+				visited[node.y] =true;
+				ans += node.w;
+				pq.addAll(adj[node.y]);
 				pick++;
-				ans += edges[i].w;
-				union(px, py);
 			}
-
-			if (pick >= (N - 1)) {
-				break;
-			}
+			
 		}
-
-		System.out.println(ans);
-
-	}
-
-	private static int findParent(int x) {
-
-		if (x != p[x]) {
-			p[x] = findParent(p[x]);
-		}
-
-		return p[x];
-	}
-
-	private static void union(int x, int y) {
-		p[y] = x;
+		
+		return ans;
 	}
 
 }
