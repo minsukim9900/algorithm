@@ -42,16 +42,9 @@ public class Main {
 	}
 
 	private static void dfs(int depth) {
+		
 		if (depth == cctv.size()) {
-			// cctv가 바라보는 방향 0~ 3 : 동 남 서 북
-			// result 배열에 들어간 수는 cctv 배열의 idx
-			int[] side = new int[cctv.size()];
-			for (int i = 0; i < cctv.size(); i++) {
-				side[i] = result[i];
-			}
-
-			quest(side);
-
+			quest();
 		} else {
 
 			for (int i = 0; i < 4; i++) {
@@ -62,7 +55,8 @@ public class Main {
 		}
 	}
 
-	private static void quest(int[] side) {
+	private static void quest() {
+		
 		int[][] copy = new int[N][M];
 
 		for (int i = 0; i < N; i++) {
@@ -72,39 +66,41 @@ public class Main {
 		}
 
 		int cnt = 0;
-		
-		for (int i = 0; i < side.length; i++) {
-			
+
+		for (int i = 0; i < result.length; i++) {
+
 			int[] curr = cctv.get(i);
 			int curr_cctv = curr[0];
-			int dir = side[i];
+			int dir = result[i];
 			int max = Math.max(N, M);
 			int r = curr[1];
 			int c = curr[2];
-			
+
 			switch (curr_cctv) {
-			
-			case 1 :
-				
+
+			case 1:
+
 				side1(copy, max, r, c, dir);
 				break;
-				
-			case 2 : 
-				
+
+			case 2:
+
 				side1(copy, max, r, c, dir);
 				r = curr[1];
 				c = curr[2];
 				side2(copy, max, r, c, dir);
 				break;
-			case 3 : 
-				
+
+			case 3:
+
 				side1(copy, max, r, c, dir);
 				r = curr[1];
 				c = curr[2];
 				side3(copy, max, r, c, dir);
 				break;
-			case 4 :
-				
+
+			case 4:
+
 				side1(copy, max, r, c, dir);
 				r = curr[1];
 				c = curr[2];
@@ -113,8 +109,9 @@ public class Main {
 				c = curr[2];
 				side3(copy, max, r, c, dir);
 				break;
+
 			case 5:
-				
+
 				side1(copy, max, r, c, dir);
 				r = curr[1];
 				c = curr[2];
@@ -126,90 +123,101 @@ public class Main {
 				c = curr[2];
 				side4(copy, max, r, c, dir);
 				break;
-				
+
 			}
 
-			
 		}
-		
+
 		for (int j = 0; j < N; j++) {
-			
+
 			for (int k = 0; k < M; k++) {
 				if (copy[j][k] == 0) {
 					cnt++;
 				}
 			}
-			
+
 			if (cnt >= blind) {
 				return;
 			}
-			
+
 		}
 
-
-			blind = Math.min(blind, cnt);
+		blind = Math.min(blind, cnt);
 
 	}
 
 	private static void side1(int[][] copy, int max, int r, int c, int dir) {
-		
+
 		for (int j = 0; j < max; j++) {
 			r += dr[dir];
 			c += dc[dir];
-			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-				return;
+			if (r >= 0 && r < N && c >= 0 && c < M) {
+
+				if (copy[r][c] == 6) {
+					return;
+				} else if (copy[r][c] == 0) {
+					copy[r][c] = 7;
+				}
+
 			}
 
-			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
-
-				copy[r][c] = 7;
-			}
 		}
-		
+
 	}
 
 	private static void side2(int[][] copy, int max, int r, int c, int dir) {
+
 		for (int j = 0; j < max; j++) {
 			r += dr[(dir + 2) % 4];
 			c += dc[(dir + 2) % 4];
-			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-				return;
-			}
 
-			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
+			if (r >= 0 && r < N && c >= 0 && c < M) {
 
-				copy[r][c] = 7;
+				if (copy[r][c] == 6) {
+					return;
+				} else if (copy[r][c] == 0) {
+					copy[r][c] = 7;
+				}
+
 			}
 		}
 	}
 
 	private static void side3(int[][] copy, int max, int r, int c, int dir) {
+
 		for (int j = 0; j < max; j++) {
 			r += dr[(dir + 1) % 4];
 			c += dc[(dir + 1) % 4];
-			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-				return;
-			}
 
-			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
+			if (r >= 0 && r < N && c >= 0 && c < M) {
 
-				copy[r][c] = 7;
+				if (copy[r][c] == 6) {
+					return;
+				} else if (copy[r][c] == 0) {
+					copy[r][c] = 7;
+				}
+
 			}
 		}
 	}
 
 	private static void side4(int[][] copy, int max, int r, int c, int dir) {
+
 		for (int j = 0; j < max; j++) {
 			r += dr[(dir + 3) % 4];
 			c += dc[(dir + 3) % 4];
-			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-				return;
-			}
 
-			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
+			if (r >= 0 && r < N && c >= 0 && c < M) {
 
-				copy[r][c] = 7;
+				if (copy[r][c] == 6) {
+					return;
+				} else if (copy[r][c] == 0) {
+					copy[r][c] = 7;
+				}
+
 			}
 		}
+
 	}
+	
 }
