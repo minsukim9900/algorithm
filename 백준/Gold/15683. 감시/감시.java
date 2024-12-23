@@ -71,220 +71,145 @@ public class Main {
 			}
 		}
 
-		// 1번 cctv
+		int cnt = 0;
+		
 		for (int i = 0; i < side.length; i++) {
+			
 			int[] curr = cctv.get(i);
 			int curr_cctv = curr[0];
 			int dir = side[i];
 			int max = Math.max(N, M);
-
-			if (curr_cctv == 1) {
-				int r = curr[1];
-				int c = curr[2];
-
-				for (int j = 0; j < max; j++) {
-					r += dr[dir];
-					c += dc[dir];
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-						break;
-					}
-
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
-
-						copy[r][c] = 7;
-					}
-				}
-
-			} else if (curr_cctv == 2) {
-
-				int r = curr[1];
-				int c = curr[2];
-
-				for (int j = 0; j < max; j++) {
-					r += dr[dir];
-					c += dc[dir];
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-						break;
-					}
-
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
-						copy[r][c] = 7;
-					}
-				}
-
+			int r = curr[1];
+			int c = curr[2];
+			
+			switch (curr_cctv) {
+			
+			case 1 :
+				
+				side1(copy, max, r, c, dir);
+				break;
+				
+			case 2 : 
+				
+				side1(copy, max, r, c, dir);
 				r = curr[1];
 				c = curr[2];
-
-				for (int j = 0; j < max; j++) {
-					r += dr[(dir + 2) % 4];
-					c += dc[(dir + 2) % 4];
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-						break;
-					}
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
-						copy[r][c] = 7;
-					}
-				}
-
-			} else if (curr_cctv == 3) {
-
-				int r = curr[1];
-				int c = curr[2];
-
-				for (int j = 0; j < max; j++) {
-					r += dr[dir];
-					c += dc[dir];
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-						break;
-					}
-
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
-						copy[r][c] = 7;
-					}
-				}
-
+				side2(copy, max, r, c, dir);
+				break;
+			case 3 : 
+				
+				side1(copy, max, r, c, dir);
 				r = curr[1];
 				c = curr[2];
-
-				for (int j = 0; j < max; j++) {
-					r += dr[(dir + 1) % 4];
-					c += dc[(dir + 1) % 4];
-
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-						break;
-					}
-
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
-						copy[r][c] = 7;
-					}
-				}
-
-			} else if (curr_cctv == 4) {
-
-				int r = curr[1];
-				int c = curr[2];
-
-				for (int j = 0; j < max; j++) {
-					r += dr[dir];
-					c += dc[dir];
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-						break;
-					}
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
-						copy[r][c] = 7;
-					}
-				}
-
+				side3(copy, max, r, c, dir);
+				break;
+			case 4 :
+				
+				side1(copy, max, r, c, dir);
 				r = curr[1];
 				c = curr[2];
-
-				for (int j = 0; j < max; j++) {
-					r += dr[(dir + 1) % 4];
-					c += dc[(dir + 1) % 4];
-
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-						break;
-					}
-
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
-						copy[r][c] = 7;
-					}
-				}
-
+				side2(copy, max, r, c, dir);
 				r = curr[1];
 				c = curr[2];
-
-				for (int j = 0; j < max; j++) {
-					r += dr[(dir + 2) % 4];
-					c += dc[(dir + 2) % 4];
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-						break;
-					}
-
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
-						copy[r][c] = 7;
-					}
-				}
-
-			} else {
-
-				int r = curr[1];
-				int c = curr[2];
-
-				for (int j = 0; j < max; j++) {
-					r += dr[dir];
-					c += dc[dir];
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-						break;
-					}
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
-						copy[r][c] = 7;
-					}
-				}
-
+				side3(copy, max, r, c, dir);
+				break;
+			case 5:
+				
+				side1(copy, max, r, c, dir);
 				r = curr[1];
 				c = curr[2];
-
-				for (int j = 0; j < max; j++) {
-					r += dr[(dir + 1) % 4];
-					c += dc[(dir + 1) % 4];
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-						break;
-					}
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
-						copy[r][c] = 7;
-					}
-				}
-
+				side2(copy, max, r, c, dir);
 				r = curr[1];
 				c = curr[2];
-
-				for (int j = 0; j < max; j++) {
-					r += dr[(dir + 2) % 4];
-					c += dc[(dir + 2) % 4];
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-						break;
-					}
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
-						copy[r][c] = 7;
-					}
-				}
-
+				side3(copy, max, r, c, dir);
 				r = curr[1];
 				c = curr[2];
-
-				for (int j = 0; j < max; j++) {
-					r += dr[(dir + 3) % 4];
-					c += dc[(dir + 3) % 4];
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
-						break;
-					}
-					if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
-						copy[r][c] = 7;
-					}
-				}
-
+				side4(copy, max, r, c, dir);
+				break;
+				
 			}
 
+			
 		}
-
-		int cnt = 0;
-		boolean check = true;
-		out: for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				if (copy[i][j] == 0) {
+		
+		for (int j = 0; j < N; j++) {
+			
+			for (int k = 0; k < M; k++) {
+				if (copy[j][k] == 0) {
 					cnt++;
-					if (cnt > blind) {
-						cnt = Integer.MAX_VALUE;
-						check = false;
-						break out;
-					}
 				}
 			}
-		}
-		if(check) {
-			blind = Math.min(blind, cnt);
+			
+			if (cnt >= blind) {
+				return;
+			}
+			
 		}
 
+
+			blind = Math.min(blind, cnt);
+
+	}
+
+	private static void side1(int[][] copy, int max, int r, int c, int dir) {
+		
+		for (int j = 0; j < max; j++) {
+			r += dr[dir];
+			c += dc[dir];
+			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
+				return;
+			}
+
+			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
+
+				copy[r][c] = 7;
+			}
+		}
+		
+	}
+
+	private static void side2(int[][] copy, int max, int r, int c, int dir) {
+		for (int j = 0; j < max; j++) {
+			r += dr[(dir + 2) % 4];
+			c += dc[(dir + 2) % 4];
+			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
+				return;
+			}
+
+			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
+
+				copy[r][c] = 7;
+			}
+		}
+	}
+
+	private static void side3(int[][] copy, int max, int r, int c, int dir) {
+		for (int j = 0; j < max; j++) {
+			r += dr[(dir + 1) % 4];
+			c += dc[(dir + 1) % 4];
+			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
+				return;
+			}
+
+			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
+
+				copy[r][c] = 7;
+			}
+		}
+	}
+
+	private static void side4(int[][] copy, int max, int r, int c, int dir) {
+		for (int j = 0; j < max; j++) {
+			r += dr[(dir + 3) % 4];
+			c += dc[(dir + 3) % 4];
+			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 6) {
+				return;
+			}
+
+			if (r >= 0 && r < N && c >= 0 && c < M && copy[r][c] == 0) {
+
+				copy[r][c] = 7;
+			}
+		}
 	}
 }
