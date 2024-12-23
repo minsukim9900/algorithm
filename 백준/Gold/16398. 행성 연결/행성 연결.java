@@ -44,7 +44,6 @@ public class Main {
 				int tmp = Integer.parseInt(st.nextToken());
 				if (i != j) {
 					adj[i].add(new Edge(i, j, tmp));
-					adj[j].add(new Edge(j, i, tmp));
 				}
 			}
 		}
