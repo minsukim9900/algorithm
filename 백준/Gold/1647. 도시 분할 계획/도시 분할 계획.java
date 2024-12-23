@@ -2,13 +2,14 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-
-	private static int[] p;
-
-	private static class Edge implements Comparable<Edge> {
+	
+	private static int N, M;
+	private static boolean[] visited;
+	
+	private static class Edge implements Comparable<Edge>{
 		int x, y, w;
 
-		public Edge(int x, int y, int w) {
+		private Edge(int x, int y, int w) {
 			super();
 			this.x = x;
 			this.y = y;
@@ -17,74 +18,61 @@ public class Main {
 
 		@Override
 		public int compareTo(Edge o) {
-			return this.w - o.w;
+			return Integer.compare(this.w, o.w);
 		}
-
 		
 		
-
 	}
-
+	
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
-
-		p = new int[N + 1];
-
-		for (int i = 1; i <= N; i++) {
-			p[i] = i;
+		StringTokenizer st;
+		st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+		visited = new boolean[N+1];
+		
+		List<Edge>[] adj = new ArrayList[N+1];
+		for(int i = 1; i<=N; i++) {
+			adj[i] = new ArrayList<>();
 		}
-
-		Edge[] edges = new Edge[M];
-
-		int ans = 0;
-		for (int i = 0; i < M; i++) {
+		
+		for(int i = 0; i<M; i++) {
 			st = new StringTokenizer(br.readLine());
 			int x = Integer.parseInt(st.nextToken());
 			int y = Integer.parseInt(st.nextToken());
 			int w = Integer.parseInt(st.nextToken());
-			edges[i] = new Edge(x, y, w);
+			
+			adj[x].add(new Edge(x, y, w));
+			adj[y].add(new Edge(y, x, w));
 		}
-
-		Arrays.sort(edges);
-
-		int pick = 0;
-
-		for (int i = 0; i < M; i++) {
-			int px = findParent(edges[i].x);
-			int py = findParent(edges[i].y);
-
-			if (px != py) {
+		
+		System.out.println(prim(1, adj));
+		
+	}
+	
+	private static int prim(int st, List<Edge>[] adj) {
+		
+		PriorityQueue<Edge> pq = new PriorityQueue<>();
+		visited[st] = true;
+		pq.addAll(adj[st]);
+		int ans = 0;
+		int pick = 1;
+		int finW = 0;
+		while(pick != N	) {
+			Edge e = pq.poll();
+			if(!visited[e.y]) {
+				visited[e.y] = true;
+				ans += e.w;
+				pq.addAll(adj[e.y]);
+				finW = Math.max(finW, e.w);
 				pick++;
-				ans += edges[i].w;
-				union(px, py);
-			}
-
-			if (pick >= (N - 1)) {
-				ans -= edges[i].w;
-				break;
 			}
 		}
-
-		System.out.println(ans);
-
-	}
-
-	private static int findParent(int x) {
-
-		if (x != p[x]) {
-			p[x] = findParent(p[x]);
-		}
-
-		return p[x];
-	}
-
-	private static void union(int x, int y) {
-		p[y] = x;
+		
+		return ans - finW;
 	}
 
 }
