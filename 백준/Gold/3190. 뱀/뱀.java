@@ -5,88 +5,89 @@ public class Main {
 
 	private static int N, K, L;
 	private static int[][] board;
-	private static int[] dr = { 0, 1, 0, -1 };
-	private static int[] dc = { 1, 0, -1, 0 };
+	private static int[][] dir = {{0,1},{1,0},{0,-1},{-1,0}};
 
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
-		N = Integer.parseInt(br.readLine());
-		board = new int[N + 2][N + 2];
-		K = Integer.parseInt(br.readLine());
-		
+		StringTokenizer st;
 
+		N = Integer.parseInt(br.readLine());
+		K = Integer.parseInt(br.readLine());
+
+		board = new int[N][N];
 		for (int i = 0; i < K; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			int r = Integer.parseInt(st.nextToken());
-			int c = Integer.parseInt(st.nextToken());
-			board[r][c] = 1;
+			st = new StringTokenizer(br.readLine());
+			int x = Integer.parseInt(st.nextToken()) - 1;
+			int y = Integer.parseInt(st.nextToken()) - 1;
+
+			board[x][y] = 1;
 		}
 
 		L = Integer.parseInt(br.readLine());
-		Queue<int[]> change = new ArrayDeque<>();
-
+		Queue<int[]> order = new ArrayDeque<>();
+		
 		for (int i = 0; i < L; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
+			st = new StringTokenizer(br.readLine());
 			int time = Integer.parseInt(st.nextToken());
-			String info = st.nextToken();
-			int dir = 1;
-			if (info.equals("L")) {
-				dir = -1;
+			String dir = st.nextToken();
+			
+			if (dir.equals("D")) {
+				order.add(new int[] { time, 1 });
+			} else {
+				order.add(new int[] { time, -1 });
 			}
-			change.add(new int[] { time, dir });
+			
 		}
-
-		int result = game(1, 1, change);
-
-		System.out.println(result);
-
+		
+		
+		System.out.println(game(order));
+		
 	}
 	
-	private static int game(int r, int c, Queue<int[]> change) {
+	private static int game(Queue<int[]> order) {
 		
 		Queue<int[]> snake = new ArrayDeque<>();
-		snake.add(new int[] {r, c});
-		int dir = 0;
-		board[r][c] = 2;
-		int time = 0;
 		
-		while (true) {
-
-			if (!change.isEmpty() && time == change.peek()[0]) {
-				int[] curr = change.poll();
-				dir = dir + curr[1];
-
-				if (dir == 4) {
-					dir = 0;
-				} else if (dir == -1) {
-					dir = 3;
-				}
-
-			}
-
-			r = r + dr[dir];
-			c = c + dc[dir];
+		int r = 0;
+		int c = 0;
+		board[r][c] = 2;
+		
+		snake.add(new int[] {0,0});
+		int time = 0;
+		int idx = 0;
+		while(true) {
 			
-			if (!(r >= 1 && r <= N && c >= 1 && c <= N) || board[r][c] == 2) {
+			r+=dir[idx][0];
+			c+=dir[idx][1];
+			
+			if(!(r >= 0 && r < N && c>= 0 && c<N) || board[r][c] == 2) {
 				time++;
-				break;
-			} else {
-
-				if (board[r][c] != 1) {
-					int[] tmp = snake.poll();
-					board[tmp[0]][tmp[1]] = 0;
+				return time;
+			}
+			if(r >= 0 && r < N && c>= 0 && c<N) {
+				if(board[r][c] == 0) {
+					int[] tail = snake.poll();
+					int nr = tail[0];
+					int nc = tail[1];
+					board[nr][nc] = 0;
 				}
 				board[r][c] = 2;
 				snake.add(new int[] {r, c});
 			}
-
+			
 			time++;
-
+			
+			if(!order.isEmpty() && time == order.peek()[0]) {
+				idx += order.poll()[1];
+				if(idx == 4) {
+					idx = 0;
+				}else if(idx == -1) {
+					idx = 3;
+				}
+			}
+			
 		}
-		
-		return time;
 	}
-
 }
