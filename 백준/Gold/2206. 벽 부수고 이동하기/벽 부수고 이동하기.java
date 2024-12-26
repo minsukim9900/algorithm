@@ -6,9 +6,7 @@ public class Main {
 	private static int N, M;
 	private static int[][] map;
 	private static int[][] dist;
-	private static List<int[]> wall = new ArrayList<>();
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
-	private static final int INF = 987654321;
 
 	public static void main(String[] args) throws IOException {
 
@@ -28,29 +26,15 @@ public class Main {
 			for (int c = 0; c < M; c++) {
 				int tmp = nums.charAt(c) - '0';
 
-				if (tmp == 1) {
-					wall.add(new int[] { r, c });
-				}
-
 				map[r][c] = tmp;
 			}
 		}
 
-		int result = bfs();
-
-		if (result >= INF) {
-			System.out.println(-1);
-		} else {
-			System.out.println(result);
-		}
-
+		System.out.println(bfs());
 	}
 
 	private static int bfs() {
 
-		for (int[] i : dist) {
-			Arrays.fill(i, INF);
-		}
 		boolean[][][] visited = new boolean[N][M][2];
 		visited[0][0][0] = true;
 
@@ -95,7 +79,7 @@ public class Main {
 
 			}
 		}
-		return dist[N - 1][M - 1];
+		return -1;
 
 	}
 
