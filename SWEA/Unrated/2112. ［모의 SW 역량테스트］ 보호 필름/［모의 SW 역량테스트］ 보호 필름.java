@@ -5,7 +5,7 @@ public class Solution {
 
 	private static int D, W, K, h;
 	private static int[][] film;
-	private static int[] choice, select;
+	private static int[] A, B;
 	private static int result = Integer.MAX_VALUE;
 
 	public static void main(String[] args) throws IOException {
@@ -25,6 +25,10 @@ public class Solution {
 
 			film = new int[D][W];
 
+			A = new int[W];
+			B = new int[W];
+			Arrays.fill(B, 1);
+
 			result = Integer.MAX_VALUE;
 
 			for (int r = 0; r < D; r++) {
@@ -34,40 +38,34 @@ public class Solution {
 				}
 			}
 
-			int[] tmp = new int[W];
-			dfs(0, tmp, 0);
+			dfs(0, 0);
 
 			System.out.println("#" + t + " " + result);
 		}
 
 	}
 
-	private static void dfs(int idx, int[] tmp, int cnt) {
+	private static void dfs(int idx, int cnt) {
+		if (check()) {
+			result = Math.min(result, cnt);
+			return;
+		}
 		if (cnt > result) {
 			return;
 		}
 		if (idx == D) {
-
-			if (cnt > result) {
-				return;
-			}
-
-			if (check()) {
-				result = Math.min(result, cnt);
-			}
-
+			return;
 		} else {
 
-			dfs(idx + 1, tmp, cnt);
+			dfs(idx + 1, cnt);
 
-			tmp = film[idx].clone();
-			Arrays.fill(film[idx], 0);
-			dfs(idx + 1, tmp, cnt + 1);
+			int[] tmp = film[idx];
+			film[idx] =A;
+			dfs(idx + 1, cnt + 1);
 			film[idx] = tmp;
-
-			tmp = film[idx].clone();
-			Arrays.fill(film[idx], 1);
-			dfs(idx + 1, tmp, cnt + 1);
+			
+			film[idx] = B;
+			dfs(idx + 1, cnt + 1);
 			film[idx] = tmp;
 
 		}
@@ -80,24 +78,24 @@ public class Solution {
 			boolean flag = false;
 			int cnt = 1;
 			for (int r = 1; r < D; r++) {
-				
-				if(film[r][c] == film[r-1][c]) {
+
+				if (film[r][c] == film[r - 1][c]) {
 					cnt++;
-				}else {
+				} else {
 					cnt = 1;
 				}
-				
-				if(cnt >= K) {
+
+				if (cnt >= K) {
 					flag = true;
 					break;
 				}
 			}
-			
-			if(!flag) return false;
-			
+
+			if (!flag)
+				return false;
 
 		}
-		
+
 		return true;
 
 	}
