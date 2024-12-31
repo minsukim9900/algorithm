@@ -48,6 +48,10 @@ public class Solution {
 		}
 		if (idx == D) {
 
+			if (cnt > result) {
+				return;
+			}
+
 			if (check()) {
 				result = Math.min(result, cnt);
 			}
@@ -71,34 +75,31 @@ public class Solution {
 	}
 
 	private static boolean check() {
-		boolean[] test = new boolean[W];
-		for (int r = 0; r < D - K + 1; r++) {
-			for (int c = 0; c < W; c++) {
 
-				if (!test[c]) {
-					test[c] = search(r, c);
+		for (int c = 0; c < W; c++) {
+			boolean flag = false;
+			int cnt = 1;
+			for (int r = 1; r < D; r++) {
+				
+				if(film[r][c] == film[r-1][c]) {
+					cnt++;
+				}else {
+					cnt = 1;
+				}
+				
+				if(cnt >= K) {
+					flag = true;
+					break;
 				}
 			}
+			
+			if(!flag) return false;
+			
 
 		}
-
-		for (int i = 0; i < test.length; i++) {
-			if (!test[i])
-				return false;
-		}
-
+		
 		return true;
-	}
 
-	private static boolean search(int r, int c) {
-
-		for (int i = r; i < r + K - 1; i++) {
-			if (film[i][c] != film[i + 1][c]) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 }
