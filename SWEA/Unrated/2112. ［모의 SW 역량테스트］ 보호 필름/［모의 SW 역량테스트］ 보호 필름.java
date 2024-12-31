@@ -2,12 +2,11 @@ import java.io.*;
 import java.util.*;
 
 public class Solution {
-	
+
 	private static int D, W, K, h;
 	private static int[][] film;
 	private static int[] choice, select;
-	private static int result;
-	private static boolean min;
+	private static int result = Integer.MAX_VALUE;
 
 	public static void main(String[] args) throws IOException {
 
@@ -27,7 +26,7 @@ public class Solution {
 			film = new int[D][W];
 
 			result = Integer.MAX_VALUE;
-			min = false;
+
 			for (int r = 0; r < D; r++) {
 				st = new StringTokenizer(br.readLine());
 				for (int c = 0; c < W; c++) {
@@ -35,121 +34,71 @@ public class Solution {
 				}
 			}
 
-			for (int i = 0; i <= D; i++) {
-				h = i;
-				choice = new int[h];
-				select = new int[h];
-				dfs(0, 0);
-				if (min) {
-					break;
-				}
-			}
+			int[] tmp = new int[W];
+			dfs(0, tmp, 0);
 
 			System.out.println("#" + t + " " + result);
 		}
 
 	}
 
+	private static void dfs(int idx, int[] tmp, int cnt) {
+		if (cnt > result) {
+			return;
+		}
+		if (idx == D) {
 
-	private static void dfs(int num, int depth) {
-		if (!min) {
+			if (check()) {
+				result = Math.min(result, cnt);
+			}
 
-			if (depth == h) {
-				selectCell(0);
-			} else {
-				for (int i = num; i <= D-h+depth; i++) {
-					choice[depth] = i;
-					dfs(i + 1, depth + 1);
+		} else {
+
+			dfs(idx + 1, tmp, cnt);
+
+			tmp = film[idx].clone();
+			Arrays.fill(film[idx], 0);
+			dfs(idx + 1, tmp, cnt + 1);
+			film[idx] = tmp;
+
+			tmp = film[idx].clone();
+			Arrays.fill(film[idx], 1);
+			dfs(idx + 1, tmp, cnt + 1);
+			film[idx] = tmp;
+
+		}
+
+	}
+
+	private static boolean check() {
+		boolean[] test = new boolean[W];
+		for (int r = 0; r < D - K + 1; r++) {
+			for (int c = 0; c < W; c++) {
+
+				if (!test[c]) {
+					test[c] = search(r, c);
 				}
 			}
 
 		}
 
-	}
-
-	private static void selectCell(int depth) {
-		if (!min) {
-			if (depth == h) {
-				
-				
-				ArrayList<int[]> backup = new ArrayList<>();
-				for(int i = 0; i<choice.length; i++) {
-					backup.add(Arrays.copyOf(film[choice[i]], film[choice[i]].length));
-				}
-				inject();
-				
-				
-
-				boolean[] test = new boolean[W];
-				if (!min) {
-					for (int r = 0; r < D - K + 1; r++) {
-						for (int c = 0; c < W; c++) {
-
-							if (!test[c]) {
-								test[c] = verify(r, c);
-							}
-
-						}
-					}
-				}
-
-				if (checking(test)) {
-					min = true;
-					result = h;
-					return;
-				}
-				
-				for(int i = 0; i<choice.length; i++) {
-					int idx = choice[i];
-					film[idx] = backup.get(i);
-				}
-				
-
-			} else {
-
-				for (int i = 0; i <= 1; i++) {
-					select[depth] = i;
-					selectCell(depth + 1);
-
-				}
-
-			}
+		for (int i = 0; i < test.length; i++) {
+			if (!test[i])
+				return false;
 		}
 
+		return true;
 	}
 
-	private static void inject() {
-		
-		
-		for (int i = 0; i < choice.length; i++) {
-			Arrays.fill(film[choice[i]], select[i]);
-		}
-
-	}
-
-	private static boolean verify(int r, int c) {
+	private static boolean search(int r, int c) {
 
 		for (int i = r; i < r + K - 1; i++) {
-
 			if (film[i][c] != film[i + 1][c]) {
 				return false;
 			}
-
 		}
 
 		return true;
-
 	}
 
-	private static boolean checking(boolean[] test) {
-
-		for (int i = 0; i < test.length; i++) {
-			if (!test[i]) {
-				return false;
-			}
-		}
-
-		return true;
-
-	}
 }
