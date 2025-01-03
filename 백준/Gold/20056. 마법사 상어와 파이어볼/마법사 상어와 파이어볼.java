@@ -42,8 +42,7 @@ public class Main {
 			move();
 			spreed();
 		}
-		
-		
+
 		int sum = 0;
 		for (int i = 0; i < fireball.size(); i++) {
 			sum += fireball.get(i)[2];
@@ -56,32 +55,25 @@ public class Main {
 		for (int i = 0; i < fireball.size(); i++) {
 			int[] curr = fireball.get(i);
 
-			
-			for(int j = 0; j<curr[3]; j++) {
-				curr[0] += delta[curr[4]][0];
-				if(curr[0] == -1) curr[0] = N-1;
-				else if(curr[0] == N) curr[0] = 0;
-				
-				curr[1] += delta[curr[4]][1];
-				if(curr[1] == -1) curr[1] = N-1;
-				else if(curr[1] == N) curr[1] = 0;
-			}
-			
-			
+			int r = (curr[0] + (delta[curr[4]][0] * curr[3])) % N;
+			int c = (curr[1] + (delta[curr[4]][1] * curr[3])) % N;
+
+			if (r < 0)
+				r += N;
+			else if (r >= N)
+				r %= N;
+			if (c < 0)
+				c += N;
+			else if (c >= N)
+				c %= N;
+            
+            curr[0] = r;
+            curr[1] = c;
+            
 			map[curr[0]][curr[1]].add(curr);
 
 		}
 
-	}
-	
-	private static int indexModify(int idx) {
-		if(idx < 0) {
-			idx = N + idx;
-		}else if(idx >= N) {
-			idx %= N;
-		}
-		
-		return idx;
 	}
 
 	private static void spreed() {
@@ -91,8 +83,9 @@ public class Main {
 		for (int r = 0; r < N; r++) {
 
 			for (int c = 0; c < N; c++) {
-
-				if (map[r][c].size() >= 2) {
+				if (map[r][c].size() == 0) {
+					continue;
+				} else if (map[r][c].size() >= 2) {
 
 					int mass = 0, speed = 0;
 					int odd = 0, even = 0;
