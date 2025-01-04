@@ -6,6 +6,7 @@ public class Main {
 	private static int N, M;
 	private static boolean[] visited;
 	private static int[] result;
+	private static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws IOException {
 
@@ -19,6 +20,7 @@ public class Main {
 		
 		dfs(0);
 		
+		System.out.println(sb.toString());
 		
 	}
 
@@ -26,9 +28,9 @@ public class Main {
 		if (depth == M) {
 			
 			for(int i = 0; i<M; i++) {
-				System.out.print(result[i]+" ");
+				sb.append(result[i]).append(" ");
 			}
-			System.out.println();
+			sb.append("\n");
 			
 		} else {
 
