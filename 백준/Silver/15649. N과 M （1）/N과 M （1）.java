@@ -2,40 +2,45 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+
 	private static int N, M;
 	private static boolean[] visited;
 	private static int[] result;
-	private static StringBuilder sb = new StringBuilder();
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-
+		StringTokenizer st;
+		st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
-		result = new int[M + 1];
 		visited = new boolean[N + 1];
-
-		perm(1);
-		System.out.println(sb.toString());
-
+		result = new int[M];
+		
+		dfs(0);
+		
+		
 	}
 
-	public static void perm(int idx) {
-		if (idx == M + 1) {
-			for (int i = 1; i <= M; i++) {
-				sb.append(result[i]).append(" ");
+	private static void dfs(int depth) {
+		if (depth == M) {
+			
+			for(int i = 0; i<M; i++) {
+				System.out.print(result[i]+" ");
 			}
-			sb.append("\n");
+			System.out.println();
+			
 		} else {
+
 			for (int i = 1; i <= N; i++) {
 				if (visited[i])
 					continue;
 				visited[i] = true;
-				result[idx] = i;
-				perm(idx + 1);
+				result[depth] = i;
+				dfs(depth + 1);
 				visited[i] = false;
 			}
+
 		}
 	}
 
