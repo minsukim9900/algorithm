@@ -3,59 +3,92 @@ import java.util.*;
 
 public class Main {
 
-	private static int N, M;
-	private static int[][] tomato;
-	private static int[] dr = { -1, 1, 0, 0 };
-	private static int[] dc = { 0, 0, -1, 1 };
-	private static Queue<int[]> q = new ArrayDeque<>();
-	private static int max = 0;
+	private static class tomato {
+		int r, c, t;
 
-	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
-		tomato = new int[M][N];
-
-		for (int r = 0; r < M; r++) {
-			st = new StringTokenizer(br.readLine());
-			for (int c = 0; c < N; c++) {
-				tomato[r][c] = Integer.parseInt(st.nextToken());
-				if (tomato[r][c] == 1) {
-					q.add(new int[] { r, c, 0 });
-				}
-			}
+		public tomato(int r, int c, int t) {
+			super();
+			this.r = r;
+			this.c = c;
+			this.t = t;
 		}
-
-		bfs();
-		for (int r = 0; r < M; r++) {
-			for (int c = 0; c < N; c++) {
-				if (tomato[r][c] == 0) {
-					System.out.println(-1);
-					return;
-				}
-			}
-		}
-
-		System.out.println(max);
 
 	}
 
-	private static void bfs() {
-		while (!q.isEmpty()) {
-			int curr[] = q.poll();
-			if (max < curr[2]) {
-				max = curr[2];
-			}
-			for (int i = 0; i < 4; i++) {
-				int nr = curr[0] + dr[i];
-				int nc = curr[1] + dc[i];
-				if (nr >= 0 && nr < M && nc >= 0 && nc < N && tomato[nr][nc] == 0) {
-					tomato[nr][nc] = 1;
-					q.add(new int[] { nr, nc, curr[2] + 1 });
+	private static int M, N;
+	private static int[][] board;
+	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+	private static int time = 0;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+		st = new StringTokenizer(br.readLine());
+		M = Integer.parseInt(st.nextToken());
+		N = Integer.parseInt(st.nextToken());
+
+		board = new int[N][M];
+		Queue<tomato> q = new ArrayDeque<>();
+
+		for (int r = 0; r < N; r++) {
+			st = new StringTokenizer(br.readLine());
+			for (int c = 0; c < M; c++) {
+				board[r][c] = Integer.parseInt(st.nextToken());
+
+				if (board[r][c] == 1) {
+					q.add(new tomato(r, c, 0));
 				}
 			}
 		}
+		
+		bfs(q);
+		
+		if (isClear()) {
+			System.out.println(time);
+		} else {
+			System.out.println(-1);
+		}
+
+	}
+
+	private static void bfs(Queue<tomato> q) {
+
+		while (!q.isEmpty()) {
+
+			tomato curr = q.poll();
+			
+			time = Math.max(time, curr.t);
+			
+			for (int i = 0; i < 4; i++) {
+				int nr = curr.r + delta[i][0];
+				int nc = curr.c + delta[i][1];
+
+				if (nr >= 0 && nr < N && nc >= 0 && nc < M && board[nr][nc] == 0) {
+					board[nr][nc] = 1;
+					q.add(new tomato(nr, nc, curr.t + 1));
+				}
+			}
+
+		}
+
+
+	}
+
+	private static boolean isClear() {
+
+		for (int r = 0; r < N; r++) {
+
+			for (int c = 0; c < M; c++) {
+
+				if (board[r][c] == 0) {
+					return false;
+				}
+
+			}
+
+		}
+
+		return true;
 	}
 
 }
