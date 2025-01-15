@@ -5,7 +5,6 @@ public class Main {
 
 	private static int V, E, R;
 	private static List<Integer>[] adj;
-	private static boolean[] visited;
 	private static int[] result;
 	private static StringBuilder sb = new StringBuilder();
 
@@ -23,7 +22,6 @@ public class Main {
 			adj[i] = new ArrayList<>();
 		}
 
-		visited = new boolean[V + 1];
 		result = new int[V+1];
 
 		for (int i = 0; i < E; i++) {
@@ -49,19 +47,18 @@ public class Main {
 	}
 
 	private static void bfs(int start) {
-		Queue<int[]> q = new ArrayDeque<>();
+		Queue<Integer> q = new ArrayDeque<>();
 		int cnt = 1;
-		q.add(new int[] {start, cnt});
-		visited[start] = true;
-
+		q.add(start);
+		result[R] = 1;
+		
 		while (!q.isEmpty()) {
-			int[] curr = q.poll();
-			result[curr[0]] = curr[1];
+			int curr = q.poll();
 
-			for (int w : adj[curr[0]]) {
-				if (!visited[w]) {
-					visited[w] = true;
-					q.add(new int[] {w, ++cnt});
+			for (int w : adj[curr]) {
+				if (result[w] == 0) {
+					result[w] = ++cnt;
+					q.add(w);
 				}
 			}
 		}
