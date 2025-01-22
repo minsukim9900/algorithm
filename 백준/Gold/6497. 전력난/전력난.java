@@ -3,85 +3,91 @@ import java.util.*;
 
 public class Main {
 
-	private static int[] p;
-	private static PriorityQueue<int[]> house;
-		
+	private static class Edge implements Comparable<Edge> {
+		int from, to, w;
 
+		public Edge(int from, int to, int w) {
+			super();
+			this.from = from;
+			this.to = to;
+			this.w = w;
+		}
+
+		@Override
+		public int compareTo(Edge o) {
+			return this.w - o.w;
+		}
+
+	}
+
+	private static int N, M;
+	private static int[] p;
 
 	public static void main(String[] args) throws IOException {
-
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
+		
 		
 		while(true) {
 			
-			house = new PriorityQueue<>(new Comparator<int[]>() {
-
-				@Override
-				public int compare(int[] o1, int[] o2) {
-					return o1[2]- o2[2]	;
-				}
-				
-				
-			
-			});
-			
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			int m = Integer.parseInt(st.nextToken());
-			int n = Integer.parseInt(st.nextToken());
 			
-			if(m == 0 && n == 0) {
-				break;
-			}else {
+			N = Integer.parseInt(st.nextToken());
+			M = Integer.parseInt(st.nextToken());
+			
+			if(N == 0) break;
+			
+			p = new int[N + 1];
+			
+			for (int i = 1; i <= N; i++) {
+				p[i] = i;
+			}
+			
+			Edge[] edges = new Edge[M];
+			int sum = 0;
+			for (int i = 0; i < M; i++) {
+				st = new StringTokenizer(br.readLine());
 				
-				p = new int[m];
+				int from = Integer.parseInt(st.nextToken());
+				int to = Integer.parseInt(st.nextToken());
+				int w = Integer.parseInt(st.nextToken());
 				
-				for(int i = 0; i<m; i++) {
-					p[i] = i;
+				sum += w;
+				
+				edges[i] = new Edge(from, to, w);
+			}
+			
+			Arrays.sort(edges);
+			
+			int pick = 0;
+			
+			for (int i = 0; i < M; i++) {
+				
+				int px = findP(edges[i].from);
+				int py = findP(edges[i].to);
+				
+				if (px != py) {
+					union(px, py);
+					sum -= edges[i].w;
 				}
-				long ans = 0;
-				for(int i = 0; i<n; i++) {
-					st = new StringTokenizer(br.readLine());
-					int x = Integer.parseInt(st.nextToken());
-					int y = Integer.parseInt(st.nextToken());
-					int w = Integer.parseInt(st.nextToken());
-					ans += w;
-					house.offer(new int[] {x,y,w});
-				}
 				
-				int pick = 0;
-				
-				for(int i = 0; i<n; i++) {
-					int[] curr = house.poll();
-					int px = findP(curr[0]);
-					int py = findP(curr[1]);
-					
-					if(px != py) {
-						union(px, py);
-						ans -= curr[2];
-						pick++;
-					}
-					
-					if(pick >= m-1) {
-						break;
-					}
-				}
-				
-				System.out.println(ans);
+				if(pick == N-1) break;
 				
 			}
+			
+			System.out.println(sum);
 		}
+
 	}
-	
+
 	private static int findP(int x) {
-		if(x != p[x]) {
+		if (x != p[x]) {
 			p[x] = findP(p[x]);
 		}
 		return p[x];
 	}
-	
+
 	private static void union(int x, int y) {
 		p[y] = x;
 	}
-	
+
 }
