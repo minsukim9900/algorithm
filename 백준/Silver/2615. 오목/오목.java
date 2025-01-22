@@ -2,129 +2,86 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	private static int[] dr = { 0, 1, -1, 1 };
-	private static int[] dc = { 1, 0, 1, 1 };
+
 	private static int[][] board;
-	private static Queue<int[]> doll = new ArrayDeque<>();
-	private static int N = 19;
+	private static ArrayList<int[]>[] arr;
+	private static int[][] delta = { { 1, 0 }, { 0, 1 }, { 1, 1 }, { -1, 1 } };
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
 
-		board = new int[N+2][N+2];
+		board = new int[21][21];
+		arr = new ArrayList[3];
+		for (int i = 1; i < 3; i++) {
+			arr[i] = new ArrayList<>();
+		}
 
-		for (int r = 1; r <= N; r++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			for (int c = 1; c <= N; c++) {
-				int tmp = Integer.parseInt(st.nextToken());
-				board[r][c] = tmp;
-				if (tmp != 0) {
-					doll.add(new int[] { tmp, r, c });
+		for (int r = 1; r <= 19; r++) {
+			st = new StringTokenizer(br.readLine());
+			for (int c = 1; c <= 19; c++) {
+				board[r][c] = Integer.parseInt(st.nextToken());
+				if (board[r][c] == 1) {
+					arr[board[r][c]].add(new int[] { r, c });
+				} else if (board[r][c] == 2) {
+					arr[board[r][c]].add(new int[] { r, c });
+
 				}
 			}
 		}
 
-		while (!doll.isEmpty()) {
-			int[] curr = doll.poll();
-			int collor = curr[0];
-			int r = curr[1];
-			int c = curr[2];
-			int cnt = 1;
-			int tmp1 = circulator1(collor, r, c, cnt);
-			if (tmp1 == 5) {
-				System.out.println(collor);
-				System.out.print(r);
-				System.out.print(" ");
-				System.out.print(c);
-				return;
+		search();
+
+	}
+
+	private static void search() {
+
+		for (int i = 1; i < 3; i++) {
+
+			for (int idx = 0; idx < arr[i].size(); idx++) {
+
+				int[] curr = arr[i].get(idx);
+				int cnt = 1;
+
+				for (int d = 0; d < 4; d++) {
+
+					int nr = curr[0] + delta[d][0];
+					int nc = curr[1] + delta[d][1];
+
+					if (board[nr][nc] != i)
+						continue;
+					cnt++;
+
+					while (true) {
+
+						nr += delta[d][0];
+						nc += delta[d][1];
+
+						if (board[nr][nc] != i)
+							break;
+
+						cnt++;
+					}
+
+					int preR = curr[0] - delta[d][0];
+					int preC = curr[1] - delta[d][1];
+
+					if (board[preR][preC] != i && cnt == 5) {
+						System.out.println(i);
+						System.out.println(curr[0] + " " + curr[1]);
+						return;
+					} else {
+						cnt = 1;
+					}
+
+				}
+
 			}
-			int tmp2 = circulator2(collor, r, c, cnt);
-			if (tmp2 == 5) {
-				System.out.println(collor);
-				System.out.print(r);
-				System.out.print(" ");
-				System.out.print(c);
-				return;
-			}
-			int tmp3 = circulator3(collor, r, c, cnt);
-			if (tmp3 == 5) {
-				System.out.println(collor);
-				System.out.print(r);
-				System.out.print(" ");
-				System.out.print(c);
-				return;
-			}
-			int tmp4 = circulator4(collor, r, c, cnt);
-			if (tmp4 == 5) {
-				System.out.println(collor);
-				System.out.print(r);
-				System.out.print(" ");
-				System.out.print(c);
-				return;
-			}
+
 		}
+
 		System.out.println(0);
-
-	}
-
-	public static int circulator1(int collor, int r, int c, int cnt) {
-		int nr = r + dr[0];
-		int nc = c + dc[0];
-		if ((c - 1) >= 0 && board[r][c - 1] != collor) {
-			if (nr >= 0 && nr <= N && nc >= 0 && nc <= N) {
-				while (nr <= N && nc <= N && board[nr][nc] == collor) {
-					cnt++;
-					nr += dr[0];
-					nc += dc[0];
-				}
-			}
-		}
-		return cnt;
-	}
-
-	public static int circulator2(int collor, int r, int c, int cnt) {
-		int nr = r + dr[1];
-		int nc = c + dc[1];
-		if ((r - 1) >= 0 && board[r - 1][c] != collor) {
-			if (nr >= 0 && nr <= N && nc >= 0 && nc <= N) {
-				while (nr <= N && nc <= N && board[nr][nc] == collor) {
-					cnt++;
-					nr += dr[1];
-					nc += dc[1];
-				}
-			}
-		}
-		return cnt;
-	}
-
-	public static int circulator3(int collor, int r, int c, int cnt) {
-		int nr = r + dr[2];
-		int nc = c + dc[2];
-		if ((r + 1) >= 0 && (c - 1) >= 0 && board[r + 1][c - 1] != collor) {
-			if (nr >= 0 && nr <= N && nc >= 0 && nc <= N) {
-				while (nr <= N && nc <= N && board[nr][nc] == collor) {
-					cnt++;
-					nr += dr[2];
-					nc += dc[2];
-				}
-			}
-		}
-		return cnt;
-	}
-
-	public static int circulator4(int collor, int r, int c, int cnt) {
-		int nr = r + dr[3];
-		int nc = c + dc[3];
-		if ((r - 1) >= 0 && (c - 1) >= 0 && board[r - 1][c - 1] != collor) {
-			if (nr >= 0 && nr <= N && nc >= 0 && nc <= N) {
-				while (nr <= N && nc <= N && board[nr][nc] == collor) {
-					cnt++;
-					nr += dr[3];
-					nc += dc[3];
-				}
-			}
-		}
-		return cnt;
+		return;
 	}
 
 }
