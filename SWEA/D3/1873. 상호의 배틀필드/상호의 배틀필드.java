@@ -83,7 +83,6 @@ public class Solution {
 					map[nr][nc] = tmp;
 					r = nr;
 					c = nc;
-					map[r][c] = dir;
 				}
 
 				map[r][c] = dir;
