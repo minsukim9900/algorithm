@@ -2,120 +2,130 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	private static int[][] island;
-	private static int[] dx = { -1, 0, 1, 0 };
-	private static int[] dy = { 0, 1, 0, -1 };
-	private static Queue<int[]> land = new ArrayDeque<>();
+
+	private static int R, C;
+	private static char[][] map;
+	private static int[][] board;
+	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
+
 		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		int R = Integer.parseInt(st.nextToken());
-		int C = Integer.parseInt(st.nextToken());
-		island = new int[R + 2][C + 2];
+		R = Integer.parseInt(st.nextToken());
+		C = Integer.parseInt(st.nextToken());
+		map = new char[R + 2][C + 2];
+		board = new int[R + 2][C + 2];
 
-		for (int x = 1; x <= R; x++) {
-			String situ = br.readLine();
-			for (int y = 1; y <= C; y++) {
-				char tmp = situ.charAt(y - 1);
+		ArrayList<int[]> island = new ArrayList<>();
 
-				if (tmp == 'X') {
-					island[x][y] = 1;
-					land.add(new int[] { x, y });
-				}
-
-			}
-
+		for (int r = 0; r < R + 2; r++) {
+			map[r][0] = '.';
+			map[r][C + 1] = '.';
+		}
+		for (int c = 0; c < C + 2; c++) {
+			map[0][c] = '.';
+			map[R + 1][c] = '.';
 		}
 
-		later();
-		int[] now = new int[4];
-		opti(now, R, C);
-		
-		
-		for (int i = now[0]; i <= now[2] ; i++) {
-			for (int j = now[1]; j <= now[3]; j++) {
-				if(island[i][j] == 0) {
-					sb.append(".");
-				}else {
-					sb.append("X");
+		for (int r = 1; r <= R; r++) {
+
+			String state = br.readLine();
+
+			for (int c = 1; c <= C; c++) {
+
+				char tmp = state.charAt(c - 1);
+				map[r][c] = tmp;
+				island.add(new int[] { r, c });
+
+			}
+		}
+
+		bfs(island);
+
+		for (int r = 1; r <= R; r++) {
+			for (int c = 1; c <= C; c++) {
+				if (map[r][c] == '.') {
+					board[r][c] = 0;
+				} else {
+					board[r][c] = 1;
 				}
 			}
-			sb.append("\n");
+		}
+
+		int startR = R;
+		int startC = C;
+		int endR = 1;
+		int endC = 1;
+
+		for (int r = 1; r <= R; r++) {
+			int sum = 0;
+			for (int c = 1; c <= C; c++) {
+				sum += board[r][c];
+			}
+
+			if (sum >= 1) {
+				startR = Math.min(startR, r);
+				endR = Math.max(endR, r);
+			}
+		}
+
+		for (int c = 1; c <= C; c++) {
+			int sum = 0;
+			for (int r = 1; r <= R; r++) {
+				sum += board[r][c];
+			}
+			
+			if (sum >= 1) {
+				startC = Math.min(startC, c);
+				endC = Math.max(endC, c);
+			}
 		}
 		
-		System.out.println(sb.toString());
+		for(int r = startR; r<=endR; r++) {
+			for(int c = startC; c<=endC; c++) {
+				System.out.print(map[r][c]);
+			}
+			System.out.println();
+		}
 
 	}
 
-	private static void later() {
+	private static void bfs(ArrayList<int[]> island) {
 
-		Queue<int[]> change = new ArrayDeque<>();
+		ArrayList<int[]> change = new ArrayList<>();
 
-		while (!land.isEmpty()) {
-
-			int[] curr = land.poll();
-
-			int x = curr[0];
-			int y = curr[1];
+		for (int i = 0; i < island.size(); i++) {
+			int[] curr = island.get(i);
 			int cnt = 0;
 
-			for (int i = 0; i < 4; i++) {
-				int nx = x + dx[i];
-				int ny = y + dy[i];
+			for (int j = 0; j < 4; j++) {
+				int nr = curr[0] + delta[j][0];
+				int nc = curr[1] + delta[j][1];
 
-				if (island[nx][ny] == 0) {
+				if (map[nr][nc] == '.') {
 					cnt++;
 				}
 
 			}
-
 			if (cnt >= 3) {
-				change.add(new int[] { x, y });
+				change.add(new int[] { curr[0], curr[1] });
 			}
-
 		}
 
-		transland(change);
+		changeIsland(change);
 
 	}
 
-	private static void transland(Queue<int[]> change) {
-		while (!change.isEmpty()) {
-			int[] curr = change.poll();
-			int x = curr[0];
-			int y = curr[1];
-			island[x][y] = 0;
+	private static void changeIsland(ArrayList<int[]> change) {
+
+		for (int i = 0; i < change.size(); i++) {
+			int[] curr = change.get(i);
+
+			map[curr[0]][curr[1]] = '.';
 		}
-	}
-	
-	private static void opti(int[] now,int r, int c) {
-		int minX = r+2;
-		int minY = c+2;
-		int maxX = 0;
-		int maxY = 0;
-		
-		for (int i = 0; i < island.length; i++) {
-			for (int j = 0; j < island[i].length; j++) {
-				
-				if(island[i][j] == 1) {
-					minX = Math.min(minX, i);
-					minY = Math.min(minY, j);
-					maxX = Math.max(maxX, i);
-					maxY = Math.max(maxY, j);
-					
-				}
-				
-			}
-			
-		}
-		
-		now[0] = minX;
-		now[1] = minY;
-		now[2] = maxX;
-		now[3] = maxY;
+
 	}
 
 }
