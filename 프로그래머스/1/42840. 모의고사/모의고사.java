@@ -38,7 +38,7 @@ class Solution {
         for(int i = 0; i < answers.length; i++) {
             
             int pCurr = answers[i];
-            int stCurr = st[idx][(i+N) % N];
+            int stCurr = st[idx][(i) % N];
             
             if (pCurr == stCurr) cnt++;
             
