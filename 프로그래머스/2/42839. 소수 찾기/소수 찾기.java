@@ -19,28 +19,20 @@ class Solution {
             visited = 0;
             result = new char[M];
             
-            dfs(0);
+            dfs(0, "");
             
         }
-        
-        System.out.println(nums);
         
         int answer = nums.size();
         return answer;
     }
     
-    private static void dfs(int depth) {
+    private static void dfs(int depth, String s) {
         
         if(depth == M) {
-            
-            String str = "";
-            for(int i = 0; i< M; i++) {
-                if(i == 0 && result[i] == '0') continue;
-                str += result[i];
-            }
-            
-            if(!str.equals("") && isPrime(str)) {
-                nums.add(Integer.parseInt(str));
+            System.out.println(s);
+            if(isPrime(s)) {
+                nums.add(Integer.parseInt(s));
             }
             
         }else {
@@ -48,9 +40,9 @@ class Solution {
                 
                 if((visited & (1<<i)) == 0) {
                     visited |= (1<<i);
-                    result[depth] = charArr[i];
-                    dfs(depth+1);
+                    dfs(depth+1, s += charArr[i]);
                     visited ^= (1<<i);
+                    s = s.substring(0, s.length()-1);
                 } 
                 
             }
