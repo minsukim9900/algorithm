@@ -3,55 +3,55 @@ import java.util.*;
 
 public class Main {
 
-	private static int N;
-	private static int[] board;
-	private static boolean[] visited;
+	private static int[] result;
 	private static int cnt = 0;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-		N = Integer.parseInt(br.readLine());
-		board = new int[N];
-		visited = new boolean[N];
-		dfs(0);
+		StringBuilder sb = new StringBuilder();
+		
+		int N = Integer.parseInt(br.readLine());
+		result = new int[N];
+		combi(N, 0, 0);
 		System.out.println(cnt);
-
 	}
-	
-	public static void dfs(int depth) {
-		if(depth == N) {
-			cnt++;
-		}
-		else {
+
+	private static void combi(int N, int depth, int visited) {
+
+		if (depth == N) {
 			
-			for(int i = 0; i<N; i++) {
-				if(visited[i]) continue;
-				visited[i] = true;
-				board[depth] = i;
-				if(check(depth)) {
-				dfs(depth+1);
+				cnt++;
+
+		} else {
+
+			for (int i = 0; i < N; i++) {
+				if (depth >= 1 && Math.abs(result[depth - 1] - i) == 1)
+					continue;
+				if ((visited & (1 << i)) == 0) {
+					visited |= (1 << i);
+					result[depth] = i;
+					if(isPut(depth)) {
+						combi(N, depth + 1, visited);
+					}
+					visited ^= (1 << i);
 				}
-				visited[i] = false;
+
 			}
-			
+
 		}
-		
 	}
 
-	
-	private static boolean check(int depth) {
-		
-		for(int i = 0; i<depth; i++) {
-			int nr = Math.abs(board[depth]-board[i]);
-			int nc = Math.abs(depth-i);
-			if(nr == nc) return false;
+	private static boolean isPut(int depth) {
+
+		for (int i = 0; i < depth; i++) {
+			if(Math.abs(result[i] - result[depth]) == Math.abs(i - depth)) return false;
 		}
+		
 		return true;
+
 	}
 	
-		
-		
 	
 
 }
