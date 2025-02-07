@@ -2,66 +2,78 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	private static int[] dr = { -1, 1, 0, 0 };
-	private static int[] dc = { 0, 0, -1, 1 };
+
+	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
 	private static int N;
-	private static ArrayList<Integer> result = new ArrayList<>();
-	private static int[][] apt;
-	private static boolean[][] check;
-	private static int count = 0; // 아파트 동 갯수
-	private static int cnt; // 각 아파트 방으 갯수
+	private static int[][] map;
+	private static boolean[][] visited;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
-		N = Integer.parseInt(br.readLine()); // 총 배열의 크기, check의 크기이기도 함
-		apt = new int[N][N];
-		check = new boolean[N][N];
 
+		N = Integer.parseInt(br.readLine());
+		map = new int[N][N];
+		visited = new boolean[N][N];
+		
+		ArrayList<int[]> room = new ArrayList<>();
+		
 		for (int r = 0; r < N; r++) {
-			String num = br.readLine();
+			String state = br.readLine();
 			for (int c = 0; c < N; c++) {
-				int tmp = num.charAt(c) - '0';
-				apt[r][c] = tmp;
-			}
-		}
+				map[r][c] = state.charAt(c) - '0';
 
-		for (int r = 0; r < N; r++) {
-			for (int c = 0; c < N; c++) {
-				if (!check[r][c] && apt[r][c] == 1) {
-					cnt = 0;
-					count++;
-					cntApt(r, c);
-					result.add(cnt);
+				if (map[r][c] == 1) {
+					room.add(new int[] { r, c });
 				}
+
 			}
 		}
 		
-		Collections.sort(result);
+		ArrayList<Integer> apt = new ArrayList<>();
 
-		sb.append(count).append("\n");
-		for(int i = 0; i<result.size(); i++) {
-			sb.append(result.get(i)).append("\n");
+		for (int i = 0; i < room.size(); i++) {
+			int r = room.get(i)[0];
+			int c = room.get(i)[1];
+
+			if (!visited[r][c]) {
+				apt.add(bfs(r, c));
+			}
+
 		}
-	
-
-		System.out.println(sb.toString());
-
+		
+		System.out.println(apt.size());
+		Collections.sort(apt);
+		for(int a : apt) {
+			System.out.println(a);
+		}
+		
 	}
 
-	public static void cntApt(int r, int c) {
-		check[r][c] = true;
-		cnt++;
+	private static int bfs(int r, int c) {
 
-		for (int i = 0; i < 4; i++) {
-			int nr = r + dr[i];
-			int nc = c + dc[i];
-			if (nr >= 0 && nr < N && nc >= 0 && nc < N) {
-				int num = apt[nr][nc];
-				if (num == 1 && !check[nr][nc]) {
-					cntApt(nr, nc);
+		Queue<int[]> q = new ArrayDeque<>();
+		q.add(new int[] { r, c });
+		visited[r][c] = true;
+		int cnt = 1;
+
+		while (!q.isEmpty()) {
+			int[] curr = q.poll();
+
+			for (int i = 0; i < 4; i++) {
+				int nr = curr[0] + delta[i][0];
+				int nc = curr[1] + delta[i][1];
+
+				if (nr >= 0 && nr < N && nc >= 0 && nc < N && !visited[nr][nc] && map[nr][nc] == 1) {
+					visited[nr][nc] = true;
+					cnt++;
+					q.add(new int[] { nr, nc });
 				}
 			}
+
 		}
+		
+		return cnt;
+
 	}
+
 }
