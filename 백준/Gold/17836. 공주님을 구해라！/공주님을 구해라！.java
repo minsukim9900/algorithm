@@ -6,7 +6,7 @@ public class Main {
 	private static int N, M, T;
 	private static int[][] maze;
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
-	private static boolean[][] preVisited;
+	private static boolean[][] visited;
 	private static int cnt = 987654321;
 
 	public static void main(String[] args) throws IOException {
@@ -21,7 +21,7 @@ public class Main {
 		T = Integer.parseInt(st.nextToken());
 
 		maze = new int[N][M];
-		preVisited = new boolean[N][M];
+		visited = new boolean[N][M];
 
 		for (int r = 0; r < N; r++) {
 			st = new StringTokenizer(br.readLine());
@@ -29,12 +29,12 @@ public class Main {
 				maze[r][c] = Integer.parseInt(st.nextToken());
 			}
 		}
-		
+
 		mazeBfs();
-		
-		if(cnt > T) {
+
+		if (cnt > T) {
 			System.out.println("Fail");
-		}else {
+		} else {
 			System.out.println(cnt);
 		}
 
@@ -44,7 +44,7 @@ public class Main {
 
 		Queue<int[]> q = new ArrayDeque<>();
 		q.add(new int[] { 0, 0, 0 });
-		preVisited[0][0] = true;
+		visited[0][0] = true;
 
 		while (!q.isEmpty()) {
 
@@ -54,26 +54,26 @@ public class Main {
 				cnt = Math.min(cnt, curr[2]);
 			}
 
-				for (int i = 0; i < 4; i++) {
-					int nr = curr[0] + delta[i][0];
-					int nc = curr[1] + delta[i][1];
+			for (int i = 0; i < 4; i++) {
+				int nr = curr[0] + delta[i][0];
+				int nc = curr[1] + delta[i][1];
 
-					if (nr >= 0 && nr < N && nc >= 0 && nc < M && !preVisited[nr][nc]) {
+				if (nr >= 0 && nr < N && nc >= 0 && nc < M && !visited[nr][nc]) {
 
-						if (maze[nr][nc] == 0) {
-							preVisited[nr][nc] = true;
-							q.offer(new int[] { nr, nc, curr[2] + 1 });
-						} else if (maze[nr][nc] == 2) {
-							preVisited[nr][nc] = true;
-							cnt = Math.min(cnt,  curr[2] + 1 + Math.abs((N-1) - nr +  (M-1) - nc));
-						}
-
+					if (maze[nr][nc] == 0) {
+						visited[nr][nc] = true;
+						q.offer(new int[] { nr, nc, curr[2] + 1 });
+					} else if (maze[nr][nc] == 2) {
+						visited[nr][nc] = true;
+						cnt = Math.min(cnt, curr[2] + 1 + Math.abs((N - 1) - nr + (M - 1) - nc));
+						q.offer(new int[] { nr, nc, curr[2] + 1 });
 					}
+
 				}
+			}
 
 		}
 
 	}
-
 
 }
