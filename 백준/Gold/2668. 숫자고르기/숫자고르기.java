@@ -31,11 +31,13 @@ public class Main {
 			}
 		}
 
-		System.out.println(result.size());
+		sb.append(result.size()).append("\n");
 		Collections.sort(result);
 		for (int r : result) {
-			System.out.println(r);
+			sb.append(r).append("\n");
 		}
+		
+		System.out.println(sb.toString());
 
 	}
 
@@ -50,6 +52,7 @@ public class Main {
 			visited[num / 32] |= (1 << (num % 32));
 			result.add(num);
 		}
+		
 		return tmp[num];
 
 	}
