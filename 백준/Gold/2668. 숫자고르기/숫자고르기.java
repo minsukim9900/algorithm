@@ -6,8 +6,7 @@ public class Main {
 	private static int[] p;
 	private static int[] dfsVisited, visited;
 	private static ArrayList<Integer> result = new ArrayList<>();
-	private static int N, M;
-	private static boolean isPick;
+	private static int N;
 
 	public static void main(String[] args) throws IOException {
 
