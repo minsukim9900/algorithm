@@ -26,7 +26,7 @@ public class Main {
 	private static List<Edge>[] adj;
 
 	public static void main(String[] args) throws IOException {
-
+		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
@@ -67,7 +67,13 @@ public class Main {
 			visited[e.y] = true;
 			ans += e.w;
 			pick++;
-			pq.addAll(adj[e.y]);
+            
+			for(Edge x : adj[e.y]) {
+				if(!visited[x.y]) {
+					pq.add(x);
+				}
+			}
+            
 		}
 
 		return ans;
