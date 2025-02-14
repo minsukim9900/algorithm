@@ -15,7 +15,7 @@ public class Main {
 		StringTokenizer st;
 
 		N = Integer.parseInt(br.readLine());
-		visited = new int[N / 32 + 1];
+		visited = new int[(N >> 5) + 1];
 
 		p = new int[N + 1];
 		for (int i = 1; i < N + 1; i++) {
@@ -23,8 +23,8 @@ public class Main {
 		}
 
 		for (int i = 1; i <= N; i++) {
-			if ((visited[i / 32] & (1 << i % 32)) == 0) {
-				dfsVisited = new int[N / 32 + 1];
+			if ((visited[i >> 5] & (1 << (i & 31))) == 0) {
+				dfsVisited = new int[(N >> 5) + 1];
 				int[] tmp = p.clone();
 				dfs(i, tmp);
 			}
@@ -42,13 +42,13 @@ public class Main {
 
 	private static int dfs(int num, int[] tmp) {
 
-		if ((dfsVisited[tmp[num] / 32] & (1 << (tmp[num] % 32))) == 0) {
-			dfsVisited[num / 32] |= (1 << (num % 32));
+		if ((dfsVisited[tmp[num] >> 5] & (1 << (tmp[num] & 31))) == 0) {
+			dfsVisited[num >> 5] |= (1 << (num & 31));
 			tmp[num] = dfs(tmp[num], tmp);
 		}
 
-		if (num == tmp[num] && (visited[tmp[num] / 32] & (1 << (tmp[num] % 32))) == 0) {
-			visited[num / 32] |= (1 << (num % 32));
+		if (num == tmp[num] && (visited[tmp[num] >> 5] & (1 << (tmp[num] & 31))) == 0) {
+			visited[num >> 5] |= (1 << (num & 31));
 			result.add(num);
 		}
 		
