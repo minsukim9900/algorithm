@@ -3,126 +3,82 @@ import java.util.*;
 
 public class Main {
 
-	private static ArrayDeque<Integer>[] wheel;
-	private static int[] dir;
-	private static int wheel_count;
-	
+	private static int[][] tobni;
+	private static int[] currIdx;
+	private static int M;
+
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
-		wheel_count = Integer.parseInt(br.readLine());
-		
-			
-			wheel = new ArrayDeque[wheel_count+1];
-			for (int i = 1; i <= wheel_count; i++) {
-				wheel[i] = new ArrayDeque<>();
+		StringTokenizer st;
+
+		M = Integer.parseInt(br.readLine());
+		tobni = new int[M][8];
+		currIdx = new int[M];
+
+		for (int i = 0; i < M; i++) {
+			String str = br.readLine();
+
+			for (int j = 0; j < 8; j++) {
+				tobni[i][j] = str.charAt(j) - '0';
 			}
-			
-			
-			for (int i = 1; i <= wheel_count; i++) {
-				String state = br.readLine();
-				for (int j = 0; j < 8; j++) {
-					wheel[i].offer(state.charAt(j)-'0');
-				}
-				
-			}
-			
-			int T = Integer.parseInt(br.readLine());
-			
-			for (int k = 0; k < T; k++) {
-				StringTokenizer st = new StringTokenizer(br.readLine());
-				int idx = Integer.parseInt(st.nextToken());
-				int rotate = Integer.parseInt(st.nextToken());
-				process(idx, rotate);
-				
-			}
-			
-			int result = 0;
-			for (int i = 1; i <= wheel_count; i++) {
-				result += (wheel[i].peek());
-			}
-			System.out.println(result);
-			
+
+		}
+
+		int N = Integer.parseInt(br.readLine());
+		for (int i = 0; i < N; i++) {
+
+			st = new StringTokenizer(br.readLine());
+			int idx = Integer.parseInt(st.nextToken());
+			int dir = Integer.parseInt(st.nextToken());
+			circulate(idx - 1, dir);
+
+		}
+
+		int i = 0;
+		int cnt = 0;
+		for (int idx : currIdx) {
+			if(tobni[i++][idx] == 1) cnt++;
+		}
+
+		System.out.println(cnt);
 
 	}
 
-	private static void process(int idx, int rotate) {
+	private static void circulate(int idx, int dir) {
 
-		dir = new int[wheel_count+1];
-		dir[idx] = rotate;
+		int left = tobni[idx][(6 + currIdx[idx]) % 8];
+		int right = tobni[idx][(2 + currIdx[idx]) % 8];
 
-		int tmp = rotate;
-		for (int i = idx; i > 1; i--) {
+		int tmpDir = dir;
 
-			int[] left = new int[2];
-			int[] right = new int[2];
+		for (int i = idx - 1; i >= 0; i--) {
 
-			left[0] = wheel[i].removeLast();
-			left[1] = wheel[i].removeLast();
-			right[0] = wheel[i - 1].poll();
-			right[1] = wheel[i - 1].poll();
+			if (tobni[i][(2 + currIdx[i]) % 8] == left) {
+				break;
+			}
+			left = tobni[i][(6 + currIdx[i]) % 8];
+			tmpDir *= -1;
+			currIdx[i] = (currIdx[i] - tmpDir + 8) % 8;
 
-			if (left[1] != wheel[i - 1].peek()) {
-				tmp *= -1;
-				dir[i - 1] = tmp;
-				wheel[i].offer(left[1]);
-				wheel[i].offer(left[0]);
-				wheel[i - 1].addFirst(right[1]);
-				wheel[i - 1].addFirst(right[0]);
-			} else {
-				wheel[i].offer(left[1]);
-				wheel[i].offer(left[0]);
-				wheel[i - 1].addFirst(right[1]);
-				wheel[i - 1].addFirst(right[0]);
+		}
+
+		tmpDir = dir;
+
+		for (int i = idx + 1; i < M; i++) {
+
+			if (tobni[i][(6 + currIdx[i]) % 8] == right) {
 				break;
 			}
 
-		}
-		tmp = rotate;
-		for (int i = idx; i < wheel_count; i++) {
-
-			int[] left = new int[2];
-			int[] right = new int[2];
-
-			left[0] = wheel[i].poll();
-			left[1] = wheel[i].poll();
-			right[0] = wheel[i + 1].removeLast();
-			right[1] = wheel[i + 1].removeLast();
-
-			if (wheel[i].peek() != right[1]) {
-				tmp *= -1;
-				dir[i + 1] = tmp;
-				wheel[i].addFirst(left[1]);
-				wheel[i].addFirst(left[0]);
-				wheel[i + 1].offer(right[1]);
-				wheel[i + 1].offer(right[0]);
-			} else {
-				wheel[i].addFirst(left[1]);
-				wheel[i].addFirst(left[0]);
-				wheel[i + 1].offer(right[1]);
-				wheel[i + 1].offer(right[0]);
-				break;
-			}
+			right = tobni[i][(2 + currIdx[i]) % 8];
+			tmpDir *= -1;
+			currIdx[i] = (currIdx[i] - tmpDir + 8) % 8;
 
 		}
 
-		turn();
+		currIdx[idx] = (currIdx[idx] - dir + 8) % 8;
+
 	}
-
-	private static void turn() {
-		for (int i = 1; i <= wheel_count; i++) {
-
-			if (dir[i] == 1) {
-				int tmp = wheel[i].removeLast();
-				wheel[i].addFirst(tmp);
-			} else if (dir[i] == -1) {
-				int tmp = wheel[i].poll();
-				wheel[i].offer(tmp);
-			}
-
-		}
-	}
-
-
 }
