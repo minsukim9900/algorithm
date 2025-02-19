@@ -3,56 +3,65 @@ import java.util.*;
 
 public class Main {
 
-	private static int H, W, max_idx;
-	private static int[] room;
-	private static int result = 0;
+	private static int H, W;
+	private static int[] heights;
 
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+
+		st = new StringTokenizer(br.readLine());
 		H = Integer.parseInt(st.nextToken());
 		W = Integer.parseInt(st.nextToken());
 
-		room = new int[W];
+		heights = new int[W];
 
 		st = new StringTokenizer(br.readLine());
-
 		int max = 0;
-		max_idx = 0;
+		int maxIdx = 0;
 
 		for (int i = 0; i < W; i++) {
-			int tmp = Integer.parseInt(st.nextToken());
-			if (max < tmp) {
-				max = tmp;
-				max_idx = i;
+			heights[i] = Integer.parseInt(st.nextToken());
+			max = Math.max(max, heights[i]);
+
+			if (max == heights[i]) {
+				maxIdx = i;
 			}
-			room[i] = tmp;
-		}
 
-		leftSide();
-		rightSide();
-		System.out.println(result);
+		}
+		
+		System.out.println(leftSearch(maxIdx) + rightSearch(maxIdx));
 
 	}
 
-	private static void leftSide() {
-		int idx = 0;
-		int maxNum = 0;
-		while (idx < max_idx) {
-			maxNum = Math.max(maxNum, room[idx]);
-			result += (maxNum - room[idx]);
-			idx++;
+	private static int leftSearch(int idx) {
+
+		int max = -1;
+		int sum = 0;
+		for (int i = 0; i < idx; i++) {
+			if (max < heights[i]) {
+				max = heights[i];
+			}
+			sum += (max - heights[i]);
 		}
+
+		return sum;
 	}
 
-	private static void rightSide() {
-		int idx = W - 1;
-		int maxNum = 0;
-		while (idx > max_idx) {
-			maxNum = Math.max(maxNum, room[idx]);
-			result += (maxNum - room[idx]);
-			idx--;
+	private static int rightSearch(int idx) {
+		
+		int max = -1;
+		int sum = 0;
+		for (int i = W - 1; i > idx; i--) {
+			if( max < heights[i]) {
+				max = heights[i];
+			}
+			
+			sum += (max - heights[i]);
 		}
+
+		return sum;
 	}
+
 }
