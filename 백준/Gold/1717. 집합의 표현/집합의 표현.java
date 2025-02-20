@@ -31,7 +31,7 @@ public class Main {
 				union(findP(numA), findP(numB));
 			} else {
 				String str = "NO";
-				if (isSameP(numA, numB)) {
+				if (isSameP(findP(numA), findP(numB))) {
 					str = "YES";
 				}
 
@@ -44,7 +44,7 @@ public class Main {
 	}
 
 	private static boolean isSameP(int A, int B) {
-		if (findP(A) == findP(B))
+		if (A == B)
 			return true;
 		return false;
 	}
