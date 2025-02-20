@@ -20,6 +20,13 @@ public class Solution {
 			String str = st.nextToken();
 
 			N = Integer.parseInt(st.nextToken());
+			if(N > 5) {
+				
+				int tmp = (N - 5) %2;
+				if (tmp == 1) N = 6;
+				else N = 5;
+			}
+			
 			nums = new char[str.length()];
 
 			for (int i = 0; i < nums.length; i++) {
