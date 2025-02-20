@@ -25,12 +25,13 @@ public class Main {
 			st = new StringTokenizer(br.readLine());
 			int numA = Integer.parseInt(st.nextToken());
 			int numB = Integer.parseInt(st.nextToken());
-			union(numA, numB);
+			union(findP(numA), findP(numB));
 		}
 
 		int[] cnt = new int[N + 1];
+        
 		for (int i = 1; i < p.length; i++) {
-			p[i] = findP(i);
+            p[i] = findP(p[i]);
 			cnt[p[i]]++;
 		}
 
@@ -45,7 +46,7 @@ public class Main {
 	}
 
 	private static void union(int A, int B) {
-		p[findP(B)] = findP(A);
+		p[B] = A;
 	}
 
 	private static int findP(int x) {
