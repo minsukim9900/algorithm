@@ -28,7 +28,7 @@ public class Main {
 			int numB = Integer.parseInt(st.nextToken());
 
 			if (state == 0) {
-				union(numA, numB);
+				union(findP(numA), findP(numB));
 			} else {
 				String str = "NO";
 				if (isSameP(numA, numB)) {
@@ -50,7 +50,7 @@ public class Main {
 	}
 
 	private static void union(int A, int B) {
-		p[findP(B)] = findP(A);
+		p[B] = A;
 	}
 
 	private static int findP(int x) {
