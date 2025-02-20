@@ -28,22 +28,34 @@ public class Main {
 			union(findP(numA), findP(numB));
 		}
 
-		int[] cnt = new int[N + 1];
+		int[] cnt = update();
         
-		for (int i = 1; i < p.length; i++) {
-            p[i] = findP(p[i]);
-			cnt[p[i]]++;
-		}
 
-		long sum = 1;
+
+		System.out.println(output(cnt));
+	}
+    
+    private static long output(int[] cnt) {
+        long sum = 1;
 		for (int i = 1; i < cnt.length; i++) {
 			if (cnt[i] > 0) {
 				sum = (sum * cnt[i]) % 1000000007;
 			}
 		}
-
-		System.out.println(sum);
-	}
+        
+        return sum;
+    }
+    
+    private static int[] update() {
+        int[] cnt = new int[N + 1];
+        
+        for (int i = 1; i < p.length; i++) {
+            p[i] = findP(p[i]);
+			cnt[p[i]]++;
+		}
+        
+        return cnt;
+    }
 
 	private static void union(int A, int B) {
 		p[B] = A;
