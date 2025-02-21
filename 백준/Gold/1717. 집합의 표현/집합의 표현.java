@@ -26,12 +26,13 @@ public class Main {
 			int state = Integer.parseInt(st.nextToken());
 			int numA = Integer.parseInt(st.nextToken());
 			int numB = Integer.parseInt(st.nextToken());
-
+            int pA = findP(numA);
+            int pB = findP(numB);
 			if (state == 0) {
-				union(findP(numA), findP(numB));
+				union(pA, pB);
 			} else {
 				String str = "NO";
-				if (isSameP(findP(numA), findP(numB))) {
+				if (isSameP(pA, pB)) {
 					str = "YES";
 				}
 
