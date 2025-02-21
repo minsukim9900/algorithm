@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Solution {
 
-	private static int N, M;
+	private static int N, M, cnt;
 	private static int[][] adj;
 
 	public static void main(String[] args) throws IOException {
@@ -33,11 +33,12 @@ public class Solution {
 			int ans = 0;
 
 			for (int i = 1; i <= N; i++) {
-				int sum = (bsBfs(i) + lsBfs(i));
-				if (sum == N - 1) {
+				cnt = 0;
+				bgDfs(i, new boolean[N+1]);
+				lwDfs(i, new boolean[N+1]);
+				if(cnt == N-1) {
 					ans++;
 				}
-
 			}
 
 			sb.append("#" + t + " ").append(ans + "\n");
@@ -46,48 +47,26 @@ public class Solution {
 		System.out.println(sb.toString());
 	}
 
-	private static int bsBfs(int st) {
-		boolean[] visited = new boolean[N + 1];
+	private static void bgDfs(int st, boolean[] visited) {
 		visited[st] = true;
-		int cnt = 0;
-		Queue<Integer> q = new ArrayDeque<>();
-		q.offer(st);
-
-		while (!q.isEmpty()) {
-			int curr = q.poll();
-
-			for (int i = 1; i <= N; i++) {
-				if (!visited[i] && adj[curr][i] != 0) {
-					visited[i] = true;
-					cnt++;
-					q.offer(i);
-				}
+		for (int i = 1; i <= N; i++) {
+			if (!visited[i] && adj[st][i] != 0) {
+				bgDfs(i, visited);
+				cnt++;
 			}
 		}
 
-		return cnt;
 	}
-
-	private static int lsBfs(int st) {
-		boolean[] visited = new boolean[N + 1];
+	
+	private static void lwDfs(int st, boolean[] visited) {
 		visited[st] = true;
-		int cnt = 0;
-		Queue<Integer> q = new ArrayDeque<>();
-		q.offer(st);
-
-		while (!q.isEmpty()) {
-			int curr = q.poll();
-
-			for (int i = 1; i <= N; i++) {
-				if (!visited[i] && adj[i][curr] != 0) {
-					visited[i] = true;
-					cnt++;
-					q.offer(i);
-				}
+		for (int i = 1; i <= N; i++) {
+			if (!visited[i] && adj[i][st] != 0) {
+				lwDfs(i, visited);
+				cnt++;
 			}
 		}
 
-		return cnt;
 	}
 
 }
