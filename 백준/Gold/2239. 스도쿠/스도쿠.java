@@ -25,9 +25,11 @@ public class Main {
 			String str = br.readLine();
 			for (int c = 0; c < N; c++) {
 				map[r][c] = str.charAt(c) - '0';
-
+                int nr = r / 3;
+                int nc = c / 3;
 				if (map[r][c] != 0) {
 					rVisited[r] |= (1 << map[r][c]);
+                    boxVisited[nr][nc] |= (1 << map[r][c]);
 				} else {
 					adj.add(new int[] { r, c });
 				}
@@ -109,17 +111,6 @@ public class Main {
 
 				if (map[r][c] != 0) {
 					cVisited[c] |= (1 << map[r][c]);
-				}
-
-			}
-		}
-
-		for (int r = 0; r < N; r++) {
-			for (int c = 0; c < N; c++) {
-				int nr = r / 3;
-				int nc = c / 3;
-				if (map[r][c] != 0) {
-					boxVisited[nr][nc] |= (1 << map[r][c]);
 				}
 
 			}
