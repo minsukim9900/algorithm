@@ -4,7 +4,7 @@ import java.util.*;
 public class Solution {
 
 	private static int N, M, cnt;
-	private static int[][] adj;
+	private static int[][] adj, radj;
 
 	public static void main(String[] args) throws IOException {
 
@@ -20,13 +20,13 @@ public class Solution {
 			M = Integer.parseInt(br.readLine());
 
 			adj = new int[N + 1][N + 1];
-
+			radj = new int[N + 1][N + 1];
 			for (int i = 0; i < M; i++) {
 
 				st = new StringTokenizer(br.readLine());
 				int from = Integer.parseInt(st.nextToken());
 				int to = Integer.parseInt(st.nextToken());
-				adj[from][to] = 1;
+				radj[to][from] = adj[from][to] = 1;
 
 			}
 
@@ -34,9 +34,9 @@ public class Solution {
 
 			for (int i = 1; i <= N; i++) {
 				cnt = 0;
-				bgDfs(i, new boolean[N+1]);
-				lwDfs(i, new boolean[N+1]);
-				if(cnt == N-1) {
+				dfs(i, adj, new boolean[N + 1]);
+				dfs(i, radj, new boolean[N + 1]);
+				if (cnt == N - 1) {
 					ans++;
 				}
 			}
@@ -47,22 +47,11 @@ public class Solution {
 		System.out.println(sb.toString());
 	}
 
-	private static void bgDfs(int st, boolean[] visited) {
+	private static void dfs(int st, int[][] map, boolean[] visited) {
 		visited[st] = true;
 		for (int i = 1; i <= N; i++) {
-			if (!visited[i] && adj[st][i] != 0) {
-				bgDfs(i, visited);
-				cnt++;
-			}
-		}
-
-	}
-	
-	private static void lwDfs(int st, boolean[] visited) {
-		visited[st] = true;
-		for (int i = 1; i <= N; i++) {
-			if (!visited[i] && adj[i][st] != 0) {
-				lwDfs(i, visited);
+			if (!visited[i] && map[st][i] != 0) {
+				dfs(i, map, visited);
 				cnt++;
 			}
 		}
