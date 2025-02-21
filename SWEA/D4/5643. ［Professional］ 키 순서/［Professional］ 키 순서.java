@@ -41,7 +41,7 @@ public class Solution {
 
 			for (int i = 1; i <= N; i++) {
 				for (int j = 1; j <= N; j++) {
-					if (adj[i][j] == 1)
+					if (adj[i][j] > 0)
 						adj[0][j]++;
 				}
 			}
@@ -61,27 +61,31 @@ public class Solution {
 	private static void gtDFS(int curr) {
 		for (int i = 1; i <= N; i++) {
 
-			if (adj[curr][i] == 0)
+			if (adj[curr][i] != 1)
 				continue;
 
 			if (adj[i][0] == -1) {
 				gtDFS(i);
 			}
-			
-			if(adj[i][0] > 0) {
+
+			if (adj[i][0] > 0) {
 				for (int j = 1; j <= N; j++) {
-					if (adj[i][j] == 1)
-						adj[curr][j] = 1;
+					if (adj[i][j] > 0)
+						adj[curr][j] = 2;
 				}
 			}
 
 		}
 
-		adj[curr][0] = 0;
+		int cnt = 0;
 		for (int k = 1; k <= N; k++) {
-			adj[curr][0] += adj[curr][k];
+			if (adj[curr][k] > 0)
+				cnt++;
 		}
 
+		adj[curr][0] = cnt;
+
 	}
+	
 
 }
