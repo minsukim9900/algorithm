@@ -25,18 +25,19 @@ public class Main {
 			String str = br.readLine();
 			for (int c = 0; c < N; c++) {
 				map[r][c] = str.charAt(c) - '0';
-                int nr = r / 3;
-                int nc = c / 3;
+                
 				if (map[r][c] != 0) {
+                    int nr = r / 3;
+                    int nc = c / 3;
 					rVisited[r] |= (1 << map[r][c]);
                     boxVisited[nr][nc] |= (1 << map[r][c]);
+                    cVisited[c] |= (1 << map[r][c]);
 				} else {
 					adj.add(new int[] { r, c });
 				}
 			}
 		}
-
-		init();
+        
 		sudo(0);
 
 	}
@@ -102,19 +103,6 @@ public class Main {
 
 		return true;
 
-	}
-
-	private static void init() {
-
-		for (int c = 0; c < N; c++) {
-			for (int r = 0; r < N; r++) {
-
-				if (map[r][c] != 0) {
-					cVisited[c] |= (1 << map[r][c]);
-				}
-
-			}
-		}
 	}
 
 }
