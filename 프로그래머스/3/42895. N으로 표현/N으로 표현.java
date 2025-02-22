@@ -40,9 +40,7 @@ class Solution {
         }
         
         for(int i = 1; i<=8; i++) {
-            for(int x : dp.get(i)) {
-                if(x == number) return i;
-            }
+            if(dp.get(i).contains(number)) return i;
         }
         
         
