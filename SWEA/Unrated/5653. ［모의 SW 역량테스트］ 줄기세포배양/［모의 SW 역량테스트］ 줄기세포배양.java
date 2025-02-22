@@ -24,13 +24,13 @@ public class Solution {
 
 			K = Integer.parseInt(st.nextToken());
 
-			map = new int[N + (2 * K)][M + (2 * K)];
-			R = N + (2 * K);
-			C = M + (2 * K);
+			R = N + (K * 2);
+			C = M + (K * 2);
+			map = new int[R][C];
 			cell = new ArrayList<>();
 
-			int sr = (N + (2 * K)) / 2;
-			int sc = (M + (2 * K)) / 2;
+			int sr = R / 2;
+			int sc = C / 2;
 
 			for (int r = sr; r < sr + N; r++) {
 
@@ -47,7 +47,7 @@ public class Solution {
 				}
 
 			}
-			
+
 			sortArr();
 			culture();
 
@@ -59,14 +59,13 @@ public class Solution {
 				}
 			}
 
-			sb.append("#"+t+" ").append(cnt).append("\n");
+			sb.append("#" + t + " ").append(cnt).append("\n");
 
 		}
 
 		System.out.println(sb.toString());
 
 	}
-	
 
 	private static void culture() {
 
@@ -77,45 +76,43 @@ public class Solution {
 		}
 
 		for (int t = 0; t < K; t++) {
+
 			int size = q.size();
-			int s = 0;
-			while (s < size) {
-				s++;
+
+			for (int k = 0; k < size; k++) {
+
 				int[] curr = q.poll();
 
 				if (curr[2] != 0) {
+					curr[2]--;
 					q.offer(curr);
+
 				} else {
+
+					curr[3]--;
 					
-					int tmp = curr[3];
-					tmp--;
-					
-					if (tmp > 0) {
-						q.offer(new int[] { curr[0], curr[1], curr[2], tmp, curr[4] });
-					}else {
+					if (curr[3] > 0) {
+						q.offer(curr);
+					} else {
 						map[curr[0]][curr[1]] = -1;
 					}
-					
+
 					for (int i = 0; i < 4; i++) {
+
 						int nr = curr[0] + delta[i][0];
 						int nc = curr[1] + delta[i][1];
 
 						if (nr >= 0 && nr < R && nc >= 0 && nc < C && map[nr][nc] == 0) {
-							
-							map[nr][nc] = curr[3];
+
+							map[nr][nc] = curr[4];
 							q.offer(new int[] { nr, nc, map[nr][nc], map[nr][nc], map[nr][nc] });
 						}
 					}
 
 				}
-				
-				if (curr[2] != 0) {
-					curr[2]--;
-				}
-				
+
 
 			}
-
 
 		}
 
@@ -127,7 +124,7 @@ public class Solution {
 
 			@Override
 			public int compare(int[] o1, int[] o2) {
-				return o2[2] - o1[2];
+				return o2[4] - o1[4];
 			}
 
 		});
