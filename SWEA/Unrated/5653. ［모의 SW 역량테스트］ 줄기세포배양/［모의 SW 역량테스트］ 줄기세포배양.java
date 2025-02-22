@@ -21,27 +21,26 @@ public class Solution {
 			st = new StringTokenizer(br.readLine());
 			int N = Integer.parseInt(st.nextToken());
 			int M = Integer.parseInt(st.nextToken());
-
 			K = Integer.parseInt(st.nextToken());
-
-			R = N + (K * 2);
-			C = M + (K * 2);
+			
+			R = N + K;
+			C = M + K;
 			map = new int[R][C];
 			cell = new ArrayList<>();
 
-			int sr = R / 2;
-			int sc = C / 2;
-
-			for (int r = sr; r < sr + N; r++) {
+			int tmp = K/2;
+			
+			for (int r = 0; r < N; r++) {
 
 				st = new StringTokenizer(br.readLine());
+				int nr = r + tmp;
+				for (int c = 0; c < M; c++) {
+					
+					int nc = c + tmp;
+					map[nr][nc] = Integer.parseInt(st.nextToken());
 
-				for (int c = sc; c < sc + M; c++) {
-
-					map[r][c] = Integer.parseInt(st.nextToken());
-
-					if (map[r][c] > 0) {
-						cell.add(new int[] { r, c, map[r][c], map[r][c], map[r][c] });
+					if (map[nr][nc] > 0) {
+						cell.add(new int[] { nr, nc, map[nr][nc], map[nr][nc], map[nr][nc] });
 					}
 
 				}
