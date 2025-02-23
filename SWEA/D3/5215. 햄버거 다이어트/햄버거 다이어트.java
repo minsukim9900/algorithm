@@ -4,7 +4,7 @@ import java.util.*;
 public class Solution {
 
 	private static int N, L;
-	private static int[][] dp;
+	private static int[] dp;
 
 	public static void main(String[] args) throws IOException {
 
@@ -20,29 +20,26 @@ public class Solution {
 			N = Integer.parseInt(st.nextToken());
 			L = Integer.parseInt(st.nextToken());
 
-			dp = new int[N + 1][L + 1];
+			dp = new int[L + 1];
 
 			int[][] items = new int[N + 1][2];
 			for (int i = 1; i <= N; i++) {
 				st = new StringTokenizer(br.readLine());
 				items[i][0] = Integer.parseInt(st.nextToken());
 				items[i][1] = Integer.parseInt(st.nextToken());
-				
+
 			}
 
 			for (int i = 1; i <= N; i++) {
-				for (int j = 1; j <= L; j++) {
-					dp[i][j] = dp[i-1][j];
-					
-					if(items[i][1] <= j) {
-						dp[i][j] = Math.max(dp[i][j], items[i][0] + dp[i-1][j - items[i][1]]);
-					}
-					
+				for (int j = L; j >= items[i][1]; j--) {
+
+					dp[j] = Math.max(dp[j], items[i][0] + dp[j - items[i][1]]);
+
 				}
 			}
-			
-			sb.append("#"+t+" ").append(dp[N][L]).append("\n");
-			
+
+			sb.append("#" + t + " ").append(dp[L]).append("\n");
+
 		}
 		System.out.println(sb.toString());
 
