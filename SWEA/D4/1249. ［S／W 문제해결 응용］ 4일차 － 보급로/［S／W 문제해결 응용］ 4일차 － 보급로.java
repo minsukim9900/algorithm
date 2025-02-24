@@ -36,15 +36,6 @@ public class Solution {
 
 	}
 
-	private static void output() {
-		for (int r = 0; r < N; r++) {
-			for (int c = 0; c < N; c++) {
-				System.out.print(dist[r][c] + " ");
-			}
-			System.out.println();
-		}
-	}
-
 	private static void bfs() {
 
 		for (int r = 0; r < N; r++) {
