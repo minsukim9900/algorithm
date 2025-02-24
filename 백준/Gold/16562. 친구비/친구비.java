@@ -43,15 +43,9 @@ public class Main {
 			
 		}
 		
-		for(int i = 1; i<=N; i++) {
-			p[i] = findP(p[i]);
-		}
+		update();
+		count();
 		
-		
-		cnt = new int[N + 1];
-		for(int i = 1; i<=N; i++) {
-			cnt[p[i]]++;
-		}
 		
 		long sum = 0;
 		for(int i = 1; i<=N; i++) {
@@ -67,6 +61,19 @@ public class Main {
 			System.out.println("Oh no");
 		}
 
+	}
+	
+	private static void count() {
+		cnt = new int[N + 1];
+		for(int i = 1; i<=N; i++) {
+			cnt[p[i]]++;
+		}
+	}
+	
+	private static void update() {
+		for(int i = 1; i<=N; i++) {
+			p[i] = findP(p[i]);
+		}
 	}
 
 	private static int findP(int x) {
