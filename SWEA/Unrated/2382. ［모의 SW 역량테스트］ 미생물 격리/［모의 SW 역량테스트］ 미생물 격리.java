@@ -50,9 +50,7 @@ public class Solution {
 		int sum = 0;
 		
 		while(!q.isEmpty()) {
-			int[] curr = q.poll();
-			
-			sum += curr[2];
+			sum += q.poll()[2];
 		}
 		
 		return sum;
