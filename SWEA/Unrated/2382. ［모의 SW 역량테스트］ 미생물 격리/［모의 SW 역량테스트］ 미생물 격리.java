@@ -37,8 +37,8 @@ public class Solution {
 				dir[r][c] = d;
 				micro.add(new int[] { r, c, cnt, d });
 			}
-			bfs(micro);
-			sb.append("#" + t + " ").append(cnt() + "\n");
+			Queue<int[]> q = bfs(micro);
+			sb.append("#" + t + " ").append(cnt(q) + "\n");
 
 		}
 
@@ -46,18 +46,19 @@ public class Solution {
 
 	}
 	
-	private static int cnt() {
+	private static int cnt(Queue<int[]> q) {
 		int sum = 0;
-		for(int r = 0; r<N; r++) {
-			for(int c = 0; c<N; c++) {
-				sum += map[r][c];
-			}
+		
+		while(!q.isEmpty()) {
+			int[] curr = q.poll();
+			
+			sum += curr[2];
 		}
 		
 		return sum;
 	}
 
-	private static void bfs(Queue<int[]> q) {
+	private static Queue<int[]> bfs(Queue<int[]> q) {
 
 		for (int t = 0; t < M; t++) {
 
@@ -102,6 +103,8 @@ public class Solution {
 			
 
 		}
+		
+		return q;
 
 	}
 
