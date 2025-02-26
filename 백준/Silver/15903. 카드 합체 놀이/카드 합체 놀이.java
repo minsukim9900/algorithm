@@ -3,6 +3,9 @@ import java.util.*;
 
 public class Main {
 
+	private static long[] heap;
+	private static int N, M, size;
+
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -11,39 +14,88 @@ public class Main {
 
 		st = new StringTokenizer(br.readLine());
 
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
 
-		PriorityQueue<Long> pq = new PriorityQueue<>();
+		heap = new long[N + 1];
 
 		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < N; i++) {
-			pq.offer(Long.parseLong(st.nextToken()));
+			push(Integer.parseInt(st.nextToken()));
 		}
 		
-		System.out.println(game(M, pq));
+		System.out.println(game());
 
 	}
 
-	private static long game(int M, PriorityQueue<Long> pq) {
+	private static long game() {
 
 		for (int i = 0; i < M; i++) {
+			long numA = pop();
+			long numB = pop();
 			
-			long numA = pq.poll();
-			long numB = pq.poll();
-			
-			long tmp = numA + numB;
-			pq.offer(tmp);
-			pq.add(tmp);
+			push(numA + numB);
+			push(numA + numB);
 		}
 		
 		long sum = 0;
 		
-		while(!pq.isEmpty()) {
-			sum += pq.poll();
+		while(size != 0) {
+			sum += pop();
+		}
+		
+		return sum;
+
+	}
+
+	private static void swap(int i, int j) {
+		long tmp = heap[i];
+		heap[i] = heap[j];
+		heap[j] = tmp;
+
+	}
+
+	private static void push(long data) {
+		heap[++size] = data;
+
+		int p = size / 2;
+		int ch = size;
+
+		while (ch != 1 && heap[p] > heap[ch]) {
+
+			swap(p, ch);
+
+			ch = p;
+			p = ch / 2;
+
+		}
+	}
+
+	private static long pop() {
+
+		long num = heap[1];
+
+		heap[1] = heap[size--];
+
+		int p = 1;
+		int ch = p * 2;
+
+		if (ch + 1 <= size && heap[ch] > heap[ch + 1]) {
+			ch++;
 		}
 
-		return sum;
+		while (ch <= size && heap[ch] < heap[p]) {
+			swap(p, ch);
+
+			p = ch;
+			ch = p * 2;
+
+			if (ch + 1 <= size && heap[ch] > heap[ch + 1]) {
+				ch++;
+			}
+		}
+
+		return num;
 	}
 
 }
