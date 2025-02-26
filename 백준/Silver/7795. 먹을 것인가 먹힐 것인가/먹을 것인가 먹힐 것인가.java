@@ -27,38 +27,47 @@ public class Main {
 			for (int i = 0; i < N; i++) {
 				numsA[i] = Integer.parseInt(st.nextToken());
 			}
-			
+
 			Arrays.sort(numsA);
-			
+
 			numsB = new int[M];
 			st = new StringTokenizer(br.readLine());
 
 			for (int i = 0; i < M; i++) {
 				numsB[i] = Integer.parseInt(st.nextToken());
 			}
-			
+
 			Arrays.sort(numsB);
-			
+
 			System.out.println(search());
 		}
 
 	}
 
 	private static int search() {
-		
-		int cnt = 0;
-		for (int i = 0; i < N; i++) {
-			
-			for (int j = 0; j < M; j++) {
-				
-				if(numsA[i] > numsB[j]) cnt++;
-				else break;
-				
-				
-			}
 
+		int cnt = 0;
+
+		int aP = N - 1;
+		int bP = M - 1;
+
+		while (true) {
+
+			if (aP < 0 || bP < 0) {
+				break;
+			}
+			
+			
+			if(numsA[aP] > numsB[bP]) {
+				cnt += bP + 1;
+				aP--;
+			} else {
+				bP--;
+			}
+			
+			
 		}
-		
+
 		return cnt;
 
 	}
