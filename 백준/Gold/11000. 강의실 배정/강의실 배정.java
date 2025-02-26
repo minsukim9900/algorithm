@@ -3,7 +3,6 @@ import java.util.*;
 
 public class Main {
 
-	private static int[] visited;
 
 	public static void main(String[] args) throws IOException {
 
@@ -12,8 +11,6 @@ public class Main {
 		StringTokenizer st = null;
 
 		int N = Integer.parseInt(br.readLine());
-
-		visited = new int[(N >> 5) + 1];
 
 		int[][] lec = new int[N][2];
 
