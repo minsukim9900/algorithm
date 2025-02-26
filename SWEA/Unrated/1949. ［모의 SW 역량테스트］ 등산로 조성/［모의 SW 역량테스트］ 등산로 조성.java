@@ -39,7 +39,7 @@ public class Solution {
 
 				for (int c = 0; c < N; c++) {
 					if (max == map[r][c]) {
-						dfs(r, c, map[r][c], 1, false);
+						dfs(r, c, map[r][c], 1, true);
 					}
 				}
 
@@ -48,14 +48,13 @@ public class Solution {
 			sb.append("#" + t + " " + maxL + "\n");
 
 		}
-		
+
 		System.out.println(sb.toString());
 
 	}
 
-
 	private static void dfs(int r, int c, int h, int l, boolean skill) {
-
+		
 		if (l > maxL)
 			maxL = l;
 
@@ -68,20 +67,13 @@ public class Solution {
 
 			if (nr >= 0 && nr < N && nc >= 0 && nc < N && !visited[nr][nc]) {
 
-				if (!skill) { // 아직 깍지 않음
+				if (map[nr][nc] < h) {
 
-					if (map[nr][nc] >= h && map[nr][nc] <= h + K - 1) {
-						dfs(nr, nc, h-1, l + 1, true);
+					dfs(nr, nc, map[nr][nc], l + 1, skill);
 
-					} else if (map[nr][nc] < h) {
-						dfs(nr, nc, map[nr][nc], l + 1, false);
-					}
+				} else if (skill && map[nr][nc] - K < h) {
 
-				} else {
-
-					if (map[nr][nc] < h) {
-						dfs(nr, nc, map[nr][nc], l + 1, true);
-					}
+					dfs(nr, nc, map[r][c] - 1, l + 1, false);
 
 				}
 
