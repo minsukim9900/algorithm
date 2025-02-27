@@ -2,25 +2,29 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-
+    
+    private static int read() throws Exception {
+		int c, n = System.in.read() & 15;
+		while ((c = System.in.read()) >= 48)
+			n = (n << 3) + (n << 1) + (c & 15);
+		return n;
+	}
+    
 	private static int N;
 	private static int[] arr, lis;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 
-		N = Integer.parseInt(br.readLine());
+		N = read();
 
 		arr = new int[N];
 		lis = new int[N];
 
-		st = new StringTokenizer(br.readLine());
-
 		for (int i = 0; i < N; i++) {
-			arr[i] = Integer.parseInt(st.nextToken());
+			arr[i] = read();
 		}
 
 		lis[0] = arr[0];
