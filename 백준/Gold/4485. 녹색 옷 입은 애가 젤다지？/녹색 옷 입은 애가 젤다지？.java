@@ -2,21 +2,28 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+    
+    private static int read() throws Exception {
+		int c, n = System.in.read() & 15;
+		while ((c = System.in.read()) >= 48)
+			n = (n << 3) + (n << 1) + (c & 15);
+		return n;
+	}
 
 	private static int N;
 	private static int[][] board;
 	private static int[][] dist;
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		//BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 		int time = 1;
 		while(true) {
 			
-			N = Integer.parseInt(br.readLine());
+			N = read();
 			if(N == 0) {
 				break;
 			}
@@ -24,10 +31,8 @@ public class Main {
 			dist = new int[N][N];
 			
 			for (int r = 0; r < N; r++) {
-				st = new StringTokenizer(br.readLine());
-				
 				for (int c = 0; c < N; c++) {
-					board[r][c] = Integer.parseInt(st.nextToken());
+					board[r][c] = read();
 					dist[r][c] = Integer.MAX_VALUE;
 				}
 				
