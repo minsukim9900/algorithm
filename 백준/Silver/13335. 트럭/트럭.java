@@ -1,58 +1,62 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
 
 	private static int N, W, L;
-	private static int[] trucks;
-	private static int count = 0;
+	private static int[] truck;
 	private static Queue<Integer> bridge = new ArrayDeque<>();
 
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st;
+
+		st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
 		W = Integer.parseInt(st.nextToken());
 		L = Integer.parseInt(st.nextToken());
 
-		trucks = new int[N];
-
+		truck = new int[N];
 		st = new StringTokenizer(br.readLine());
-
-		for (int t = 0; t < N; t++) {
-			trucks[t] = Integer.parseInt(st.nextToken());
+		for (int i = 0; i < N; i++) {
+			truck[i] = Integer.parseInt(st.nextToken());
 		}
-
-		for (int w = 0; w < W; w++) {
-			bridge.add(0);
-		}
-		
-		cross();
-		
-		System.out.println(count);
+		System.out.println(process());
 
 	}
 
-	private static void cross() {
-		int t = 0;
-		int weight = 0;
+	private static int process() {
 
-		while (t < N) {
-			weight -= bridge.poll();
-			count++;
-			if (weight + trucks[t] > L) {
-				bridge.add(0);
+		for (int i = 0; i < W; i++) {
+			bridge.offer(0);
+		}
+
+		int cnt = 0;
+		int sum = 0;
+		int idx = 0;
+
+		while (idx < N) {
+
+			cnt++;
+
+			sum -= bridge.poll();
+
+			if (sum + truck[idx] > L) {
+
+				bridge.offer(0);
+
 			} else {
-				bridge.add(trucks[t]);
-				weight += trucks[t];
-				t++;
+
+				bridge.offer(truck[idx]);
+				sum += truck[idx++];
+
 			}
 
 		}
-		
-		count+= W;
 
+		return cnt + W;
 	}
 
 }
