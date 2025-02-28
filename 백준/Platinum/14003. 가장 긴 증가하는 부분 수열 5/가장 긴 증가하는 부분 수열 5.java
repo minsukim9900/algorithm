@@ -5,19 +5,29 @@ public class Main {
 
 	private static int N;
 	private static int[] arr, lis;
+	
+	public static int read() throws IOException {
+		int n = System.in.read() & 15, cur;
+		boolean isNegative = (n == 13);
+		if (isNegative) {
+			n = System.in.read() & 15;
+		}
+		while ((cur = System.in.read()) > 32) {
+			n = (n << 3) + (n << 1) + (cur & 15);
+		}
+		return isNegative ? ~n + 1: n;
+	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 
-		N = Integer.parseInt(br.readLine());
+		N = read();
 		arr = new int[N];
 
-		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < N; i++) {
-			arr[i] = Integer.parseInt(st.nextToken());
+			arr[i] = read();
 		}
 
 		lis = new int[N];
