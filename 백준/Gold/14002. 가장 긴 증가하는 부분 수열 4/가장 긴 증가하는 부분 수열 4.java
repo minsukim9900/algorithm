@@ -1,81 +1,91 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Main {
 
 	private static int N;
 	private static int[] arr, lis;
+	
+	public static int read() throws IOException {
+		int n = System.in.read() & 15, cur;
+		boolean isNegative = (n == 13);
+		if (isNegative) {
+			n = System.in.read() & 15;
+		}
+		while ((cur = System.in.read()) > 32) {
+			n = (n << 3) + (n << 1) + (cur & 15);
+		}
+		return isNegative ? ~n + 1: n;
+	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 
-		N = Integer.parseInt(br.readLine());
-		arr = new int[N + 1];
-		lis = new int[N + 1];
+		N = read();
+		arr = new int[N];
 
-		st = new StringTokenizer(br.readLine());
-
-		for (int i = 1; i < N + 1; i++) {
-			arr[i] = Integer.parseInt(st.nextToken());
+		for (int i = 0; i < N; i++) {
+			arr[i] = read();
 		}
 
-		int lisMax = 0;
-		int lisIdx = 0;
+		lis = new int[N];
+		int[] track = new int[N];
+		lis[0] = arr[0];
+		track[0] = 0;
 
-		for (int i = 1; i < N + 1; i++) {
-			int curr = arr[i];
-			int max = 0;
-			int idx = 0;
+		int idx = 1;
+		for (int i = 1; i < N; i++) {
 
-			for (int j = i - 1; j > 0; j--) {
+			if (lis[idx - 1] < arr[i]) {
 
-				if (arr[j] < arr[i] && max < lis[j]) {
-					max = lis[j];
-					idx = j;
-				}
+				lis[idx++] = arr[i];
+				track[i] = idx - 1;
+			} else {
 
-			}
-			lis[i] = lis[idx] + 1;
-
-			if (lisMax < lis[i]) {
-				lisMax = lis[i];
-				lisIdx = i;
+				int sIdx = binarySearch(0, idx - 1, arr[i]);
+				lis[sIdx] = arr[i];
+				track[i] = sIdx;
 			}
 		}
 
-		int result = lisMax;
-		int[] array = new int[lisMax];
-		array[--lisMax] = arr[lisIdx];
-		int pre = arr[lisIdx];
-		
-		while (lisMax > 0) {
+		System.out.println(idx);
 
-			int max = 0;
-			int idx = 0;
+		int tIdx = idx - 1;
+		int[] result = new int[idx];
+		for (int i = N - 1; i >= 0; i--) {
 
-			for (int i = lisIdx - 1; i > 0; i--) {
-
-				if (pre > arr[i] && max < lis[i]) {
-					max = lis[i];
-					idx = i;
-				}
-
+			if (tIdx == track[i]) {
+				result[tIdx--] = arr[i];
 			}
-			
-			pre = arr[idx];
-			lisIdx = idx;
-			array[--lisMax] = arr[idx];
 
 		}
-		
-		System.out.println(result);
-		for(int i = 0; i < array.length; i++) {
-			System.out.print(array[i] + " ");
+
+		for (int w : result) {
+			sb.append(w).append(" ");
 		}
+
+		System.out.println(sb.toString());
 
 	}
 
+	private static int binarySearch(int left, int right, int target) {
+
+		int mid = 0;
+
+		while (left < right) {
+
+			mid = (left >> 1) + (right >> 1);
+
+			if (target > lis[mid]) {
+				left = mid + 1;
+			} else {
+				right = mid;
+			}
+		}
+
+		return right;
+
+	}
 }
