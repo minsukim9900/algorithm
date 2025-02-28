@@ -24,31 +24,28 @@ public class Main {
 			info[i][1] = Integer.parseInt(st.nextToken());
 		}
 
-		Arrays.sort(info, new Comparator<int[]>() {
+		int[] dp = new int[C + 101];
 
-			@Override
-			public int compare(int[] o1, int[] o2) {
-				return o1[0] - o2[0];
-			}
-		});
-
-		int[] dp = new int[C * info[0][0] + 1];
+		Arrays.fill(dp, 987654321);
+		dp[0] = 0;
 
 		for (int i = 0; i < N; i++) {
 
-			for (int j = info[i][0]; j < dp.length; j++) {
-				dp[j] = Math.max(dp[j], dp[j - info[i][0]] + info[i][1]);
+			for (int j = info[i][1]; j < dp.length; j++) {
+
+				dp[j] = Math.min(dp[j], dp[j - info[i][1]] + info[i][0]);
+				
 			}
 
 		}
+		
 
-
-		for (int i = 1; i < dp.length; i++) {
-			if (dp[i] >= C) {
-				System.out.println(i);
-				return;
-			}
+		int result = Integer.MAX_VALUE;
+		for (int i = C; i < dp.length; i++) {
+			result = Math.min(dp[i], result);
 		}
+
+		System.out.println(result);
 
 	}
 }
