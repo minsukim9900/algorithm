@@ -52,10 +52,12 @@ public class Main {
 				if(dp[r][c] >= INF) dp[r][c] = 0;
 				if(dp[r][c] > 0) dp[r][c] = 1;
 				
-				System.out.print(dp[r][c] + " ");
+				sb.append(dp[r][c] + " ");
 			}
-			System.out.println();
+			sb.append("\n");
 		}
+		
+		System.out.println(sb);
 		
 
 	}
