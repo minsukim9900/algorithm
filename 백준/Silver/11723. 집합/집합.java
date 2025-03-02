@@ -1,58 +1,102 @@
 import java.io.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
+	private static int arr;
+	private static int size, M;
+	private static StringBuilder sb = new StringBuilder();
 
-		int N = Integer.parseInt(br.readLine());
-		int[] arr = new int[21];
-	
-		
-		
-		
-		String method;
-		for (int i = 0; i < N; i++) {
-			method = br.readLine();
-			if(method.length()>3 && method.substring(0,3).equals("add")) {
-				if(arr[Integer.parseInt(method.substring(4))]==0) {
-					arr[Integer.parseInt(method.substring(4))] =1;					
-				}
+	public static void main(String[] args) throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+
+		M = Integer.parseInt(br.readLine());
+		arr = 0;
+
+		for (int i = 0; i < M; i++) {
+
+			st = new StringTokenizer(br.readLine());
+			String order = st.nextToken();
+
+			if (order.equals("all") || order.equals("empty")) {
+				select(order, 0);
+
+			} else {
+				int data = Integer.parseInt(st.nextToken());
+				select(order, data);
 			}
-			else if(method.length()>3 && method.substring(0,5).equals("check")) {
-				if(arr[Integer.parseInt(method.substring(6))]==1) {
-					sb.append(1).append("\n");
-				}
-				else {
-					sb.append(0).append("\n");
-				}
-			}
-			else if(method.length()>6 && method.substring(0,6).equals("toggle")) {
-				if(arr[Integer.parseInt(method.substring(7))]==1) {
-					arr[Integer.parseInt(method.substring(7))] = 0;
-				}
-				else {
-					arr[Integer.parseInt(method.substring(7))] = 1;
-				}
-			}
-			else if(method.length()>6 && method.substring(0,6).equals("remove")){
-				if(arr[Integer.parseInt(method.substring(7))]==1) {
-					arr[Integer.parseInt(method.substring(7))] =0;					
-				}
-			}
-			else if(method.equals("all")) {
-				for(int j = 1; j<arr.length; j++) {
-					arr[j] =1;
-				}
-			}
-			else if(method.equals("empty")) {
-				for(int j = 1; j<arr.length; j++) {
-					arr[j] =0;
-				}
-			}
+
 		}
+
 		System.out.println(sb.toString());
+
 	}
+
+	private static void select(String order, int data) {
+
+		switch (order) {
+
+		case "add":
+			add(data);
+			break;
+		case "remove":
+			remove(data);
+			break;
+		case "check":
+			check(data);
+			break;
+		case "toggle":
+			toggle(data);
+			break;
+		case "all":
+			all();
+			break;
+		case "empty":
+			empty();
+			break;
+
+		}
+
+	}
+
+	private static void add(int data) {
+
+		arr |= (1 << data);
+
+	}
+
+	private static void check(int data) {
+
+		if ((arr & (1 << data)) == 0) {
+			sb.append(0 + "\n");
+		} else {
+			sb.append(1 + "\n");
+		}
+
+	}
+
+	private static void remove(int data) {
+
+		arr &= ~(1 << data);
+
+	}
+
+	private static void toggle(int data) {
+
+		arr ^= (1 << data);
+
+	}
+
+	private static void all() {
+
+		arr = (1 << 21) - 1;
+
+	}
+
+	private static void empty() {
+		arr = 0;
+	}
+
 }
