@@ -52,15 +52,14 @@ public class Main {
 			Arrays.fill(dist, INF);
 			size = 0;
 			dijkstra(X, i, 1);
-			
+
 		}
-		
-		
+
 		int ans = 0;
-		for(int s : result) {
+		for (int s : result) {
 			ans = Math.max(ans, s);
 		}
-		
+
 		System.out.println(ans);
 
 	}
@@ -92,9 +91,9 @@ public class Main {
 
 		}
 		if (state == 0)
-		result[start] += dist[end];
+			result[start] += dist[end];
 		else
-		result[end] += dist[end];
+			result[end] += dist[end];
 
 	}
 
