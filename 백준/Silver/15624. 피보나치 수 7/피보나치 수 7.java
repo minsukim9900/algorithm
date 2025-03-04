@@ -14,17 +14,17 @@ public class Main {
 		N = Integer.parseInt(br.readLine());
 		int[] dp = new int[N + 1];
 
-		if (N == 0)
-			System.out.println(1);
+		if (N == 0 || N ==1)
+			System.out.println(N);
 		else {
 			dp[1] = 1;
 
 			for (int i = 2; i <= N; i++) {
 				dp[i] = (dp[i - 1] + dp[i - 2]) % 1_000_000_007;
 			}
+			System.out.println(dp[N]);
 		}
 		
-		System.out.println(dp[N]);
 
 	}
 
