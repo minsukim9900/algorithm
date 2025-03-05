@@ -79,7 +79,6 @@ public class Solution {
 	private static int cntHouse(int[] curr, int K) {
 
 		int cnt = 0;
-		boolean[][] visited = new boolean[N][N];
 		
 		for (int dr = -K + 1; dr < K; dr++) {
 
@@ -90,7 +89,7 @@ public class Solution {
 					int nr = curr[0] + dr;
 					int nc = curr[1] + dc;
 					
-					if(nr >= 0 && nr <N && nc >= 0 && nc < N && !visited[nr][nc] && map[nr][nc] == 1) {
+					if(nr >= 0 && nr <N && nc >= 0 && nc < N && map[nr][nc] == 1) {
 						cnt++;
 					}
 				}
