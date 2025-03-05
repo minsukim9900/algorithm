@@ -38,7 +38,7 @@ public class Solution {
 			}
 			
 			int max = 0;
-			for (int k = 1; k <= 21; k++) {
+			for (int k = 1; k <= N + 1; k++) {
 
 				for (int r = 0; r < N; r++) {
 					for (int c = 0; c < N; c++) {
