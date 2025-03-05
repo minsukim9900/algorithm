@@ -15,10 +15,10 @@ public class Solution {
 		StringTokenizer st = null;
 
 		price = new int[30];
+
 		for (int i = 1; i < 30; i++) {
 			price[i] = (i * i) + ((i - 1) * (i - 1));
 		}
-		
 
 		int T = Integer.parseInt(br.readLine());
 
@@ -31,31 +31,44 @@ public class Solution {
 			map = new int[N][N];
 
 			for (int r = 0; r < N; r++) {
+
 				st = new StringTokenizer(br.readLine());
+
 				for (int c = 0; c < N; c++) {
+
 					map[r][c] = Integer.parseInt(st.nextToken());
 				}
+
 			}
-			
+
 			int max = 0;
-			for (int k = 1; k <= N + 1; k++) {
+			// N의 범위가 21까지 주어짐
+			for (int k = 1; k <= 21; k++) {
 
 				for (int r = 0; r < N; r++) {
+
 					for (int c = 0; c < N; c++) {
+
+						// 각 좌표에 k를 증가시켜주면서 탐색
 						int cnt = cntHouse(new int[] { r, c }, k);
-						int tmp = M * cnt -  price[k];
-						
-						if(tmp >= 0) {
-							if(max < cnt) {
+
+						// 이윤 계산
+						int profit = M * cnt - price[k];
+
+						if (profit >= 0) {
+
+							if (max < cnt) {
 								max = cnt;
 							}
+
 						}
-						
+
 					}
+
 				}
 
 			}
-			
+
 			sb.append("#" + t + " " + max + "\n");
 
 		}
@@ -66,43 +79,24 @@ public class Solution {
 	private static int cntHouse(int[] curr, int K) {
 
 		int cnt = 0;
+		boolean[][] visited = new boolean[N][N];
+		
+		for (int dr = -K + 1; dr < K; dr++) {
 
-		for (int i = 0; i < K; i++) {
-
-			int nr = curr[0] - i;
-			if (nr < 0)
-				continue;
-			cnt += map[nr][curr[1]];
-
-			for (int j = K - i - 1; j > 0; j--) {
-				for (int idx = 0; idx < 2; idx++) {
-					int nc = curr[1] + (delta[idx][1] * j);
-					if (nc >= 0 && nc < N && map[nr][nc] == 1) {
+			for (int dc = -K + 1; dc < K; dc++) {
+				
+				if(Math.abs(dr) + Math.abs(dc) < K) {
+					
+					int nr = curr[0] + dr;
+					int nc = curr[1] + dc;
+					
+					if(nr >= 0 && nr <N && nc >= 0 && nc < N && !visited[nr][nc] && map[nr][nc] == 1) {
 						cnt++;
 					}
 				}
+				
 			}
-
-		}
-
-		for (int i = 1; i <= K - 1; i++) {
-
-			int nr = curr[0] + i;
-			if (nr >= N)
-				continue;
-			cnt += map[nr][curr[1]];
-
-			for (int j = K - i - 1; j > 0; j--) {
-				for (int idx = 0; idx < 2; idx++) {
-					int nc = curr[1] + (delta[idx][1] * j);
-					if (nc >= 0 && nc < N && map[nr][nc] == 1) {
-						cnt++;
-					}
-
-				}
-
-			}
-
+			
 		}
 
 		return cnt;
