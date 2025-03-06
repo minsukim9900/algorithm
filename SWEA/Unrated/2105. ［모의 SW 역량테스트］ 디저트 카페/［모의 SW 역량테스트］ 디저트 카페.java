@@ -33,6 +33,8 @@ public class Solution {
 				}
 			}
 
+			visited = new boolean[N][N];
+			boolean[] visitNum = new boolean[101];
 			for (int r = 0; r < N; r++) {
 
 				for (int c = 0; c < N; c++) {
@@ -42,13 +44,12 @@ public class Solution {
 					if(r == 0 && c == N-1) continue;
 					if(r == N-1 && c == N-1) continue;
 					
-					visited = new boolean[N][N];
 					visited[r][c] = true;
 					int[] curr = new int[] { r, c };
-					boolean[] visitNum = new boolean[101];
 					visitNum[map[r][c]] = true;
 					dfs(curr, curr, visitNum, new boolean[4], -1, 0);
-
+					visited[r][c] = false;
+					visitNum[map[r][c]] = false;
 				}
 			}
 			
@@ -61,14 +62,15 @@ public class Solution {
 
 	private static void dfs(int[] curr, int[] p, boolean[] visitNum, boolean[] visitDir, int preDir, int cnt) {
 		
-		
+		// 방향을 두번 이상 바꾸었으며, 현재 위치가 처음 위치랑 같을 때
 		if (cntVisitDir(visitDir) >= 2 && curr[0] == p[0] && curr[1] == p[1]) {
 
 
 			max = Math.max(max, cnt + 2);
 			
 		} else {
-
+			
+			// 방향을 두 번 이상 바꾸면, 현재 위치 방문처리 한 것을 초기화 해준다.
 			if (cntVisitDir(visitDir) == 2) {
 				
 				visited[p[0]][p[1]] = false;
