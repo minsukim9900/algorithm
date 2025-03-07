@@ -119,14 +119,9 @@ public class Main {
 	}
 
 	private static boolean isRemain() {
-		int sum = 0;
 		for (int r = 0; r < N; r++) {
 			for (int c = 0; c < M; c++) {
-				if(map[r][c] == 2) map[r][c] = 0;
-				sum += map[r][c]; 
-
-				if (sum > 0)
-					return true;
+				if(map[r][c] == 1) return true;
 			}
 		}
 
