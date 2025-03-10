@@ -3,68 +3,86 @@ import java.util.*;
 
 public class Main {
 
-	private static int N, maxIdx;
-	private static int[][] tower;
-	private static int[] towerMax = new int[2];
-	private static int sum = 0;
+	public static void main(String[] args) throws IOException {
 
-	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
-		StringTokenizer st;
+		StringTokenizer st = null;
 
-		N = Integer.parseInt(br.readLine());
-		tower = new int[1001][1];
-		towerMax[1] = Integer.MIN_VALUE;
-		maxIdx = 0;
-		
+		int N = Integer.parseInt(br.readLine());
+
+		ArrayList<int[]> info = new ArrayList<>();
+
+		int max = 0;
 		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
-			int start = Integer.parseInt(st.nextToken());
-			int height = Integer.parseInt(st.nextToken());
-			if(towerMax[1] < height) {
-				towerMax[0] = start;
-				towerMax[1] = height;
-			}
-			if(maxIdx < start) {
-				maxIdx = start;
-			}
-			tower[start][0] = height;
-		}
-		
-		uphill();
-		downhill();
-		System.out.println(sum);
-		
-		
-	}
-	
-	public static void uphill() {
-		int tmp = tower[0][0];
-		int height = tower[0][0];
-		for(int i = 0; i<towerMax[0]; i++) {
-			if(height >= tower[i+1][0]) {
-				sum += height;
-			}else if(height < tower[i+1][0]) {
-				sum += height;
-				height = tower[i+1][0];
-			}
-		}
-	}
-	
-	public static void downhill() {
-		int tmp = tower[maxIdx][0];
-		int height = tower[maxIdx][0];
-		for(int i = maxIdx; i>=towerMax[0]; i--) {
-			if(height >= tower[i-1][0]) {
-				sum += height;
-			}else if(height < tower[i-1][0]) {
-				sum += height;
-				height = tower[i-1][0];
-			}
-		}
-	}
-	
-	
+			int x = Integer.parseInt(st.nextToken());
+			int y = Integer.parseInt(st.nextToken());
 
+			max = Math.max(max, y);
+
+			info.add(new int[] { x, y });
+		}
+
+		Collections.sort(info, new Comparator<int[]>() {
+			@Override
+			public int compare(int[] o1, int[] o2) {
+				return o1[0] - o2[0];
+			}
+		});
+		
+		int mid = findIdx(info, max);
+		System.out.println(cal(info, mid));
+
+	}
+
+	private static int findIdx(ArrayList<int[]> info, int max) {
+		int idx = 0;
+		for (int i = 0; i < info.size(); i++) {
+			if (max == info.get(i)[1])
+				idx = i;
+		}
+
+		return idx;
+	}
+
+	private static int cal(ArrayList<int[]> info, int idx) {
+
+		int sum = 0;
+		int max = info.get(0)[1];
+		int preidx = info.get(0)[0];
+		
+		for (int i = 1; i <= idx; i++) {
+			int[] curr = info.get(i);
+			int tmp = curr[0] - preidx;
+			if (curr[1] > max) {
+				sum += (max * tmp);
+				max = curr[1];
+			} else {
+				sum += (max * tmp);
+			}
+			
+			preidx = curr[0];
+
+		}
+		
+		
+		max = info.get(info.size()-1)[1];
+		preidx = info.get(info.size() - 1)[0];
+		
+		for (int i = info.size() - 2; i >= idx; i--) {
+			int[] curr = info.get(i);
+			int tmp = preidx - curr[0];
+			
+			if (curr[1] > max) {
+				sum += (max * tmp);
+				max = curr[1];
+			} else {
+				sum += (max * tmp);
+			}
+			preidx = curr[0];
+		}
+
+		return sum + info.get(idx)[1];
+	}
 }
