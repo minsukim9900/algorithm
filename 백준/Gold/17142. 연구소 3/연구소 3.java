@@ -76,6 +76,7 @@ public class Main {
 				
 				int[] curr = q.poll();
 				num = Math.max(num, curr[2]);
+				if(num > minTime) return;
 
 
 				for (int i = 0; i < 4; i++) {
