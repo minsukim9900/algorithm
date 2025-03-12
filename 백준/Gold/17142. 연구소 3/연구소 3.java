@@ -20,14 +20,15 @@ public class Main {
 		M = Integer.parseInt(st.nextToken());
 
 		map = new int[N][N];
-		int cnt = 0;
+		int zeroCnt = 0;
 		for (int r = 0; r < N; r++) {
 			st = new StringTokenizer(br.readLine());
 			for (int c = 0; c < N; c++) {
 				map[r][c] = Integer.parseInt(st.nextToken());
-				
-				if(map[r][c] == 0) cnt++;
-				
+
+				if (map[r][c] == 0)
+					zeroCnt++;
+
 				if (map[r][c] == 2) {
 					virus.add(new int[] { r, c });
 					map[r][c] = -1;
@@ -35,84 +36,78 @@ public class Main {
 
 			}
 		}
-		
-		if(cnt == 0) {
+
+		if (zeroCnt == 0) {
 			System.out.println(0);
 			return;
-		}else {
-			combi(0, 0, new int[M], cnt);
 		}
 
-		if(minTime == 987654321) minTime = -1;
-		System.out.println(minTime);
-		
+		combi(0, 0, new int[M], zeroCnt);
+		System.out.println(minTime == 987654321 ? -1 : minTime);
 
 	}
 
-	private static void combi(int idx, int depth, int[] result, int cnt) {
+	private static void combi(int idx, int depth, int[] result, int zeroCnt) {
 
 		if (depth == M) {
-			int n = cnt;
-			int[][] tmp = new int[N][N];
 
-			for (int r = 0; r < N; r++) {
-				for (int c = 0; c < N; c++) {
-					tmp[r][c] = map[r][c];
-				}
-			}
-
-			Queue<int[]> q = new ArrayDeque<>();
-			
-			for (int s : result) {
-				int[] curr = virus.get(s);
-				q.offer(new int[] { curr[0], curr[1], 0 });
-				tmp[curr[0]][curr[1]] = -2;
-			}
-
-			int num = 0;
-			
-			while (!q.isEmpty()) {
-				
-				
-				int[] curr = q.poll();
-				num = Math.max(num, curr[2]);
-				if(num > minTime) return;
-
-
-				for (int i = 0; i < 4; i++) {
-					int nr = curr[0] + delta[i][0];
-					int nc = curr[1] + delta[i][1];
-
-					if (nr >= 0 && nr < N && nc >= 0 && nc < N && (tmp[nr][nc] == 0 || tmp[nr][nc] == -1)) {
-						if(tmp[nr][nc] == 0) {
-							n--;
-							tmp[nr][nc] = curr[2] + 1;
-							q.offer(new int[] {nr, nc, tmp[nr][nc]});
-						}else if(n > 0 && tmp[nr][nc] == -1) {
-							tmp[nr][nc] = curr[2] + 1;
-							q.offer(new int[] {nr, nc, tmp[nr][nc]});
-						}
-					}
-					
-				}
-
-			}
-			
-			boolean isClear = true;
-			if(n > 0) isClear = false;
-			
-			if(isClear) {
-				minTime = Math.min(minTime, num);
-			}
+			bfs(new int[N][N], result, zeroCnt);
 
 		} else {
 
 			for (int i = idx; i < virus.size(); i++) {
 				result[depth] = i;
-				combi(i + 1, depth + 1, result, cnt);
+				combi(i + 1, depth + 1, result, zeroCnt);
 			}
 
 		}
+
+	}
+
+	private static void bfs(int[][] copyMap, int[] select, int zeroCnt) {
+
+		for (int i = 0; i < N; i++) {
+			System.arraycopy(map[i], 0, copyMap[i], 0, N);
+		}
+
+		Queue<int[]> q = new ArrayDeque<>();
+
+		for (int s : select) {
+			int[] curr = virus.get(s);
+			q.offer(new int[] { curr[0], curr[1], 0 });
+			copyMap[curr[0]][curr[1]] = -2;
+		}
+
+		int time = 0;
+
+		while (!q.isEmpty()) {
+
+			int[] curr = q.poll();
+
+			if (time >= minTime)
+				return;
+
+			for (int i = 0; i < 4; i++) {
+				int nr = curr[0] + delta[i][0];
+				int nc = curr[1] + delta[i][1];
+
+				if (nr >= 0 && nr < N && nc >= 0 && nc < N && (copyMap[nr][nc] == 0 || copyMap[nr][nc] == -1)) {
+
+					if (copyMap[nr][nc] == 0) {
+						zeroCnt--;
+						time = Math.max(time, curr[2] + 1);
+					}
+					copyMap[nr][nc] = curr[2] + 1;
+					q.offer(new int[] { nr, nc, copyMap[nr][nc] });
+
+				}
+
+			}
+
+		}
+
+		if (zeroCnt == 0)
+			minTime = Math.min(minTime, time);
 
 	}
 }
