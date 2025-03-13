@@ -36,14 +36,15 @@ public class Main {
 				visited[r][c] = false;
 			}
 		}
-		
+
 		System.out.println(result);
 
 	}
 
 	private static void dfs(int r, int c, int depth, int sum) {
-		
-		if(sum + (max * 4-depth) <result) return;
+
+		if (sum + max * ((1 << 2) - depth) <= result)
+			return;
 
 		if (depth == 4) {
 			result = Math.max(result, sum);
