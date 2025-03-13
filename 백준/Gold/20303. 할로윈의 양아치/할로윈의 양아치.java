@@ -7,21 +7,31 @@ public class Main {
 	private static int[] arr;
 	private static int[] p;
 
-	public static void main(String[] args) throws IOException {
+	public static int read() throws IOException {
+		int n = System.in.read() & 15, cur;
+		boolean isNegative = (n == 13);
+		if (isNegative) {
+			n = System.in.read() & 15;
+		}
+		while ((cur = System.in.read()) > 32) {
+			n = (n << 3) + (n << 1) + (cur & 15);
+		}
+		return isNegative ? ~n + 1 : n;
+	}
+
+	public static void main(String[] args) throws Exception {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = null;
 
-		st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
-		K = Integer.parseInt(st.nextToken());
+		N = read();
+		M = read();
+		K = read();
 
 		arr = new int[N + 1];
-		st = new StringTokenizer(br.readLine());
 		for (int i = 1; i <= N; i++) {
-			arr[i] = Integer.parseInt(st.nextToken());
+			arr[i] = read();
 		}
 
 		p = new int[N + 1];
@@ -30,9 +40,8 @@ public class Main {
 		}
 
 		for (int i = 0; i < M; i++) {
-			st = new StringTokenizer(br.readLine());
 
-			union(findP(Integer.parseInt(st.nextToken())), findP(Integer.parseInt(st.nextToken())));
+			union(findP(read()), findP(read()));
 		}
 
 		for (int i = 1; i <= N; i++) {
@@ -40,7 +49,7 @@ public class Main {
 		}
 
 		ArrayList<int[]> items = merge();
-		
+
 		System.out.println(cal(items));
 
 	}
@@ -49,16 +58,16 @@ public class Main {
 		int[] dp = new int[K];
 
 		for (int i = 0; i < items.size(); i++) {
-			
+
 			int[] curr = items.get(i);
-			
-			for(int j = K -1; j>=curr[0]; j--) {
-				dp[j] = Math.max(dp[j], dp[j-curr[0]] + curr[1]);
+
+			for (int j = K - 1; j >= curr[0]; j--) {
+				dp[j] = Math.max(dp[j], dp[j - curr[0]] + curr[1]);
 			}
-			
+
 		}
-		
-		return dp[K-1];
+
+		return dp[K - 1];
 
 	}
 
