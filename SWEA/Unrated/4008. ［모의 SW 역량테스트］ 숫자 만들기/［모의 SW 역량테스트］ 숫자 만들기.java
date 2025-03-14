@@ -38,11 +38,10 @@ public class Solution {
 				arr[i] = Integer.parseInt(st.nextToken());
 			}
 
-
 			min = Integer.MAX_VALUE;
 			max = Integer.MIN_VALUE;
-			
-			selectSign(0, new int[N - 1], new boolean[N - 1]);
+
+			selectSign(0, arr[0], new boolean[N - 1]);
 
 			sb.append("#" + t + " " + (max - min) + "\n");
 		}
@@ -63,31 +62,25 @@ public class Solution {
 		}
 	}
 
-	private static void selectSign(int depth, int[] result, boolean[] visited) {
+	private static void selectSign(int depth, int num, boolean[] visited) {
 
 		if (depth == N - 1) {
-
-			int sum = arr[0];
-			for (int i = 0; i < N - 1; i++) {
-				int num = arr[i + 1];
-				sum = cal(sum, num, result[i]);
-			}
-			min = Math.min(sum, min);
-			max = Math.max(sum, max);
+			min = Math.min(num, min);
+			max = Math.max(num, max);
 
 		} else {
 			
 			int pre = -1;
 			for (int i = 0; i < N - 1; i++) {
-
+				
 				if (visited[i] || pre == sign.get(i)) {
 					continue;
 				}
-				
+
 				pre = sign.get(i);
 				visited[i] = true;
-				result[depth] = sign.get(i);
-				selectSign(depth + 1, result, visited);
+				int tmp = cal(num, arr[depth + 1], sign.get(i));
+				selectSign(depth + 1, tmp, visited);
 				visited[i] = false;
 			}
 
