@@ -32,8 +32,8 @@ public class Solution {
  
                 st = new StringTokenizer(br.readLine());
  
-                int x = (Integer.parseInt(st.nextToken()) + 1000) << 1;
-                int y = (Integer.parseInt(st.nextToken()) + 1000) << 1;
+                int x = (Integer.parseInt(st.nextToken())) << 1;
+                int y = (Integer.parseInt(st.nextToken()) ) << 1;
                 int dir = Integer.parseInt(st.nextToken());
                 int k = Integer.parseInt(st.nextToken());
  
@@ -66,7 +66,7 @@ public class Solution {
                 int nr = curr[0] + delta[curr[2]][0];
                 int nc = curr[1] + delta[curr[2]][1];
  
-                if (nr >= 0 && nr <= 4000 && nc >= 0 && nc <= 4000) {
+                if (nr >= -2000 && nr <= 2000 && nc >= -2000 && nc <= 2000) {
                     filter.add(new int[] { nr, nc, curr[2], curr[3] });
                 }
  
