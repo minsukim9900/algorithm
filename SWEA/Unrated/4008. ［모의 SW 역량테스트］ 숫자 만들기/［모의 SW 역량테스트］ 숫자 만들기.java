@@ -79,8 +79,7 @@ public class Solution {
 
 				pre = sign.get(i);
 				visited[i] = true;
-				int tmp = cal(num, arr[depth + 1], sign.get(i));
-				selectSign(depth + 1, tmp, visited);
+				selectSign(depth + 1, cal(num, arr[depth + 1], sign.get(i)), visited);
 				visited[i] = false;
 			}
 
