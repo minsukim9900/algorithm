@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Main {
 
-	private static int N, K;
+	private static int N, K, L, cnt;
 	private static int[] info;
 	private static boolean[] visited;
 
@@ -17,9 +17,11 @@ public class Main {
 		N = Integer.parseInt(st.nextToken());
 		K = Integer.parseInt(st.nextToken());
 
-		info = new int[N << 1];
-		visited = new boolean[N << 1];
-		
+		L = N << 1;
+
+		info = new int[L];
+		visited = new boolean[L];
+
 		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < info.length; i++) {
 			info[i] = Integer.parseInt(st.nextToken());
@@ -38,36 +40,30 @@ public class Main {
 
 		while (true) {
 
-			int cnt = 0;
+			idx = ((idx - 1) + L) % L;
 
-			idx = ((idx - 1) + (N << 1)) % (N << 1);
-			
 			if (!robots.isEmpty()) {
-				
-				if (robots.peek() == ((idx + N - 1)) % (N << 1)) {
+
+				if (robots.peek() == ((idx + N - 1)) % L) {
 					int tmp = robots.poll();
 					visited[tmp] = false;
 				}
 
 				robots = move(robots, idx);
 			}
-			
+
 			if (info[idx] > 0) {
 				robots.offer(idx);
 				visited[idx] = true;
 				info[idx]--;
-			}
 
-			for (int w : info) {
-				
-				if (w <= 0) {
+				if (info[idx] == 0) {
 					cnt++;
 				}
-				
 			}
 
 			t++;
-			
+
 			if (cnt >= K) {
 				break;
 			}
@@ -83,15 +79,19 @@ public class Main {
 		for (int i = 0; i < size; i++) {
 			int curr = robots.poll();
 
-			int nIdx = (curr + 1) % (N << 1);
+			int nIdx = (curr + 1) % L;
 
 			if (info[nIdx] > 0 && !visited[nIdx]) {
-				
+
 				visited[nIdx] = true;
 				info[nIdx]--;
 				visited[curr] = false;
 				
-				if ((nIdx == ((idx + N - 1)) % (N << 1))) {
+				if(info[nIdx] == 0) {
+					cnt++;
+				}
+
+				if ((nIdx == ((idx + N - 1)) % L)) {
 					continue;
 				}
 
@@ -101,7 +101,6 @@ public class Main {
 			}
 
 		}
-
 
 		return robots;
 	}
