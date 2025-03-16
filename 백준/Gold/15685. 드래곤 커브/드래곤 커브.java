@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Main {
 
-	private static boolean[][] map = new boolean[102][102];
+	private static boolean[][] map = new boolean[101][101];
 
 	private static int[][] delta = { { 0, 1 }, { -1, 0 }, { 0, -1 }, { 1, 0 } };
 
