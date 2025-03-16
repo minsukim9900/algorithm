@@ -3,16 +3,11 @@ import java.util.*;
 
 public class Main {
     
-    public static int read() throws IOException {
-		int n = System.in.read() & 15, cur;
-		boolean isNegative = (n == 13);
-		if (isNegative) {
-			n = System.in.read() & 15;
-		}
-		while ((cur = System.in.read()) > 32) {
-			n = (n << 3) + (n << 1) + (cur & 15);
-		}
-		return isNegative ? ~n + 1: n;
+   private static int read() throws Exception {
+		int c, n = System.in.read() & 15;
+		while ((c = System.in.read()) >= 48)
+			n = (n << 3) + (n << 1) + (c & 15);
+		return n;
 	}
 
 	private static boolean[][] map = new boolean[101][101];
