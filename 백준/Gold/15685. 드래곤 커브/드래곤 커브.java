@@ -17,12 +17,11 @@ public class Main {
 
 		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
-
 			int c = Integer.parseInt(st.nextToken());
 			int r = Integer.parseInt(st.nextToken());
 			int dir = Integer.parseInt(st.nextToken());
 			int gen = Integer.parseInt(st.nextToken());
-			ArrayList<Integer> info = makeGeneration(dir, gen);
+			int[] info = makeGeneration(dir, gen);
 
 			visit(r, c, info);
 		}
@@ -38,32 +37,28 @@ public class Main {
 
 	}
 
-	private static void visit(int r, int c, ArrayList<Integer> info) {
+	private static void visit(int r, int c, int[] info) {
 
 		map[r][c] = true;
-		int nr = r;
-		int nc = c;
-
-		for (int i = 0; i < info.size(); i++) {
-			nr += delta[info.get(i)][0];
-			nc += delta[info.get(i)][1];
-			map[nr][nc] = true;
+		for (int i = 0; i < info.length; i++) {
+			r += delta[info[i]][0];
+			c += delta[info[i]][1];
+			map[r][c] = true;
 		}
 
 	}
 
-
-	private static ArrayList<Integer> makeGeneration(int dir, int gen) {
-		ArrayList<Integer> info = new ArrayList<>();
-		info.add(dir);
+	private static int[] makeGeneration(int dir, int gen) {
+		int[] info = new int[(1 << gen)];
+		int l = 1;
+		info[0] = dir;
 
 		for (int g = 0; g < gen; g++) {
-
-			int size = info.size();
-
-			for (int i = size - 1; i >= 0; i--) {
-				int nd = (info.get(i) + 1) & 3;
-				info.add(nd);
+			
+			
+			for (int i = l - 1; i >= 0; i--) {
+				int nd = (info[i] + 1) & 3;
+				info[l++] = nd;
 			}
 
 		}
