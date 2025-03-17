@@ -3,10 +3,8 @@ import java.util.*;
 
 public class Main {
 
-	private static int[][] delta = { { 0, 1 }, { 1, 1 }, { 1, 0 } };
-	private static int N, result;
+	private static int N;
 	private static int[][] board;
-	private static boolean[][] visited;
 
 	public static void main(String[] args) throws IOException {
 
@@ -15,51 +13,36 @@ public class Main {
 		StringTokenizer st = null;
 
 		N = Integer.parseInt(br.readLine());
-		board = new int[N][N];
-		visited = new boolean[N][N];
+		board = new int[N + 1][N + 1];
 
-		for (int r = 0; r < N; r++) {
+		int[][][] dp = new int[N + 1][N + 1][3];
+
+		for (int r = 1; r <= N; r++) {
 			st = new StringTokenizer(br.readLine());
-			for (int c = 0; c < N; c++) {
+			for (int c = 1; c <= N; c++) {
 				board[r][c] = Integer.parseInt(st.nextToken());
 			}
 		}
 
-		visited[0][0] = true;
-		visited[0][1] = true;
-		dfs(0, 1, 0);
-		System.out.println(result);
+		dp[1][2][0] = 1;
+
+		for (int r = 1; r <= N; r++) {
+			for (int c = 1; c <= N; c++) {
+				if (r == 1 && c == 2)
+					continue;
+				if (board[r][c] == 1)
+					continue;
+				dp[r][c][0] += (dp[r][c - 1][0] + dp[r][c - 1][1]);
+				dp[r][c][2] += (dp[r - 1][c][2] + dp[r - 1][c][1]);
+
+				if (board[r][c] == 1 || board[r - 1][c] == 1 || board[r][c - 1] == 1)
+					continue;
+				dp[r][c][1] += (dp[r - 1][c - 1][0] + dp[r - 1][c - 1][1] + dp[r - 1][c - 1][2]);
+			}
+		}
+
+		System.out.println(dp[N][N][0] + dp[N][N][1] + dp[N][N][2]);
 
 	}
 
-	private static void dfs(int r, int c, int dir) {
-
-		if (r == N - 1 && c == N - 1) {
-			result++;
-			return;
-		}
-
-
-		for (int i = -1; i < 2; i++) {
-			int nd = dir + i;
-			if (nd < 0 || nd > 2) {
-				continue;
-			}
-
-			int nr = r + delta[nd][0];
-			int nc = c + delta[nd][1];
-
-			if (nr >= 00 && nr < N && nc >= 0 && nc < N && !visited[nr][nc]) {
-				visited[r][c] = true;
-				if ((nd == 0 || nd == 2) && board[nr][nc] == 0) {
-					dfs(nr, nc, nd);
-				} else if (nd == 1 && board[nr][nc] == 0 && board[nr - 1][nc] == 0 && board[nr][nc - 1] == 0) {
-					dfs(nr, nc, nd);
-				}
-				visited[r][c] = false;
-			}
-
-		}
-
-	}
 }
