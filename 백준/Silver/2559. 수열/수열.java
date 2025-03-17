@@ -27,23 +27,16 @@ public class Main {
 	}
 
 	private static long cal() {
-		long max = Integer.MIN_VALUE;
+		int currSum = 0;
+		for (int i = 0; i < K; i++) {
+			currSum += arr[i];
+		}
 
-		int left = 0;
-		int right = left + K - 1;
+		long max = currSum;
 
-		while (left != N - 1 && right < N) {
-
-			long sum = 0;
-
-			while (left <= right) {
-				sum += arr[right--];
-			}
-			left++;
-			right = left + K - 1;
-			
-			max = Math.max(max, sum);
-
+		for (int i = K; i < N; i++) {
+			currSum += arr[i] - arr[i - K];
+			max = Math.max(max, currSum);
 		}
 
 		return max;
