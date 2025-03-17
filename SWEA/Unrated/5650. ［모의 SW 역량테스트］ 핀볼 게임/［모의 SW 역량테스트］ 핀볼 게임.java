@@ -50,7 +50,6 @@ public class Solution {
 				}
 			}
 
-
 			for (int[] w : loc) {
 				for (int i = 0; i < 4; i++) {
 					dfs(w[0], w[1], i);
@@ -102,11 +101,7 @@ public class Solution {
 
 	private static boolean isRange(int r, int c) {
 
-		if (r < 0 || r >= N || c < 0 || c >= N) {
-			return false;
-		}
-
-		return true;
+		return r >= 0 && r < N && c >= 0 && c < N;
 	}
 
 	private static int visitWall(int dir) {
@@ -121,14 +116,14 @@ public class Solution {
 
 	private static int[] potal(int r, int c) {
 		int[] location = null;
-		for (int i = 0; i < 2; i++) {
-			int[] curr = hole[board[r][c] - 6].get(i);
-			if (curr[0] == r && curr[1] == c) {
-				location = hole[board[r][c] - 6].get((i + 1) & 1);
-			}
+		int[] pos1 = hole[board[r][c] - 6].get(0);
+		int[] pos2 = hole[board[r][c] - 6].get(1);
+		
+		if(pos1[0] == r && pos1[1] == c) {
+			return pos2;
+		}else {
+			return pos1;
 		}
-
-		return location;
 
 	}
 
