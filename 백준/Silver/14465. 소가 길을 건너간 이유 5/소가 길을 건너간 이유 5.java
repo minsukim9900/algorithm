@@ -18,11 +18,11 @@ public class Main {
 		K = Integer.parseInt(st.nextToken());
 		B = Integer.parseInt(st.nextToken());
 
-		lights = new int[N + 1];
+		lights = new int[(N >> 5) + 1];
 
 		for (int i = 0; i < B; i++) {
 			int idx = Integer.parseInt(br.readLine());
-			lights[idx] = 1;
+			lights[idx >> 5] |= 1 << (idx & 31);
 		}
 		
 		System.out.println(cal());
@@ -33,17 +33,30 @@ public class Main {
 		int currCnt = 0;
 
 		for (int i = 1; i <= K; i++) {
-			currCnt += lights[i];
+			if ((lights[i >> 5] & (1 << (i & 31))) != 0) {
+				currCnt++;
+			}
 		}
 
 		int min = currCnt;
 
 		for (int i = K + 1; i <= N; i++) {
-			currCnt += lights[i] - lights[i - K];
-			min = Math.min(currCnt, min);
-		}
+			int a = 0;
+			int b = 0;
 
+			if ((lights[(i - K) >> 5] & (1 << ((i - K) & 31))) != 0) {
+				a = 1;
+			}
+			if ((lights[i >> 5] & (1 << (i & 31))) != 0) {
+				b = 1;
+			}
+			
+			currCnt += b - a;
+			min = Math.min(min, currCnt);
+		}
+		
 		return min;
+
 	}
 
 }
