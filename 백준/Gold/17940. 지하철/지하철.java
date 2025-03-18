@@ -43,7 +43,7 @@ public class Main {
 			}
 		}
 
-		heap = new int[N * N + cnt][3];
+		heap = new int[cnt + 1][3];
 		transfer = new int[N];
 		dist = new int[N];
 		Arrays.fill(transfer, INF);
@@ -84,6 +84,7 @@ public class Main {
 	}
 
 	 private static void push(int[] data) {
+	        if (size >= heap.length - 1) return;
 	        heap[++size] = data;
 	        int ch = size;
 	        int p = ch / 2;
@@ -96,6 +97,7 @@ public class Main {
 	    }
 
 	    private static int[] poll() {
+	        if (size == 0) return new int[] {-1, -1, -1};
 	        int[] arr = heap[1];
 	        heap[1] = heap[size--];
 	        int p = 1;
