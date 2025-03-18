@@ -2,20 +2,24 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+    private static int read() throws Exception {
+		int c, n = System.in.read() & 15;
+		while ((c = System.in.read()) >= 48)
+			n = (n << 3) + (n << 1) + (c & 15);
+		return n;
+	}
 	private static int N, M, size;
 	private static ArrayList<int[]>[] adj;
 	private static int[][] heap;
 	private static final int INF = 987654321;
 	private static int[] dist, transfer, station;
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static void main(String[] args) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = null;
 
-		st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
+		N = read();
+		M = read();
 		adj = new ArrayList[N];
 		station = new int[N];
 		int cnt = 0;
@@ -25,13 +29,12 @@ public class Main {
 		}
 
 		for (int i = 0; i < N; i++) {
-			station[i] = Integer.parseInt(br.readLine());
+			station[i] = read();
 		}
 
 		for (int r = 0; r < N; r++) {
-			st = new StringTokenizer(br.readLine());
 			for (int c = 0; c < N; c++) {
-				int w = Integer.parseInt(st.nextToken());
+				int w = read();
 
 				if (w > 0) {
 					cnt++;
@@ -40,7 +43,7 @@ public class Main {
 			}
 		}
 
-		heap = new int[cnt+1][3];
+		heap = new int[N * N + cnt][3];
 		transfer = new int[N];
 		dist = new int[N];
 		Arrays.fill(transfer, INF);
@@ -81,7 +84,6 @@ public class Main {
 	}
 
 	 private static void push(int[] data) {
-	        if (size >= heap.length - 1) return;
 	        heap[++size] = data;
 	        int ch = size;
 	        int p = ch / 2;
@@ -94,7 +96,6 @@ public class Main {
 	    }
 
 	    private static int[] poll() {
-	        if (size == 0) return new int[] {-1, -1, -1};
 	        int[] arr = heap[1];
 	        heap[1] = heap[size--];
 	        int p = 1;
