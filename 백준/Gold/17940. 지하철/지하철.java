@@ -40,7 +40,7 @@ public class Main {
 			}
 		}
 
-		heap = new int[N * N][3];
+		heap = new int[cnt+1][3];
 		transfer = new int[N];
 		dist = new int[N];
 		Arrays.fill(transfer, INF);
