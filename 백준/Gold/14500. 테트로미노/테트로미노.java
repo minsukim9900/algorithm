@@ -7,24 +7,29 @@ public class Main {
 	private static int[][] map;
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
 	private static boolean[][] visited;
+    
+    private static int read() throws Exception {
+		int c, n = System.in.read() & 15;
+		while ((c = System.in.read()) >= 48)
+			n = (n << 3) + (n << 1) + (c & 15);
+		return n;
+	}
+    
 
 	public static void main(String[] args) throws Exception {
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = null;
 
-		st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
+		N = read();
+		M = read();
 
 		map = new int[N][M];
 		visited = new boolean[N][M];
 
 		for (int r = 0; r < N; r++) {
-			st = new StringTokenizer(br.readLine());
 			for (int c = 0; c < M; c++) {
-				map[r][c] = Integer.parseInt(st.nextToken());
+				map[r][c] = read();
 				max = Math.max(max, map[r][c]);
 			}
 		}
@@ -41,12 +46,13 @@ public class Main {
 
 	}
 
+
 	private static void dfs(int r, int c, int depth, int sum) {
 
 		if (sum + max * ((1 << 2) - depth) <= result)
 			return;
 
-		if (depth == 4) {
+		if (depth == (1 << 2)) {
 			result = Math.max(result, sum);
 		} else {
 
@@ -55,13 +61,13 @@ public class Main {
 				int nc = c + delta[i][1];
 
 				if (nr >= 0 && nr < N && nc >= 0 && nc < M && !visited[nr][nc]) {
-
-					if (depth == 2) {
+					
+					if(depth == 2) {
 						visited[nr][nc] = true;
 						dfs(r, c, depth + 1, sum + map[nr][nc]);
 						visited[nr][nc] = false;
 					}
-
+					
 					visited[nr][nc] = true;
 					dfs(nr, nc, depth + 1, sum + map[nr][nc]);
 					visited[nr][nc] = false;
