@@ -74,9 +74,7 @@ public class Main {
 				if (dist[w[0]] > dist[idx] + w[1]) {
 					dist[w[0]] = dist[idx] + w[1];
 					result[w[0]] = (long) (dist[idx] * 0.9) + w[1];
-
 					pq.add(new long[] { w[0], dist[w[0]] });
-
 				} else if (dist[w[0]] == dist[idx] + w[1]) {
 					dist[w[0]] = dist[idx] + w[1];
 					result[w[0]] = Math.min(result[w[0]],(long) (dist[idx] * 0.9) + w[1]);
