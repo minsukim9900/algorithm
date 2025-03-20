@@ -18,55 +18,56 @@ public class Solution {
 			N = Integer.parseInt(st.nextToken());
 			K = Integer.parseInt(st.nextToken());
 			String pw = br.readLine();
+
+			// 회전하면서 만든 숫자들
 			Set<Integer> nums = simulate(pw);
+
+			// 정렬을 하기 위해 arr 배열에 넣어둠
 			Integer[] arr = new Integer[nums.size()];
 			int idx = 0;
 
+			// SET자료형 nums를 arr에 넣어두기 위한 작업
 			Iterator<Integer> iter = nums.iterator();
+
 			while (iter.hasNext()) {
 				arr[idx++] = iter.next();
 			}
+
+			/////////////////////////////////////////
+			// 내림차순 정렬
+			// 내림차순 정렬을 하기위해서는 int[] 자료형이 아닌 Wrapper 자료형 Integer로
+			// 배열 만들어서 정렬 시켜야함.
 			Arrays.sort(arr, Collections.reverseOrder());
+
+			// 출력하기 위해 StringBuilder에 저장
 			sb.append("#" + t + " " + arr[K - 1] + "\n");
 		}
 		System.out.println(sb.toString());
 	}
 
+	// 자물쇠 회전하는 시뮬레이션
 	private static Set<Integer> simulate(String pw) {
-
-		char[] cr = new char[N];
-
-		for (int i = 0; i < N; i++) {
-			cr[i] = pw.charAt(i);
-		}
-
 		Set<Integer> nums = new HashSet<>();
-
-		cal(nums, cr,0);
-		for (int i = 0; i < (N >> 2) - 1; i++) {
-			cal(nums, cr, i + 1);
-		}
-
-		return nums;
-	}
-
-	private static Set<Integer> cal(Set<Integer> nums, char[] cr, int cir) {
-		for (int i = 0; i < N; i += (N >> 2)) {
-			int num = 0;
-
-			for (int j = 0; j < (N >> 2); j++) {
-				int idx = (i + j - cir + N) % N;
-				int tmp = Character.digit(cr[idx], 16);
-				int x = 1;
-
-				for (int k = 0; k < (N >> 2) - j - 1; k++) {
-					x *= 16;
+		char[] cr = pw.toCharArray();
+		int side = N >> 2;
+		
+		// 회전 수 ( 0회전부터 ~ N/4 - 1회전까지)
+		for (int i = 0; i < side; i++) {
+			// 회전하고 한 면씩 
+			for (int j = 0; j < N; j += side) {
+				int num = 0;
+				
+				// 한 면에 나오는 숫자들 16진수로 변환하기
+				for (int k = 0; k < side; k++) {
+					int idx = (j + k - i + N) % N;
+					int digit = Character.digit(cr[idx], 16);
+					num = num * 16 + digit;
 				}
-				num += (tmp * x);
+				nums.add(num);
 			}
-			nums.add(num);
 		}
-		return nums;
-	}
 
+		return nums;
+
+	}
 }
