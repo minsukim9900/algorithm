@@ -57,9 +57,11 @@ public class Solution {
 
 		for (int i = 0; i < N; i++) {
 			cnt += arr[i] / v;
+            
+            if(cnt >= M) return true;
 		}
 
-		return cnt >= M;
+		return false;
 	}
 
 }
