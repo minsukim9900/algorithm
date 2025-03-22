@@ -6,27 +6,31 @@ public class Main {
 	private static boolean[][] visited;
 	private static int N, M, K;
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
-
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    
+    private static int read() throws Exception {
+		int c, n = System.in.read() & 15;
+		while ((c = System.in.read()) >= 48)
+			n = (n << 3) + (n << 1) + (c & 15);
+		return n;
+	}
+    
+	public static void main(String[] args) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = null;
 
-		int T = Integer.parseInt(br.readLine());
+		int T = read();
 
 		for (int t = 0; t < T; t++) {
-			st = new StringTokenizer(br.readLine());
-			M = Integer.parseInt(st.nextToken());
-			N = Integer.parseInt(st.nextToken());
-			K = Integer.parseInt(st.nextToken());
+			M = read();
+			N = read();
+			K = read();
 			visited = new boolean[N][M];
 
 			ArrayList<int[]> baechu = new ArrayList<>();
 			map = new int[N][M];
 			for (int i = 0; i < K; i++) {
-				st = new StringTokenizer(br.readLine());
-				int c = Integer.parseInt(st.nextToken());
-				int r = Integer.parseInt(st.nextToken());
+				int c = read();
+				int r = read();
 
 				map[r][c] = 1;
 				baechu.add(new int[] { r, c });
