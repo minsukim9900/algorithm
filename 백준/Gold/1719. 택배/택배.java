@@ -6,10 +6,10 @@ public class Main {
 	private static ArrayList<int[]>[] arr;
 	private static int[][] memo;
 	private static final int INF = 987654321;
+	private static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = null;
 
 		st = new StringTokenizer(br.readLine());
@@ -38,7 +38,12 @@ public class Main {
 		for (int i = 1; i <= N; i++) {
 			dijkstra(i);
 		}
+		
+		output();
 
+	}
+	
+	private static void output() {
 		for (int i = 1; i <= N; i++) {
 			for (int j = 1; j <= N; j++) {
 				if(memo[i][j] == 0) {
@@ -76,9 +81,12 @@ public class Main {
 				continue;
 
 			visited[curr[0]] = true;
+			
 			for (int[] w : arr[curr[0]]) {
+				
 				if (dist[w[0]] > dist[curr[0]] + w[1]) {
 					dist[w[0]] = dist[curr[0]] + w[1];
+					
 					if (curr[2] == s) {
 						memo[s][w[0]] = w[0];
 						pq.offer(new int[] { w[0], dist[w[0]], w[0] });
@@ -86,6 +94,7 @@ public class Main {
 						memo[s][w[0]] = curr[2];
 						pq.offer(new int[] { w[0], dist[w[0]], curr[2] });
 					}
+					
 				}
 			}
 		}
