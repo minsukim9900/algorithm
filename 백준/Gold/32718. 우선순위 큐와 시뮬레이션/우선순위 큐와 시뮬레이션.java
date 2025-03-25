@@ -24,11 +24,12 @@ public class Main {
 		Arrays.sort(arr);
 
 		st = new StringTokenizer(br.readLine());
-
 		int x = 0;
+
 		for (int i = 0; i < T; i++) {
 			int tmp = Integer.parseInt(st.nextToken());
 			x = (x + tmp) % K;
+
 			sb.append(getMax(x) + " ");
 		}
 		System.out.println(sb.toString());
@@ -47,7 +48,7 @@ public class Main {
 		if (idx < N) {
 			result2 = arr[N - 1] + x - K;
 		}
-		
+
 		return Math.max(result1, result2);
 
 	}
@@ -56,7 +57,7 @@ public class Main {
 		int s = 0;
 		int e = N;
 
-		while (s < e) {
+		while (s != e) {
 			int mid = s + ((e - s) >> 1);
 
 			if (arr[mid] >= t) {
