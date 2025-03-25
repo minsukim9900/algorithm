@@ -2,21 +2,26 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+    
+    private static int read() throws Exception {
+		int c, n = System.in.read() & 15;
+		while ((c = System.in.read()) >= 48)
+			n = (n << 3) + (n << 1) + (c & 15);
+		return n;
+	}
 
 	private static int N, M, L;
 	private static int[] arr;
 	private static int[] dif;
 	private static int cnt;
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static void main(String[] args) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = null;
 
-		st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
-		L = Integer.parseInt(st.nextToken());
+		N = read();
+		M = read();
+		L = read();
 
 		arr = new int[N + 2];
 		arr[0] = 0;
@@ -24,9 +29,8 @@ public class Main {
 		cnt = M;
 
 		if (N > 0) {
-			st = new StringTokenizer(br.readLine());
 			for (int i = 1; i <= N; i++) {
-				arr[i] = Integer.parseInt(st.nextToken());
+				arr[i] = read();
 			}
 		}
 
