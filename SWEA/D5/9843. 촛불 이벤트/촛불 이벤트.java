@@ -22,11 +22,11 @@ public class Solution {
 	}
 
 	private static long binarySearch() {
-		long s = 1;
-		long e = 10000000000L;
+		long s = 0;
+		long e = 10000000001L;
 		long ans = 0;
 
-		while (s <= e) {
+		while (s != e) {
 
 			long mid = s + ((e - s) >> 1);
 			long value = (mid * (mid + 1)) >> 1;
@@ -35,7 +35,7 @@ public class Solution {
 				ans = mid;
 				s = mid + 1;
 			} else {
-				e = mid - 1;
+				e = mid;
 			}
 		}
 		
