@@ -23,7 +23,8 @@ public class Main {
 		for (int i = 0; i < M; i++) {
 			int target = Integer.parseInt(st.nextToken());
 			int ans = binarySearch(nums, target);
-			sb.append(ans + " ");
+
+			sb.append(target == ans ? 1 + " " : 0 + " ");
 		}
 		System.out.println(sb.toString());
 	}
@@ -31,18 +32,16 @@ public class Main {
 	private static int binarySearch(int[] nums, int target) {
 		int s = 0;
 		int e = nums.length - 1;
-		int result = 0;
+		int result = 10000001;
 
 		while (s <= e) {
 			int mid = s + (e - s) / 2;
-			
-			if(nums[mid] == target) {
-				result = 1;
-				break;
-			}else if(nums[mid] < target) {
-				s = mid + 1;
-			}else if (nums[mid] > target) {
+
+			if (nums[mid] >= target) {
+				result = nums[mid];
 				e = mid - 1;
+			} else {
+				s = mid + 1;
 			}
 
 		}
