@@ -1,32 +1,39 @@
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
 
 public class Main {
+	private static boolean[] visited = new boolean[10001];
 
 	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
-		
-		int[] count = new int[10001];
-		for(int i = 1; i<=10000; i++) {
-			int n = d(i);
-			
-			if(n<10001) {
-				count[n]=1;
-			}
-			if(count[i]==0) {
-				sb.append(i).append("\n");
+		StringTokenizer st = null;
+
+		for (int i = 1; i <= 10000; i++) {
+			if (!visited[i]) {
+				simulate(i);
+				sb.append(i + "\n");
 			}
 		}
-		System.out.println(sb);
+		System.out.println(sb.toString());
 	}
-	
-	public static int d(int num) {
+
+	private static void simulate(int num) {
+		if (num > 10000)
+			return;
+		visited[num] = true;
+		int selfNum = 0;
+		simulate(makeSelfNum(num));
+	}
+
+	private static int makeSelfNum(int num) {
 		int sum = num;
-		
-		while(num != 0) {
-			sum += num % 10;
-			num /= 10;
+		String nums = String.valueOf(num);
+
+		for (int i = 0; i < nums.length(); i++) {
+			sum += (nums.charAt(i) - '0');
 		}
-		
+
 		return sum;
 	}
 }
