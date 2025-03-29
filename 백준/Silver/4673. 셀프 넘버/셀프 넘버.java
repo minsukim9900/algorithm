@@ -28,10 +28,10 @@ public class Main {
 
 	private static int makeSelfNum(int num) {
 		int sum = num;
-		String nums = String.valueOf(num);
 
-		for (int i = 0; i < nums.length(); i++) {
-			sum += (nums.charAt(i) - '0');
+		while (num > 0) {
+			sum += (num % 10);
+			num /= 10;
 		}
 
 		return sum;
