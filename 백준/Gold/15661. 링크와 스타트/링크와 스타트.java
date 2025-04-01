@@ -21,7 +21,7 @@ public class Main {
 			}
 		}
 
-		for (int i = 1; i < N; i++) {
+		for (int i = 1; i <= (N >> 1) + 1; i++) {
 			combi(1, 0, i, 0);
 		}
 
