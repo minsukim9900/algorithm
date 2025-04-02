@@ -35,7 +35,7 @@ public class Main {
 			ans = Math.min(ans, Math.abs(sum));
 
 		} else {
-			combi(idx + 1, cnt + 1, sum - arr[0][idx] - arr[idx][0]);
+			combi(idx + 1, cnt + 1, sum - (arr[0][idx] + arr[idx][0]));
 			combi(idx + 1, cnt, sum);
 		}
 
