@@ -45,12 +45,6 @@ public class Main {
 		System.out.println(rs);
 	}
 
-	/*
-	 * 1. 비어있는 칸 중에서 좋아하는 학생이 인접한 칸에 가장 많은 칸으로 자리를 정한다. 2. 1을 만족하는 칸이 여러 개이면, 인접한 칸
-	 * 중에서 비어있는 칸이 가장 많은 칸으로 자리를 정한다. 3. 2를 만족하는 칸도 여러 개인 경우에는 행의 번호가 가장 작은 칸으로, 그러한
-	 * 칸도 여러 개이면 열의 번호가 가장 작은 칸으로 자리를 정한다.
-	 */
-	
 	private static int satisfaction(int cnt) {
 		if(cnt == 0) return 0;
 		if(cnt == 1) return 1;
@@ -61,11 +55,13 @@ public class Main {
 	
 
 	private static void simulate(ArrayList<Integer> order) {
+		initBoard();
+		
 		for (int i = 0; i < order.size(); i++) {
 			int idx = order.get(i);
-			updateBoard();
 			int[] info = findSeat(idx);
 			ans[info[0]][info[1]] = idx;
+			minusSpace(info[0], info[1]);
 		}
 	}
 
@@ -105,8 +101,7 @@ public class Main {
 		return pq.poll();
 	}
 
-	// 각 칸 별로 인접한 칸이 몇 개인지 정보를 담기 위한 설정
-	private static void updateBoard() {
+	private static void initBoard() {
 
 		for (int r = 0; r < N; r++) {
 			for (int c = 0; c < N; c++) {
@@ -114,6 +109,17 @@ public class Main {
 			}
 		}
 
+	}
+	
+	private static void minusSpace(int r, int c) {
+		for (int i = 0; i < 4; i++) {
+			int nr = r + delta[i][0];
+			int nc = c + delta[i][1];
+
+			if (isRange(nr, nc) && ans[nr][nc] == 0) {
+				board[nr][nc]--;
+			}
+		}
 	}
 
 	private static int cntSpace(int r, int c) {
