@@ -2,55 +2,68 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String input = br.readLine();
 
-        Stack<Object> stack = new Stack<>();
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st = null;
 
-        for (int i = 0; i < input.length(); i++) {
-            char ch = input.charAt(i);
+		String str = br.readLine();
+		System.out.println(cal(str));
+	}
 
-            if (ch == '(' || ch == '[') {
-                stack.push(ch);
-            } else {
-                int innerSum = 0;
+	/*
+	 * ‘()’ 인 괄호열의 값은 2이다. ‘[]’ 인 괄호열의 값은 3이다. ‘(X)’ 의 괄호값은 2×값(X) 으로 계산된다. ‘[X]’ 의
+	 * 괄호값은 3×값(X) 으로 계산된다. 바른 괄호열 X와 Y가 결합된 XY의 괄호값은 값(XY)= 값(X)+값(Y) 로 계산된다.
+	 */
 
-                while (!stack.isEmpty()) {
-                    Object top = stack.pop();
+	private static int cal(String str) {
+		int ans = 0;
+		int tmp = 1;
+		Stack<Character> stack = new Stack<>();
 
-                    if (top instanceof Integer) {
-                        innerSum += (int) top;
-                    } else if (ch == ')' && top.equals('(')) {
-                        stack.push(innerSum == 0 ? 2 : 2 * innerSum);
-                        break;
-                    } else if (ch == ']' && top.equals('[')) {
-                        stack.push(innerSum == 0 ? 3 : 3 * innerSum);
-                        break;
-                    } else {
-                        System.out.println(0);
-                        return;
-                    }
-                }
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
 
-                if (stack.isEmpty() && (ch == ')' || ch == ']')) {
-                    System.out.println(0);
-                    return;
-                }
-            }
-        }
+			if (ch == '(' || ch == '[') {
 
-        int result = 0;
-        while (!stack.isEmpty()) {
-            Object top = stack.pop();
-            if (top instanceof Integer) {
-                result += (int) top;
-            } else {
-                System.out.println(0);
-                return;
-            }
-        }
+				if (ch == '(') {
+					tmp *= 2;
+				} else if (ch == '[') {
+					tmp *= 3;
+				}
 
-        System.out.println(result);
-    }
+				stack.push(ch);
+			} else if (ch == ')') {
+
+				if (stack.isEmpty() || stack.peek() != '(') {
+					ans = 0;
+					break;
+				} else if (str.charAt(i - 1) == '(') {
+					ans += tmp;
+				}
+				
+				tmp /= 2;
+				stack.pop();
+
+			} else if (ch == ']') {
+
+				if (stack.isEmpty() || stack.peek() != '[') {
+					ans = 0;
+					break;
+				} else if (str.charAt(i - 1) == '[') {
+					ans += tmp;
+				}
+				
+				tmp /= 3;
+				stack.pop();
+
+			}
+
+		}
+		
+		if(!stack.isEmpty()) ans = 0;
+
+		return ans;
+	}
 }
