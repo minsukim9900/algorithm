@@ -1,41 +1,32 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-	
-	
+	private static int[][] map = new int[101][101];
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
+		StringTokenizer st;
+
 		int N = Integer.parseInt(br.readLine());
-		int[][] whitePaper = new int[100][100];
-		
-		for(int i=0; i<N; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			int x = Integer.parseInt(st.nextToken());
-			int y = Integer.parseInt(st.nextToken());
-			for(int j = x; j<x+10; j++) {
-				for(int k = y; k<y+10; k++) {
-					whitePaper[j][k]=1;
-				}
-				
-			}
-		}
-		
-		int count = 0;
-		
-		for(int i=0; i<whitePaper.length;i++) {
-			for(int j=0; j<whitePaper[i].length; j++) {
-				if(whitePaper[i][j] >= 1) {
-					count++;
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			int r = Integer.parseInt(st.nextToken());
+			int c = Integer.parseInt(st.nextToken());
+
+			for (int j = r; j < r + 10; j++) {
+				for (int k = c; k < c + 10; k++) {
+					map[j][k] = 1;
 				}
 			}
+
 		}
-		
-		System.out.println(count);
-		
-		
+		int sum = 0;
+		for (int r = 0; r < 101; r++) {
+			for (int c = 0; c < 101; c++) {
+				sum += map[r][c];
+			}
+		}
+		System.out.println(sum);
 	}
 }
