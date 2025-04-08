@@ -22,11 +22,49 @@ public class Main {
 				board[r][c] = Integer.parseInt(st.nextToken());
 			}
 		}
-
-		for (int i = 0; i < R; i++) {
-			select();
-		}
+		lotate();
 		output();
+
+	}
+
+	private static void lotate() {
+
+		int tmp = Math.min(N, M) >> 1;
+
+		for (int i = 0; i < tmp; i++) {
+			ArrayList<Integer> arr = new ArrayList<>();
+
+			for (int c = i; c < M - i; c++) {
+				arr.add(board[0 + i][c]);
+			}
+			for (int r = i + 1; r < N - i; r++) {
+				arr.add(board[r][M - 1 - i]);
+			}
+			for (int c = M - 2 - i; c >= 0 + i; c--) {
+				arr.add(board[N - 1 - i][c]);
+			}
+			for (int r = N - 2 - i; r > 0 + i; r--) {
+				arr.add(board[r][0 + i]);
+			}
+
+			int currIdx = (0 + R) % arr.size();
+			for (int c = i; c < M - i; c++) {
+				board[0 + i][c] = arr.get(currIdx);
+				currIdx = (currIdx + 1) % arr.size();
+			}
+			for (int r = i + 1; r < N - i; r++) {
+				board[r][M - 1 - i] = arr.get(currIdx);
+				currIdx = (currIdx + 1) % arr.size();
+			}
+			for (int c = M - 2 - i; c >= 0 + i; c--) {
+				board[N - 1 - i][c] = arr.get(currIdx);
+				currIdx = (currIdx + 1) % arr.size();
+			}
+			for (int r = N - 2 - i; r > 0 + i; r--) {
+				board[r][0 + i] = arr.get(currIdx);
+				currIdx = (currIdx + 1) % arr.size();
+			}
+		}
 
 	}
 
@@ -40,41 +78,4 @@ public class Main {
 		System.out.println(sb.toString());
 	}
 
-	private static void select() {
-		int tmp = (Math.min(N, M)) >> 1;
-		int r = 0;
-		int c = 0;
-
-		for (int i = 0; i < tmp; i++) {
-			move(r, c);
-			r++;
-			c++;
-		}
-	}
-
-	private static void move(int r, int c) {
-		int tmp = board[r][c];
-
-		for (int i = c; i < M - c - 1; i++) {
-			swap(r, i, r, i + 1);
-		}
-
-		for (int i = r + 1; i < N - r; i++) {
-			swap(i - 1, M - 1 - c, i, M - 1 - c);
-		}
-
-		for (int i = M - c - 2; i >= 0 + c; i--) {
-			swap(N - 1 - r, i + 1, N - 1 - r, i);
-		}
-
-		for (int i = N - r - 2; i > 0 + r; i--) {
-			swap(i + 1, c, i, c);
-		}
-	}
-
-	private static void swap(int sr, int sc, int er, int ec) {
-		int tmp = board[sr][sc];
-		board[sr][sc] = board[er][ec];
-		board[er][ec] = tmp;
-	}
 }
