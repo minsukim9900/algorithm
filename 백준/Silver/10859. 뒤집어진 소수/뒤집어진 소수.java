@@ -2,15 +2,18 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	private static HashMap<Integer, Integer> map = new HashMap<>();
+	private static int[] rotate = new int[10];
 	static {
-		map.put(0, 0);
-		map.put(1, 1);
-		map.put(2, 2);
-		map.put(5, 5);
-		map.put(6, 9);
-		map.put(8, 8);
-		map.put(9, 6);
+		rotate[0] = 0;
+		rotate[1] = 1;
+		rotate[2] = 2;
+		rotate[3] = -1;
+		rotate[4] = -1;
+		rotate[5] = 5;
+		rotate[6] = 9;
+		rotate[7] = -1;
+		rotate[8] = 8;
+		rotate[9] = 6;
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -26,14 +29,14 @@ public class Main {
 				System.out.println("no");
 				return;
 			}
-			
-			int v = map.get(tmp);
+
+			int v = rotate[tmp];
 
 			sb.append(v);
 		}
 		Long num = Long.parseLong(sb.toString());
 		String ans = "no";
-		if(isDecimal(num) && isDecimal(Long.parseLong(str))) {
+		if (isDecimal(num) && isDecimal(Long.parseLong(str))) {
 			ans = "yes";
 		}
 		System.out.println(ans);
@@ -41,15 +44,17 @@ public class Main {
 	}
 
 	private static boolean isDecimal(long num) {
-		if(num < 2) {
+		if (num < 2) {
 			return false;
 		}
+		
+		if(num == 2 || num == 3) return true;
+		if(num % 2 == 0 || num % 3 == 0) return false;
 
-		for (long i = 2L; i * i <= num; i++) {
-			if (num % i == 0) {
-				return false;
-			}
+		for(long i = 5; i * i <= num; i += 6) {
+			if(num % i == 0 || num % (i + 2) == 0) return false;
 		}
+		
 		return true;
 	}
 
