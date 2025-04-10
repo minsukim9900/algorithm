@@ -5,7 +5,6 @@ public class Main {
 
 	private static int N;
 	private static char[][] boni;
-	private static boolean result;
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -21,12 +20,7 @@ public class Main {
 		}
 
 		int max = cntSame();
-		check(max);
 
-		if (result) {
-			System.out.println(N);
-			return;
-		}
 
 		for (int r = 0; r < N; r++) {
 			for (int c = 0; c < N-1; c++) {
@@ -34,10 +28,9 @@ public class Main {
 				swapRow(r, c);
 				int tmp = cntSame();
 				max = Math.max(max, tmp);
-				check(max);
 				swapRow(r, c);
 			}
-			if (result) {
+			if (max == N) {
 				System.out.println(N);
 				return;
 			}
@@ -49,10 +42,9 @@ public class Main {
 				swapColumn(r, c);
 				int tmp = cntSame();
 				max = Math.max(max, tmp);
-				check(max);
 				swapColumn(r, c);
 			}
-			if (result) {
+			if (max == N) {
 				System.out.println(N);
 				return;
 			}
@@ -104,10 +96,5 @@ public class Main {
 		return max;
 	}
 
-	public static void check(int max) {
-		if (max == N) {
-			result = true;
-		}
-	}
 
 }
