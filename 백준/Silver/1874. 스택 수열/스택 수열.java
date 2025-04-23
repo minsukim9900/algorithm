@@ -3,8 +3,6 @@ import java.util.*;
 
 public class Main {
 	private static int N;
-	private static Stack<Integer> stack = new Stack<>();
-	private static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -18,11 +16,12 @@ public class Main {
 		}
 		stackSimulate(arr);
 	}
-	
-	
+
 	private static void stackSimulate(int[] arr) {
+		Stack<Integer> stack = new Stack<>();
+		StringBuilder sb = new StringBuilder();
 		int idx = 0;
-		
+
 		for (int i = 1; i <= N; i++) {
 			stack.push(i);
 			sb.append("+").append("\n");
@@ -33,11 +32,6 @@ public class Main {
 				idx++;
 			}
 		}
-		
-		if(idx == N) {
-			System.out.println(sb.toString());
-		}else {
-			System.out.println("NO");
-		}
+		System.out.println(idx == N ? sb.toString() : "NO");
 	}
 }
