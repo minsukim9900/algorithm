@@ -1,19 +1,33 @@
+import java.io.*;
+import java.util.*;
+
 class Solution {
+    private static double ha = 360.0 / (12 * 3600.0);
+    private static double ma = 360.0 / (3600.0);
+    private static double sa = 360.0 / 60.0;
+    
     public int solution(int h1,int m1,int s1,int h2,int m2,int s2) {
-        long start = h1*3600L + m1*60 + s1;
-        long end   = h2*3600L + m2*60 + s2;
-        // 시침↔초침: 43200/719
-        long hi = (start*719 + 43200 - 1) / 43200;
-        long hj = (end  *719) / 43200;
-        long H = Math.max(0, hj - hi + 1);
-        // 분침↔초침: 3600/59
-        long mi = (start*59 + 3600 - 1) / 3600;
-        long mj = (end  *59) / 3600;
-        long M = Math.max(0, mj - mi + 1);
-        // 0초(=12시간 단위) 이벤트 중복 제거
-        int overlap = 0;
-        if (start <= 0 && end >= 0) overlap++;
-        if (start <= 43200 && end >= 43200) overlap++;
-        return (int)(H + M - overlap);
+        int ans = 0;
+        // 각도?
+        double start = h1 * 3600.0 + m1 * 60 + s1;
+        double end = h2 * 3600.0 + m2 * 60 + s2;
+        
+        boolean preOverlap = false;
+        
+        for (double t = start; t<=end; t += 0.001) {
+            double ha = ((t % 43200) / 43200) * 360;
+            double ma = ((t % 3600) / 3600) * 360;
+            double sa = ((t % 60) / 60) * 360;
+            
+            boolean overlap = Math.abs(sa - ha ) < 0.01 || Math.abs(sa - ma) < 0.01;
+            
+            if(overlap && !preOverlap) {
+                ans++;
+            }
+            preOverlap = overlap;
+        }
+        return ans;
     }
+    
+   
 }
