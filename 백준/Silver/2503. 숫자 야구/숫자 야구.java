@@ -2,114 +2,82 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-
 	private static int N;
-	private static int[][] info;
-	private static int count = 0;
-	private static boolean[] check = new boolean[988];
+	private static String[] nums;
+	private static int[] strikeInfo, ballInfo;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
 
 		N = Integer.parseInt(br.readLine());
-		info = new int[N][5];
+		nums = new String[N];
+		strikeInfo = new int[N];
+		ballInfo = new int[N];
 
 		for (int i = 0; i < N; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			String Num = st.nextToken();
-
-			int num1 = Num.charAt(0) - '0';
-			int num2 = Num.charAt(1) - '0';
-			int num3 = Num.charAt(2) - '0';
-
-			int strike = Integer.parseInt(st.nextToken());
-			int ball = Integer.parseInt(st.nextToken());
-
-			info[i][0] = num1;
-			info[i][1] = num2;
-			info[i][2] = num3;
-			info[i][3] = strike;
-			info[i][4] = ball;
-
+			st = new StringTokenizer(br.readLine());
+			nums[i] = st.nextToken();
+			strikeInfo[i] = Integer.parseInt(st.nextToken());
+			ballInfo[i] = Integer.parseInt(st.nextToken());
 		}
-		FirstWork();
-		
-		for (int i = 0; i < N; i++) {
+		System.out.println(simulate());
+	}
 
-			for (int j = 123; j < 988; j++) {
-				if(check[j]) {
-					String num = String.valueOf(j);
-					int num1 = num.charAt(0) - '0';
-					int num2 = num.charAt(1) - '0';
-					int num3 = num.charAt(2) - '0';
-					comp(i, j, num1, num2, num3);
+	private static int simulate() {
+		int cnt = 0;
+
+		for (int i = 1; i <= 9; i++) {
+
+			for (int j = 1; j <= 9; j++) {
+				if (i == j) {
+					continue;
+				}
+
+				for (int k = 1; k <= 9; k++) {
+					if (i == k || k == j) {
+						continue;
+					}
+
+					if (isPoss(i, j, k)) {
+						cnt++;
+					}
 				}
 			}
-
 		}
-		
-		for(boolean b : check) {
-			if(b) count++;
-		}
-		
-		System.out.println(count);
-		
+		return cnt;
 	}
 
-	private static void comp(int comp_idx, int Number, int num1, int num2, int num3) {
-		int comp1 = info[comp_idx][0];
-		int comp2 = info[comp_idx][1];
-		int comp3 = info[comp_idx][2];
-		int compStrike = info[comp_idx][3];
-		int compBall = info[comp_idx][4];
-		int strike = 0;
-		int ball = 0;
-
-		if (comp1 == num1)
-			strike++;
-		if (comp2 == num2)
-			strike++;
-		if (comp3 == num3)
-			strike++;
-		if (strike != compStrike) {
-			check[Number] = false;
-			return;
-		}
-
-		if ( comp2 == num1 || comp3 == num1) {
-			ball++;
-		}
-		if (comp1 == num2 || comp3 == num2) {
-			ball++;
-		}
-		if (comp1 == num3 || comp2 == num3) {
-			ball++;
-		}
-
-		if (ball != compBall) {
-			check[Number] = false;
-			return;
-		}
-
-		check[Number] = true;
-	}
-
-	private static void FirstWork() {
-		for (int j = 123; j < 988; j++) {
-			String num = String.valueOf(j);
-			int num1 = num.charAt(0) - '0';
-			int num2 = num.charAt(1) - '0';
-			int num3 = num.charAt(2) - '0';
-
-			if (num1 == num2 || num2 == num3 || num1 == num3) {
-				check[j] = false;
-			} else if (num2 == 0 || num3 == 0) {
-				check[j] = false;
-			} else {
-				check[j] = true;
+	private static boolean isPoss(int x, int y, int z) {
+		
+		for (int i = 0; i < N; i++) {
+			int strike = 0;
+			int ball = 0;
+			int compX = nums[i].charAt(0) - '0';
+			int compY = nums[i].charAt(1) - '0';
+			int compZ = nums[i].charAt(2) - '0';
+			
+			strike += count(x, compX);
+			ball += count(x, compY);
+			ball += count(x, compZ);
+			
+			strike += count(y, compY);
+			ball += count(y, compX);
+			ball += count(y, compZ);
+			
+			strike += count(z, compZ);
+			ball += count(z, compY);
+			ball += count(z, compX);
+			
+			if(strike != strikeInfo[i] || ball != ballInfo[i]) {
+				return false;
 			}
 		}
-
+		return true;
 	}
-
+	
+	private static int count(int x, int compX) {
+		return x == compX ? 1 : 0;
+	}
+	
 }
