@@ -3,10 +3,7 @@ import java.util.*;
 
 public class Main {
 	private static int W, H, N, P;
-	/*
-	 * 1 북쪽, 2 남쪽, 3 서쪽, 4 동쪽
-	 */
-
+    
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
@@ -25,7 +22,7 @@ public class Main {
 		}
 		st = new StringTokenizer(br.readLine());
 		int pos = distance(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
-		
+
 		System.out.println(simulate(pos, info));
 	}
 
@@ -34,7 +31,7 @@ public class Main {
 
 		for (int i = 0; i < info.length; i++) {
 			int dis = Math.abs(pos - info[i]);
-			
+
 			ans += Math.min(dis, P - dis);
 		}
 		return ans;
@@ -43,21 +40,17 @@ public class Main {
 	private static int distance(int dir, int x) {
 
 		switch (dir) {
-		case 1: {
+		case 1:
 			return x;
-		}
-		case 4: {
+		case 4:
 			return W + x;
-		}
-		case 2: {
+		case 2:
 			return W + H + W - x;
-		}
-		case 3: {
+		case 3:
 			return (W << 1) + H + (H - x);
-		}
 		default:
 			return 0;
 		}
-		
+
 	}
 }
