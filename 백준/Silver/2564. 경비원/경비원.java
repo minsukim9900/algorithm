@@ -2,18 +2,21 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	private static int R, C, N, P;
+	private static int W, H, N, P;
+	/*
+	 * 1 북쪽, 2 남쪽, 3 서쪽, 4 동쪽
+	 */
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 
 		st = new StringTokenizer(br.readLine());
-		C = Integer.parseInt(st.nextToken());
-		R = Integer.parseInt(st.nextToken());
+		W = Integer.parseInt(st.nextToken());
+		H = Integer.parseInt(st.nextToken());
 		N = Integer.parseInt(br.readLine());
 
-		P = (R + C) << 1;
+		P = (H + W) << 1;
 		int[] info = new int[N];
 
 		for (int i = 0; i < N; i++) {
@@ -34,7 +37,6 @@ public class Main {
 			
 			ans += Math.min(dis, P - dis);
 		}
-
 		return ans;
 	}
 
@@ -45,18 +47,17 @@ public class Main {
 			return x;
 		}
 		case 4: {
-			return C + x;
+			return W + x;
 		}
 		case 2: {
-			return C + R + C - x;
+			return W + H + W - x;
 		}
 		case 3: {
-			return (C << 1) + R + (R - x);
+			return (W << 1) + H + (H - x);
 		}
 		default:
 			return 0;
 		}
-
+		
 	}
-
 }
