@@ -16,9 +16,14 @@ class Solution {
     }
     
     private static void dfs(int depth, int n, int[] select) {
-        if(depth == 11 || n >= N) {
+        if(n > N) {
+            return;
+        }
+        
+        if(depth == 10) {
+            select[depth] = N - n;
             int tmp = diff(select);
-            if(tmp > 0 && n == N) {
+            if(tmp > 0) {
                 if(max < tmp) {
                     max = tmp;
                     rs = select.clone();
@@ -44,10 +49,12 @@ class Solution {
         dfs(depth + 1, n, select);
         
         // 해당 점수 과녁을 1 ~ N개 쐈을 때
-        for(int i = 1; i <= N; i++) {
-            select[depth] = i;
-            dfs(depth + 1, n + i, select);
-            select[depth] = 0;
+        int need = infos[depth] + 1;
+        
+        if(need + n <= N) {
+            select[depth] = need;
+            dfs(depth + 1, n + need, select);
+            select[depth] = 0;   
         }
         
     }
