@@ -3,7 +3,6 @@ import java.util.*;
 
 public class Main {
 	private static int N;
-	private static ArrayList<String> arr;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -12,7 +11,6 @@ public class Main {
 
 		int T = Integer.parseInt(br.readLine());
 		for (int t = 1; t <= T; t++) {
-			arr = new ArrayList<>();
 			N = Integer.parseInt(br.readLine());
 			permutation(0, new char[N - 1], 1, 1);
 			System.out.println();
