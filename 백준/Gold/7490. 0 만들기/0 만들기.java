@@ -12,17 +12,10 @@ public class Main {
 
 		int T = Integer.parseInt(br.readLine());
 		for (int t = 1; t <= T; t++) {
-			sb = new StringBuilder();
 			arr = new ArrayList<>();
 			N = Integer.parseInt(br.readLine());
-			permutation(0, new char[N - 1]);
-			
-			Collections.sort(arr);
-			
-			for(String str : arr) {
-				sb.append(str);
-			}
-			System.out.println(sb.toString());
+			permutation(0, new char[N - 1], 1, 1);
+			System.out.println();
 		}
 	}
 
@@ -31,67 +24,33 @@ public class Main {
 	 * 숫자는 오름차순이다. 완탐으로 어떻게 접근할 수 있을까? 각 숫자 사이에 3개의 부호를 넣고 계산하는 방식? 순열이다.
 	 */
 
-	private static void permutation(int num, char[] select) {
-		if (num == N - 1) {
-			StringBuilder sb = new StringBuilder();
-			if (cal(select) == 0) {
+	private static void permutation(int depth, char[] select, int sum, int pre) {
+		if (depth == N - 1) {
+			if (sum == 0) {
+				StringBuilder sb = new StringBuilder();
+
 				for (int i = 0; i < N - 1; i++) {
-					sb.append(i + 1);
-					sb.append(select[i]);
+					sb.append(i + 1).append(select[i]);
 				}
-				sb.append(N).append("\n");
-				arr.add(sb.toString());
+				sb.append(N);
+				System.out.println(sb.toString());
 			}
 		} else {
-			select[num] = '+';
-			permutation(num + 1, select);
 
-			select[num] = '-';
-			permutation(num + 1, select);
-
-			select[num] = ' ';
-			permutation(num + 1, select);
-
-		}
-	}
-
-	private static int cal(char[] select) {
-		StringBuilder sb1 = new StringBuilder();
-		for (int i = 0; i < N - 1; i++) {
-			sb1.append(i + 1);
-			sb1.append(select[i]);
-		}
-		sb1.append(N);
-
-		String expression = sb1.toString().replace(" ", "");
-
-		int sum = 0;
-		int num = expression.charAt(0) - '0';
-		char op = '+';
-
-		for (int i = 1; i < expression.length(); i++) {
-			char c = expression.charAt(i);
-
-			if (c >= '0' && c <= '9') {
-				num = num * 10 + (c - '0');
+			select[depth] = ' ';
+			if (pre < 0) {
+				permutation(depth + 1, select, sum - (pre) + (pre * 10 - (depth + 2)), (pre * 10 - (depth + 2)));
 			} else {
-				if(op == '+') {
-					sum += num;
-				}else {
-					sum -= num;
-				}
-				
-				op = c;
-				num = 0;
+				permutation(depth + 1, select, sum - (pre) + (pre * 10 + (depth + 2)), (pre * 10 + (depth + 2)));
 			}
+
+			select[depth] = '+';
+			permutation(depth + 1, select, sum + (depth + 2), depth + 2);
+
+			select[depth] = '-';
+			permutation(depth + 1, select, sum - (depth + 2), -(depth + 2));
+
 		}
-		
-		if(op == '+') {
-			sum += num;
-		}else {
-			sum -= num;
-		}
-		
-		return sum;
 	}
+
 }
