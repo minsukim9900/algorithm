@@ -24,34 +24,18 @@ public class Main {
 	}
 
 	private static int twopointer() {
-		int result = 0;
-		int left = 0;
-		int right = 0;
-		int sum = nums[left];
-
-		while (left < N) {
-			boolean isPoss = false;
-
-			if (sum == M) {
-				result++;
-				if (left + 1 < N) {
-					sum -= nums[left++];
-					isPoss = true;
+		int left = 0, right = 0, result = 0;
+		int sum = 0;
+		
+		while(true) {
+			if(sum >= M) {
+				if(sum == M) {
+					result++;
 				}
-			} else if (sum > M) {
-				if (left + 1 < N) {
-					sum -= nums[left++];
-					isPoss = true;
-				}
+				sum -= nums[left++];
 			} else {
-				if (right + 1 < N) {
-					sum += nums[++right];
-					isPoss = true;
-				}
-			}
-			
-			if(!isPoss) {
-				break;
+				if(right == N) break;
+				sum += nums[right++];
 			}
 		}
 		return result;
