@@ -17,9 +17,9 @@ class Main {
 			nums[i] = Integer.parseInt(st.nextToken());
 		}
 		Arrays.sort(nums);
-		
+
 		StringBuilder sb = new StringBuilder();
-		for(int i : simulate()) {
+		for (int i : simulate()) {
 			sb.append(i).append(" ");
 		}
 		System.out.println(sb.toString());
@@ -32,18 +32,17 @@ class Main {
 		int right = N - 1;
 
 		while (left < right) {
-			int sum = Math.abs(nums[left] + nums[right]);
+			int sum = nums[left] + nums[right];
 
-			if (sum == 0) {
-				return new int[] { nums[left], nums[right] };
-			}
-
-			if (min > sum) {
-				min = sum;
+			if (min > Math.abs(sum)) {
+				min = Math.abs(sum);
 				result = new int[] { nums[left], nums[right] };
+				if (sum == 0) {
+					return result;
+				}
 			}
-			
-			if (Math.abs(nums[left]) > Math.abs(nums[right])) {
+
+			if (sum < 0) {
 				left++;
 			} else {
 				right--;
