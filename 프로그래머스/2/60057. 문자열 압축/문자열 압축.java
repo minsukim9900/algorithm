@@ -7,7 +7,7 @@ class Solution {
         M = s.length();
         answer = s.length();
         
-        for(int i = 1; i <= M; i++) {
+        for(int i = 1; i <= M >> 1; i++) {
             dfs(0, i, s, "", "", 1);   
         }
         return answer;
