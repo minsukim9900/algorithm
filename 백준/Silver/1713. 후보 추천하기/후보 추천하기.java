@@ -3,8 +3,6 @@ import java.util.*;
 
 public class Main {
 	private static int N, M;
-	private static int[] result;
-	private static int[][] numsInfo;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -13,58 +11,45 @@ public class Main {
 
 		N = Integer.parseInt(br.readLine());
 		M = Integer.parseInt(br.readLine());
-		result = new int[N];
-		numsInfo = new int[M + 1][2];
+		List<int[]> frame = new ArrayList<>();
+		Map<Integer, int[]> map = new HashMap<>();
 
-		int cnt = 0;
 		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < M; i++) {
 			int curr = Integer.parseInt(st.nextToken());
 
-			if (numsInfo[curr][0] > 0) {
-				numsInfo[curr][0]++;
-				continue;
-			}
-
-			if (cnt == N) {
-				int idx = deleteSearchCandidate();
-				numsInfo[idx][0] = 0;
-				numsInfo[idx][1] = 0;
+			if (map.containsKey(curr)) {
+				map.get(curr)[1]++;
 			} else {
-				cnt++;
-			}
-			numsInfo[curr][0]++;
-			numsInfo[curr][1] = i;
-		}
+				if (frame.size() == N) {
+					int[] toRemove = frame.get(0);
 
-		for (int i = 1; i <= M; i++) {
-			if(numsInfo[i][0] > 0) {
-				sb.append(i).append(" ");
+					for (int[] comp : frame) {
+						if (comp[1] < toRemove[1] || (comp[1] == toRemove[1] && comp[2] < toRemove[2])) {
+							toRemove = comp;
+						}
+					}
+					frame.remove(toRemove);
+					map.remove(toRemove[0]);
+				}
+
+				int[] cand = new int[] { curr, 1, i };
+				frame.add(cand);
+				map.put(curr, cand);
 			}
+		}
+		
+		Collections.sort(frame, new Comparator<int[]>() {
+
+			@Override
+			public int compare(int[] o1, int[] o2) {
+				return Integer.compare(o1[0], o2[0]);
+			}
+		});
+		
+		for(int[] w : frame) {
+			sb.append(w[0]).append(" ");
 		}
 		System.out.println(sb.toString());
-
-	}
-
-	private static int deleteSearchCandidate() {
-		int idx = 0;
-		int min = 1001;
-
-		for (int i = 1; i <= M; i++) {
-			if (numsInfo[i][0] == 0) {
-				continue;
-			}
-
-			if (min > numsInfo[i][0]) {
-				min = numsInfo[i][0];
-				idx = i;
-			} else if (min == numsInfo[i][0]) {
-				if (numsInfo[idx][1] > numsInfo[i][1]) {
-					idx = i;
-				}
-			}
-		}
-
-		return idx;
 	}
 }
