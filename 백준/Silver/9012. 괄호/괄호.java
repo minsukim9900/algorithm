@@ -1,40 +1,51 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Stack;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		StringBuilder sb = new StringBuilder();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st;
 
 		int N = Integer.parseInt(br.readLine());
-		
+
 		for (int i = 0; i < N; i++) {
-			String parenthesis = br.readLine();
-			Stack<Character> stack = new Stack<>();
-			for (int w = 0; w < parenthesis.length(); w++) {
-				if (parenthesis.charAt(w) ==  '(') {
-					stack.push(parenthesis.charAt(w));
-				} else{
-					if(stack.empty()) {
-						stack.push(parenthesis.charAt(w));
-						break;
-					}
-					else {
-						stack.pop();
-					}
+			String str = br.readLine();
+			String result = "NO";
+			
+			if(simulate(str)) {
+				result = "YES";
+			}
+			sb.append(result).append("\n");
+		}
+		
+		System.out.println(sb.toString());
+
+	}
+
+	private static boolean simulate(String str) {
+		boolean isPossible = false;
+		Stack<Character> stack = new Stack<>();
+
+		for (int i = 0; i < str.length(); i++) {
+			char c = str.charAt(i);
+
+			if (c == '(') {
+				stack.add(c);
+			} else {
+				if (stack.isEmpty()) {
+					return false;
+				} else {
+					stack.pop();
 				}
-					
-			}
-			if (stack.empty()) {
-				System.out.println("YES");
-			}
-			else {
-				System.out.println("NO");
 			}
 		}
+		
+		if(!stack.isEmpty()) {
+			return false;
+		}
+
+		return true;
 	}
 }
