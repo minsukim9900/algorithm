@@ -1,36 +1,33 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
+	private static int K;
 
 	public static void main(String[] args) throws IOException {
-		StringBuilder sb = new StringBuilder();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st;
+
+		K = Integer.parseInt(br.readLine());
+
+		Stack<Long> stack = new Stack<>();
 		
-		int num = Integer.parseInt(br.readLine());
-		Stack<Integer> stack = new Stack<>();
-		
-		for(int i = 0; i<num; i++) {
-			int a = Integer.parseInt(br.readLine());
-			
-			if(a == 0) {
-				stack.pop();
-			}
-			else {
-				stack.push(a);
+		for (int i = 0; i < K; i++) {
+			long num = Long.parseLong(br.readLine());
+
+			if (num == 0L) {
+				if (!stack.isEmpty()) {
+					stack.pop();
+				}
+			} else {
+				stack.push(num);
 			}
 		}
 		
-		int sum =0;
-		
-		for(int i:stack) {
-			sum += i;
+		long sum = 0L;
+		while(!stack.isEmpty()) {
+			sum += stack.pop();
 		}
 		System.out.println(sum);
 	}
