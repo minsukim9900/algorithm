@@ -13,32 +13,26 @@ class Solution {
                 index--;
                 continue;
             }
-            
-           // System.out.println(index + " " + Arrays.toString(deliveries) + " " + Arrays.toString(pickups));
-            isCompleted(cap, index, deliveries);
-            isCompleted(cap, index, pickups);
+
+            process(cap, index, deliveries);
+            process(cap, index, pickups);
             answer += (index + 1) * 2;
-            //System.out.println("현재 이동 거리: " + answer);
         }
         return answer;
     }
     
-    private static void isCompleted(int cap, int index, int[] arr) {
-        //System.out.println();
+    private static void process(int cap, int index, int[] arr) {
         int startIndex = index;
         int box = cap;
         
         while(index >= 0) {
-            //System.out.print("박스 갯수: " + box + " ");
             if(box >= arr[index]) {
                 box -= arr[index];
                 arr[index--] = 0;
             }else {
                 arr[index] -= box;
-                //System.out.println(Arrays.toString(arr));
                 break;
             }
-            //System.out.println(Arrays.toString(arr));
         }
     }
 }
