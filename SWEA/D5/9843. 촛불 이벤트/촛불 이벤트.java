@@ -26,18 +26,15 @@ public class Solution {
 		while (s <= e) {
 			long mid = (s + e) / 2;
 			long num = cal(mid);
-			
-			
-			if (num == N) {
+
+			if (num >= N) {
 				answer = mid;
-				break;
-			} else if (num > N) {
 				e = mid - 1;
 			} else {
 				s = mid + 1;
 			}
 		}
-		return answer;
+		return cal(answer) == N ? answer : -1;
 	}
 
 	private static long cal(long v) {
