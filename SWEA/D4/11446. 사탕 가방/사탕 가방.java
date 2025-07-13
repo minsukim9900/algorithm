@@ -4,12 +4,12 @@ import java.util.*;
 public class Solution {
 	private static int N;
 	private static long M;
-	private static long[] candy;
+	private static long[] nums;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
 		StringBuilder sb = new StringBuilder();
-		StringTokenizer st = null;
 
 		int T = Integer.parseInt(br.readLine());
 
@@ -17,46 +17,48 @@ public class Solution {
 			st = new StringTokenizer(br.readLine());
 			N = Integer.parseInt(st.nextToken());
 			M = Long.parseLong(st.nextToken());
-			candy = new long[N];
-			
+
+			nums = new long[N];
+
 			st = new StringTokenizer(br.readLine());
 			for (int i = 0; i < N; i++) {
-				candy[i] = Long.parseLong(st.nextToken());
+				nums[i] = Long.parseLong(st.nextToken());
 			}
 			
-			sb.append("#" + t + " " + binarySearch() +"\n");
+			sb.append("#" + t + " ").append(binarySearch()).append("\n");
 		}
-		System.out.print(sb.toString());
-
+		System.out.println(sb.toString());
 	}
 
 	private static long binarySearch() {
+		long answer = 0;
 		long s = 1;
 		long e = 1L << 60;
-		long result = 0;
 
 		while (s <= e) {
-			long mid = s + (e - s) / 2;
+			long mid = (s + e) / 2;
 
-			if (check(mid)) {
-				result = mid;
+			if (isPoss(mid)) {
+				answer = mid;
 				s = mid + 1;
 			} else {
 				e = mid - 1;
 			}
-
 		}
-		return result;
+
+		return answer;
 	}
 
-	private static boolean check(long mid) {
+	private static boolean isPoss(long v) {
 		long cnt = 0;
-		
-		for (int i = 0; i < N; i++) {
-			cnt += candy[i] / mid;
-			
-			if(cnt >= M) return true;
+
+		for (long w : nums) {
+			cnt += (w / v);
+
+			if (cnt >= M)
+				return true;
 		}
+
 		return false;
 	}
 }
