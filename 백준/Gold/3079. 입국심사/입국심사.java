@@ -14,22 +14,20 @@ public class Main {
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		times = new long[N];
-		
-		long min = Long.MAX_VALUE;
+
 		for (int i = 0; i < N; i++) {
 			times[i] = Long.parseLong(br.readLine());
-			min = Math.min(min, times[i]);
 		}
-		System.out.println(binarySearch(min));
+		System.out.println(binarySearch());
 	}
 
-	private static long binarySearch(long min) {
+	private static long binarySearch() {
 		long answer = 0L;
-		long s = min;
-		long e = min * M;
+		long s = 0L;
+		long e = Long.MAX_VALUE;
 
 		while (s <= e) {
-			long mid = (s + e) / 2;
+			long mid = (s >> 1) + (e >> 1);
 
 			if (check(mid)) {
 				e = mid - 1;
@@ -46,7 +44,11 @@ public class Main {
 
 		for (long w : times) {
 			cnt += (v / w);
+			
+			if(cnt >= M) {
+				return true;
+			}
 		}
-		return cnt >= M;
+		return false;
 	}
 }
