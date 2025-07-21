@@ -2,66 +2,63 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-
-	private static int N, findNum;
-	private static int[] dx = { 1, 0, -1, 0 };
-	private static int[] dy = { 0, 1, 0, -1 };
+	private static int N;
 	private static int[][] board;
-	private static int[] result = new int[2];
+	private static int saveNum;
+	private static StringBuilder sb = new StringBuilder();
 
-	public static void main(String[] args) throws IOException {
-
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
+		StringTokenizer st = null;
+
 		N = Integer.parseInt(br.readLine());
-		findNum = Integer.parseInt(br.readLine());
-		
-		board = new int[N+2][N+2];
-		int nums = N * N;
-		int boundary = N;
-		int dir = 0;
-		int r = 0, c = 1;
-		
-		
-		
-			while(nums != 0) {
-				
-				for(int i = 0; i<boundary; i++) {
-					r += dx[dir];
-					board[r][c] = nums--;
-					if(board[r][c] == findNum) {
-						result[0] = r;
-						result[1] = c;
-					}
-				}
-				
-				boundary--;
-				dir = (dir + 1 ) % 4;
-				
-				for(int i = 0; i<boundary; i++) {
-					c += dy[dir];
-					board[r][c] = nums--;
-					if(board[r][c] == findNum) {
-						result[0] = r;
-						result[1] = c;
-					}
-				}
-				dir = (dir + 1 ) % 4;
-				
-				
-				
+		saveNum = Integer.parseInt(br.readLine());
+		board = new int[N][N];
+		simulate();
+		System.out.println(sb.toString());
+	}
+
+	private static void simulate() {
+		int num = N * N;
+		int size = N;
+		int r = 0;
+		int c = 0;
+		int dir = 1;
+		while (num > 0) {
+
+			for (int i = 0; i < size; i++) {
+				board[r][c] = num--;
+				r += dir;
 			}
-			
-			
-		
-		for(int i = 1; i<=N; i++) {
-			for(int j = 1; j<=N; j++) {
-				sb.append(board[i][j]).append(" ");
+
+			r -= dir;
+			c += dir;
+			size--;
+			for (int i = 0; i < size; i++) {
+				board[r][c] = num--;
+				c += (dir);
+			}
+
+			c -= dir;
+			dir *= -1;
+			r += dir;
+		}
+		int[] ans = new int[2];
+		for (int y = 0; y < N; y++) {
+			for (int x = 0; x < N; x++) {
+				sb.append(board[y][x] + " ");
+				if (board[y][x] == saveNum) {
+					ans[0] = y + 1;
+					ans[1] = x + 1;
+				}
 			}
 			sb.append("\n");
 		}
-		sb.append(result[0]).append(" ").append(result[1]);
-		System.out.println(sb.toString());
+
+		for (int w : ans) {
+			sb.append(w).append(" ");
+		}
+
 	}
 
 }
