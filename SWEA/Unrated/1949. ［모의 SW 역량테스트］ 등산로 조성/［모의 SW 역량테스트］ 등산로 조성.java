@@ -5,6 +5,7 @@ public class Solution {
 	private static int N, K, answer;
 	private static int[][] board;
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+	private static boolean[][] visited;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -28,12 +29,8 @@ public class Solution {
 					max = Math.max(max, board[r][c]);
 				}
 			}
-
 			ArrayList<int[]> high = new ArrayList<>();
 
-			/*
-			 * high에 저장할 배열 내용은 가장 높은 정상부분의 정보를 저장한다.
-			 */
 			for (int r = 0; r < N; r++) {
 				for (int c = 0; c < N; c++) {
 					if (board[r][c] == max) {
@@ -41,45 +38,39 @@ public class Solution {
 					}
 				}
 			}
-
+			
+			visited = new boolean[N][N];
 			for (int[] curr : high) {
-				dfs(curr[0], curr[1], false, 1, new boolean[N][N]);
+				visited[curr[0]][curr[1]] = true;
+				dfs(curr[0], curr[1], false, 1);
+				visited[curr[0]][curr[1]] = false;
 			}
 			sb.append("#").append(t).append(" ").append(answer).append("\n");
 		}
 		System.out.println(sb.toString());
 	}
 
-	private static void dfs(int r, int c, boolean isComplete, int distance, boolean[][] visited) {
-		visited[r][c] = true;
-
-		// 4방위 탐색
+	private static void dfs(int r, int c, boolean isComplete, int distance) {
 		for (int idx = 0; idx < 4; idx++) {
 			int nr = r + delta[idx][0];
 			int nc = c + delta[idx][1];
-			// 범위에 들어왔는지 && 방문한 적이 없는지
 			if (isRange(nr, nc) && !visited[nr][nc]) {
 				int savePoint = board[nr][nc];
-				// 다음 위치가 현재 위치보다 낮은 지형일 때
+				
 				if (board[nr][nc] < board[r][c]) {
 					visited[nr][nc] = true;
-					dfs(nr, nc, isComplete, distance + 1, visited);
+					dfs(nr, nc, isComplete, distance + 1);
 				} else {
-					// 다음 위치가 현재 위치보다 같거나 높은 지형일 때
-					// 깍은 적이 없고 깎았을 때 내리막길이 될 경우에만
 					if (!isComplete && board[nr][nc] - K < board[r][c]) {
 						isComplete = true;
 						board[nr][nc] = board[r][c] - 1;
 						visited[nr][nc] = true;
-						dfs(nr, nc, isComplete, distance + 1, visited);
-						// 다시 깎았는지 여부 확인 복구
+						dfs(nr, nc, isComplete, distance + 1);
 						isComplete = false;
 					} else {
-						// 이미 한 번 깍은 상태라면
 						answer = Math.max(answer, distance);
 					}
 				}
-				// 깎은 지형 다시 복구
 				visited[nr][nc] = false;
 				board[nr][nc] = savePoint;
 			}
