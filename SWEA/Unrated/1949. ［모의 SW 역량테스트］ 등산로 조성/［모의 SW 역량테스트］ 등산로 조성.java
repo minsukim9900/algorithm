@@ -11,7 +11,6 @@ public class Solution {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		StringBuilder sb = new StringBuilder();
-
 		int T = Integer.parseInt(br.readLine());
 
 		for (int t = 1; t <= T; t++) {
@@ -38,11 +37,10 @@ public class Solution {
 					}
 				}
 			}
-			
 			visited = new boolean[N][N];
 			for (int[] curr : high) {
 				visited[curr[0]][curr[1]] = true;
-				dfs(curr[0], curr[1], false, 1);
+				dfs(curr[0], curr[1], false, 1, max);
 				visited[curr[0]][curr[1]] = false;
 			}
 			sb.append("#").append(t).append(" ").append(answer).append("\n");
@@ -50,29 +48,26 @@ public class Solution {
 		System.out.println(sb.toString());
 	}
 
-	private static void dfs(int r, int c, boolean isComplete, int distance) {
+	private static void dfs(int r, int c, boolean hasCut, int distance, int preH) {
 		for (int idx = 0; idx < 4; idx++) {
 			int nr = r + delta[idx][0];
 			int nc = c + delta[idx][1];
 			if (isRange(nr, nc) && !visited[nr][nc]) {
-				int savePoint = board[nr][nc];
-				
-				if (board[nr][nc] < board[r][c]) {
+				if (board[nr][nc] < preH) {
 					visited[nr][nc] = true;
-					dfs(nr, nc, isComplete, distance + 1);
+					dfs(nr, nc, hasCut, distance + 1, board[nr][nc]);
+                    visited[nr][nc] = false;
 				} else {
-					if (!isComplete && board[nr][nc] - K < board[r][c]) {
-						isComplete = true;
-						board[nr][nc] = board[r][c] - 1;
+					if (!hasCut && board[nr][nc] - K < preH) {
+						hasCut = true;
 						visited[nr][nc] = true;
-						dfs(nr, nc, isComplete, distance + 1);
-						isComplete = false;
+						dfs(nr, nc, hasCut, distance + 1, preH - 1);
+                        visited[nr][nc] = false;
+						hasCut = false;
 					} else {
 						answer = Math.max(answer, distance);
 					}
 				}
-				visited[nr][nc] = false;
-				board[nr][nc] = savePoint;
 			}
 		}
 	}
