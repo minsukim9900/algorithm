@@ -20,7 +20,6 @@ public class Main {
 			s = Math.min(s, nums[i]);
 			e = Math.max(e, nums[i]);
 		}
-
 		e += K;
 		Arrays.sort(nums);
 		System.out.println(binarySearch(s, e, nums));
@@ -38,29 +37,20 @@ public class Main {
 			} else {
 				e = mid - 1;
 			}
-
 		}
 		return answer;
 	}
 
 	private static boolean check(int value, int[] nums) {
-		int min = Integer.MAX_VALUE;
-		int k = K;
+		long count = 0;
 
 		for (int curr : nums) {
-			int tmp = value - curr;
-
-			if (k > 0 && tmp > 0) {
-				if (k >= tmp) {
-					curr += tmp;
-					k -= tmp;
-				} else {
-					curr += k;
-					k = 0;
-				}
+			if (value >= curr) {
+				count += value - curr;
+			} else {
+				break;
 			}
-			min = Math.min(min, curr);
 		}
-		return min >= value;
+		return count <= K;
 	}
 }
