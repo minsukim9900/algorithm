@@ -49,6 +49,8 @@ public class Solution {
 	}
 
 	private static void dfs(int r, int c, boolean hasCut, int distance, int preH) {
+        answer = Math.max(answer, distance);
+        
 		for (int idx = 0; idx < 4; idx++) {
 			int nr = r + delta[idx][0];
 			int nc = c + delta[idx][1];
@@ -64,9 +66,7 @@ public class Solution {
 						dfs(nr, nc, hasCut, distance + 1, preH - 1);
                         visited[nr][nc] = false;
 						hasCut = false;
-					} else {
-						answer = Math.max(answer, distance);
-					}
+					} 
 				}
 			}
 		}
