@@ -17,7 +17,7 @@ public class Main {
 		for (int i = 0; i < N; i++) {
 			nums[i] = Integer.parseInt(st.nextToken());
 		}
-		for(int w : cal()) {
+		for (int w : cal()) {
 			sb.append(w).append(" ");
 		}
 		System.out.println(sb.toString());
@@ -25,25 +25,20 @@ public class Main {
 
 	private static int[] cal() {
 		int[] answer = new int[N];
-		Stack<Integer> stack = new Stack<>();
+		Arrays.fill(answer, -1);
+		Deque<Integer> stack = new ArrayDeque<>();
 
 		for (int i = N - 1; i >= 0; i--) {
 			if (!stack.isEmpty()) {
 				while (!stack.isEmpty() && stack.peek() <= nums[i]) {
 					stack.pop();
 				}
-
-				if (stack.isEmpty()) {
-					answer[i] = -1;
-				} else {
+				if(!stack.isEmpty()) {
 					answer[i] = stack.peek();
 				}
-			} else {
-				answer[i] = -1;
 			}
 			stack.push(nums[i]);
 		}
-
 		return answer;
 	}
 }
