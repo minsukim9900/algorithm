@@ -2,99 +2,84 @@ import java.io.*;
 import java.util.*;
 
 public class Solution {
-
 	private static int D, W, K;
-	private static int[][] pilm;
-	private static int min;
-	private static int[] A, B;
+	private static int[][] board;
+	private static int answer;
 
 	public static void main(String[] args) throws IOException {
-
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
 		StringBuilder sb = new StringBuilder();
-		StringTokenizer st = null;
 
 		int T = Integer.parseInt(br.readLine());
-
 		for (int t = 1; t <= T; t++) {
 			st = new StringTokenizer(br.readLine());
-
 			D = Integer.parseInt(st.nextToken());
 			W = Integer.parseInt(st.nextToken());
 			K = Integer.parseInt(st.nextToken());
-			min = 987654321;
-			pilm = new int[D][W];
-
-			A = new int[W];
-			B = new int[W];
-			Arrays.fill(B, 1);
-
+			answer = D;
+			board = new int[D][W];
+            
 			for (int r = 0; r < D; r++) {
 				st = new StringTokenizer(br.readLine());
 				for (int c = 0; c < W; c++) {
-					pilm[r][c] = Integer.parseInt(st.nextToken());
+					board[r][c] = Integer.parseInt(st.nextToken());
 				}
 			}
-
-			dfs(0, 0);
-
-			sb.append("#" + t + " " + min + "\n");
+			simulate(0, 0);
+			sb.append("#").append(t).append(" ").append(answer).append("\n");
 		}
 		System.out.println(sb.toString());
-
 	}
 
-	private static void dfs(int r, int cnt) {
-
-		if (isClear()) {
-			min = Math.min(min, cnt);
+	private static void simulate(int depth, int cnt) {
+		if (cnt >= answer) {
+			return;
 		}
 
-		if (cnt > min || r >= D)
+		if (depth == D) {
+			if (check()) {
+				answer = Math.min(answer, cnt);
+			}
 			return;
+		}
 
-		dfs(r + 1, cnt);
+		// 약품 주입 X
+		simulate(depth + 1, cnt);
 
-		int[] tmpA = pilm[r];
-		pilm[r] = A;
-		dfs(r + 1, cnt + 1);
-		pilm[r] = tmpA;
+		// 약품 A 주입
+		int[] tmp = board[depth].clone();
+		Arrays.fill(board[depth], 0);
+		simulate(depth + 1, cnt + 1);
 
-		int[] tmpB = pilm[r];
-		pilm[r] = B;
-		dfs(r + 1, cnt + 1);
-		pilm[r] = tmpB;
-
+		// 약품 B 주입
+		Arrays.fill(board[depth], 1);
+		simulate(depth + 1, cnt + 1);
+		board[depth] = tmp;
 	}
 
-	private static boolean isClear() {
-
+	private static boolean check() {
 		for (int c = 0; c < W; c++) {
-
 			int cnt = 1;
-			boolean flag = false;
-			
-			for (int r = 1; r < D; r++) {
+			int state = board[0][c];
 
-				if (pilm[r][c] == pilm[r - 1][c]) {
+			for (int r = 1; r < D; r++) {
+				if (state == board[r][c]) {
 					cnt++;
 				} else {
+					state = board[r][c];
 					cnt = 1;
 				}
-
+				
 				if (cnt >= K) {
-					flag = true;
 					break;
 				}
-
 			}
-
-			if (!flag)
+			
+			if (cnt < K) {
 				return false;
-
+			}
 		}
-
 		return true;
 	}
-
 }
