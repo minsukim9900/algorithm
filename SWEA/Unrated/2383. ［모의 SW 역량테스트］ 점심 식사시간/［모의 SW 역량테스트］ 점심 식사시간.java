@@ -35,6 +35,7 @@ public class Solution {
 				}
 			}
 
+			// 사람마다 각 계단 별 거리를 저장할 배열
 			dist = new int[person.size()][2];
 			for (int i = 0; i < person.size(); i++) {
 				int r = person.get(i)[0];
@@ -44,49 +45,49 @@ public class Solution {
 					dist[i][j] = Math.abs(r - stairs[j][0]) + Math.abs(c - stairs[j][1]);
 				}
 			}
-			selectStair();
+
+			// 각 사람별로 어떤 계단을 선택할 지 고르는 for문
+			// 0은 첫 번째 계단, 1은 두 번째 계단
+			for (int mask = 0; mask < (1 << person.size()); mask++) {
+				answer = Math.min(answer, goDownStair(mask));
+			}
+
 			sb.append("#").append(t).append(" ").append(answer).append("\n");
 		}
 		System.out.println(sb.toString());
 	}
 
-	private static void selectStair() {
-		for (int mask = 0; mask < (1 << person.size()); mask++) {
-			answer = Math.min(answer, goDownStair(mask));
-		}
-	}
-
 	private static int goDownStair(int select) {
-		PriorityQueue<int[]>[] pq = new PriorityQueue[2];
-        
+		PriorityQueue<Integer>[] pq = new PriorityQueue[2];
 		for (int i = 0; i < 2; i++) {
-			pq[i] = new PriorityQueue<>((o1, o2) -> Integer.compare(o1[1], o2[1]));
+			pq[i] = new PriorityQueue<>();
 		}
-		int time = Integer.MAX_VALUE;
+		// 최대 시간
+		int time = N << 1;
 
+		// 시작 할 시간을 구하고, 각 사람 별로 해당 계단 앞에 대기 시키기
 		for (int i = 0; i < person.size(); i++) {
 			int[] curr = person.get(i);
 			int idx = ((select & (1 << i)) > 0) ? 1 : 0;
-			time = Math.min(time, dist[i][idx]);
 
-			pq[idx].add(new int[] { i + 1, dist[i][idx] });
+			time = Math.min(time, dist[i][idx]);
+			pq[idx].add(dist[i][idx]);
 		}
 
-		Queue<int[]>[] q = new ArrayDeque[2];
+		Queue<Integer>[] q = new ArrayDeque[2];
 		for (int i = 0; i < 2; i++) {
 			q[i] = new ArrayDeque<>();
 		}
+
 		int count = person.size();
 
 		while (count >= 1) {
 			time++;
+
 			// 먼저 계단에 있는 사람 한 칸 이동한다.
 			for (int i = 0; i < 2; i++) {
-				if (q[i].isEmpty()) {
-					continue;
-				}
-
-				while (!q[i].isEmpty() && q[i].peek()[1] + stairs[i][2] == time) {
+				// 계단에 사람이 있고 도착할 시간이라면 도착 처리 해준다.
+				while (!q[i].isEmpty() && q[i].peek() + stairs[i][2] == time) {
 					q[i].poll();
 					count--;
 				}
@@ -95,20 +96,13 @@ public class Solution {
 			// 도착하거나 대기하고 있는 사람을 계단에 넣는다.
 			for (int i = 0; i < 2; i++) {
 				// 대기자가 없을 경우는 패스'
-				if (pq[i].isEmpty()) {
-					continue;
-				}
-
-				while (true) {
-					if (q[i].size() == 3 || (!pq[i].isEmpty() && pq[i].peek()[1] + 1 > time)) {
+				while (!pq[i].isEmpty()) {
+					// 이미 계단이 꽉차 있거나, 아직 출발 할 시간이 아니라면 종료 어차피 뒤에 있는 얘들도 출발 할 시간이 아니다.
+					if (q[i].size() == 3 || (!pq[i].isEmpty() && pq[i].peek() + 1 > time)) {
 						break;
 					}
-                    
-					if (pq[i].isEmpty()) {
-						break;
-					}
-					int[] curr = pq[i].poll();
-					q[i].add(new int[] { curr[1], time });
+					int curr = pq[i].poll();
+					q[i].add(time);
 				}
 			}
 		}
