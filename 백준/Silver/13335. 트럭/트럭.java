@@ -1,62 +1,52 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Main {
-
 	private static int N, W, L;
-	private static int[] truck;
-	private static Queue<Integer> bridge = new ArrayDeque<>();
+	private static int[] trucks;
 
-	public static void main(String[] args) throws IOException {
-
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = null;
 		StringBuilder sb = new StringBuilder();
-		StringTokenizer st;
 
 		st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
 		W = Integer.parseInt(st.nextToken());
 		L = Integer.parseInt(st.nextToken());
 
-		truck = new int[N];
+		trucks = new int[N];
 		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < N; i++) {
-			truck[i] = Integer.parseInt(st.nextToken());
+			trucks[i] = Integer.parseInt(st.nextToken());
 		}
-		System.out.println(process());
-
+		System.out.println(simulate());
 	}
 
-	private static int process() {
-
-		for (int i = 0; i < W; i++) {
-			bridge.offer(0);
-		}
-
-		int cnt = 0;
-		int sum = 0;
+	private static int simulate() {
+		int time = 0;
 		int idx = 0;
 
-		while (idx < N) {
+		Queue<Integer> bridge = new ArrayDeque<>();
+		for (int i = 0; i < W; i++) {
+			bridge.add(0);
+		}
+		int l = 0;
 
-			cnt++;
-
-			sum -= bridge.poll();
-
-			if (sum + truck[idx] > L) {
-
-				bridge.offer(0);
-
-			} else {
-
-				bridge.offer(truck[idx]);
-				sum += truck[idx++];
-
+		while (true) {
+			if (idx == N) {
+				break;
 			}
 
+			time++;
+			l -= bridge.poll();
+			if (l + trucks[idx] <= L) {
+				l += trucks[idx];
+				bridge.add(trucks[idx++]);
+			} else {
+				bridge.add(0);
+			}
 		}
-
-		return cnt + W;
+		return time += W;
 	}
-
 }
