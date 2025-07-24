@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Solution {
 	private static int N, answer;
-	private static int[][] board, stairs;
+	private static int[][] board, stairs, dist;
 	private static ArrayList<int[]> person;
 
 	public static void main(String[] args) throws IOException {
@@ -34,27 +34,31 @@ public class Solution {
 					}
 				}
 			}
-			selectStair(0, 0);
+
+			dist = new int[person.size()][2];
+			for (int i = 0; i < person.size(); i++) {
+				int r = person.get(i)[0];
+				int c = person.get(i)[1];
+
+				for (int j = 0; j < 2; j++) {
+					dist[i][j] = Math.abs(r - stairs[j][0]) + Math.abs(c - stairs[j][1]);
+				}
+			}
+			selectStair();
 			sb.append("#").append(t).append(" ").append(answer).append("\n");
 		}
 		System.out.println(sb.toString());
 	}
 
-	private static void selectStair(int depth, int select) {
-		if (depth == person.size()) {
-			answer = Math.min(answer, goDownStair(select));
-			return;
+	private static void selectStair() {
+		for (int mask = 0; mask < (1 << person.size()); mask++) {
+			answer = Math.min(answer, goDownStair(mask));
 		}
-		// A 계단을 이용할 때
-		selectStair(depth + 1, select);
-
-		// B 계단을 이용할 때
-		select |= (1 << depth);
-		selectStair(depth + 1, select);
 	}
 
 	private static int goDownStair(int select) {
 		PriorityQueue<int[]>[] pq = new PriorityQueue[2];
+        
 		for (int i = 0; i < 2; i++) {
 			pq[i] = new PriorityQueue<>((o1, o2) -> Integer.compare(o1[1], o2[1]));
 		}
@@ -62,27 +66,20 @@ public class Solution {
 
 		for (int i = 0; i < person.size(); i++) {
 			int[] curr = person.get(i);
-			int idx = 0;
+			int idx = ((select & (1 << i)) > 0) ? 1 : 0;
+			time = Math.min(time, dist[i][idx]);
 
-			if ((select & (1 << i)) > 0) {
-				idx = 1;
-			}
-			int distance = Math.abs(stairs[idx][0] - curr[0]) + Math.abs(stairs[idx][1] - curr[1]);
-			time = Math.min(time, distance);
-
-			pq[idx].add(new int[] { i + 1, distance });
+			pq[idx].add(new int[] { i + 1, dist[i][idx] });
 		}
 
 		Queue<int[]>[] q = new ArrayDeque[2];
 		for (int i = 0; i < 2; i++) {
 			q[i] = new ArrayDeque<>();
 		}
-
 		int count = person.size();
 
 		while (count >= 1) {
 			time++;
-
 			// 먼저 계단에 있는 사람 한 칸 이동한다.
 			for (int i = 0; i < 2; i++) {
 				if (q[i].isEmpty()) {
@@ -106,6 +103,7 @@ public class Solution {
 					if (q[i].size() == 3 || (!pq[i].isEmpty() && pq[i].peek()[1] + 1 > time)) {
 						break;
 					}
+                    
 					if (pq[i].isEmpty()) {
 						break;
 					}
