@@ -2,178 +2,118 @@ import java.io.*;
 import java.util.*;
 
 public class Solution {
-
-	private static int N, M, S, min;
-	private static int[][] map;
-	private static ArrayList<int[]> person, stair;
+	private static int N, answer;
+	private static int[][] board, stairs;
+	private static ArrayList<int[]> person;
 
 	public static void main(String[] args) throws IOException {
-
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
 		StringBuilder sb = new StringBuilder();
-		StringTokenizer st = null;
 
 		int T = Integer.parseInt(br.readLine());
-
 		for (int t = 1; t <= T; t++) {
-
 			N = Integer.parseInt(br.readLine());
-			map = new int[N][N];
-			min = Integer.MAX_VALUE;
 			person = new ArrayList<>();
-			stair = new ArrayList<>();
+			board = new int[N][N];
+			stairs = new int[2][3];
+			answer = Integer.MAX_VALUE;
+			int tempIdx = 0;
 
 			for (int r = 0; r < N; r++) {
 				st = new StringTokenizer(br.readLine());
-
 				for (int c = 0; c < N; c++) {
+					board[r][c] = Integer.parseInt(st.nextToken());
 
-					map[r][c] = Integer.parseInt(st.nextToken());
-
-					if (map[r][c] == 1) {
+					if (board[r][c] == 1) {
 						person.add(new int[] { r, c });
-					} else if (map[r][c] > 1) {
-						stair.add(new int[] { r, c, map[r][c] });
+					} else if (board[r][c] > 1) {
+						stairs[tempIdx][0] = r;
+						stairs[tempIdx][1] = c;
+						stairs[tempIdx++][2] = board[r][c];
 					}
-
 				}
-
 			}
-
-			M = person.size();
-			S = stair.size();
-			perm(0, new int[M]);
-			
-			sb.append("#"+ t + " " + min + "\n");
+			selectStair(0, 0);
+			sb.append("#").append(t).append(" ").append(answer).append("\n");
 		}
-		
 		System.out.println(sb.toString());
-
 	}
 
-	private static void perm(int depth, int[] select) {
-
-		if (depth == M) {
-			update(select);
-		} else {
-
-			for (int i = 0; i < S; i++) {
-				select[depth] = i;
-				perm(depth + 1, select);
-			}
-
+	private static void selectStair(int depth, int select) {
+		if (depth == person.size()) {
+			answer = Math.min(answer, goDownStair(select));
+			return;
 		}
+		// A 계단을 이용할 때
+		selectStair(depth + 1, select);
+
+		// B 계단을 이용할 때
+		select |= (1 << depth);
+		selectStair(depth + 1, select);
 	}
 
-	private static void update(int[] select) {
-
-		int[] cnt = new int[S];
-		for (int i = 0; i < M; i++) {
-			cnt[select[i]]++;
+	private static int goDownStair(int select) {
+		PriorityQueue<int[]>[] pq = new PriorityQueue[2];
+		for (int i = 0; i < 2; i++) {
+			pq[i] = new PriorityQueue<>((o1, o2) -> Integer.compare(o1[1], o2[1]));
 		}
+		int time = Integer.MAX_VALUE;
 
-		int[][][] info = new int[S][][];
+		for (int i = 0; i < person.size(); i++) {
+			int[] curr = person.get(i);
+			int idx = 0;
 
-		for (int i = 0; i < S; i++) {
-			info[i] = new int[cnt[i]][3];
-		}
-
-		for (int i = 0; i < M; i++) {
-			int[] p = person.get(i);
-			int[] s = stair.get(select[i]);
-
-			int d = Math.abs(p[0] - s[0]) + Math.abs(p[1] - s[1]);
-
-			info[select[i]][--cnt[select[i]]] = new int[] { i, d, select[i], stair.get(select[i])[2], 0 };
-
-		}
-
-		for (int i = 0; i < S; i++) {
-			Arrays.sort(info[i], new Comparator<int[]>() {
-
-				@Override
-				public int compare(int[] o1, int[] o2) {
-
-					if (o1[1] == o2[1]) {
-						return o1[0] - o2[0];
-					}
-
-					return o1[1] - o2[1];
-				}
-			});
-		}
-
-		min = Math.min(min,cal(info));
-		
-	}
-
-	private static int cal(int[][][] info) {
-		
-		int time = 987654321;
-		for (int i = 0; i < info.length; i++) {
-			if (info[i].length == 0)
-				continue;
-			time = Math.min(time, info[i][0][1]);
-		}
-
-		int cnt = 0;
-
-		int[] stairCnt = new int[S];
-
-		Queue<int[]>[] wait = new ArrayDeque[S];
-		for (int i = 0; i < S; i++) {
-			wait[i] = new ArrayDeque<>();
-		}
-
-		Queue<int[]>[] start = new ArrayDeque[S];
-		for (int i = 0; i < S; i++) {
-			start[i] = new ArrayDeque<>();
-		}
-
-		while (cnt < M) {
-			
-			if(cnt == M) break;
-			for (int i = 0; i < info.length; i++) {
-				if (info[i].length == 0)
-					continue;
-
-				for (int j = 0; j < info[i].length; j++) {
-					if (info[i][j][1] == time) {
-						wait[i].add(info[i][j]);
-					}
-				}
+			if ((select & (1 << i)) > 0) {
+				idx = 1;
 			}
-			
+			int distance = Math.abs(stairs[idx][0] - curr[0]) + Math.abs(stairs[idx][1] - curr[1]);
+			time = Math.min(time, distance);
 
-			for (int i = 0; i < S; i++) {
-				
-				while (stairCnt[i] < 3 && !wait[i].isEmpty() && wait[i].peek()[1]  < time) {
-					stairCnt[i]++;
-					int[] curr = wait[i].poll();
-					curr[4] += time;
-					start[i].add(curr);
-				}
-				
-			}
-			
+			pq[idx].add(new int[] { i + 1, distance });
+		}
 
-			for (int i = 0; i < S; i++) {
-				
-				while (!start[i].isEmpty() && time >= start[i].peek()[4] + start[i].peek()[3] - 1) {
-					stairCnt[i]--;
-					cnt++;
-					int[] curr = start[i].poll();
-				}
-			}
-			
-			
-			
+		Queue<int[]>[] q = new ArrayDeque[2];
+		for (int i = 0; i < 2; i++) {
+			q[i] = new ArrayDeque<>();
+		}
+
+		int count = person.size();
+
+		while (count >= 1) {
 			time++;
 
+			// 먼저 계단에 있는 사람 한 칸 이동한다.
+			for (int i = 0; i < 2; i++) {
+				if (q[i].isEmpty()) {
+					continue;
+				}
+
+				while (!q[i].isEmpty() && q[i].peek()[1] + stairs[i][2] == time) {
+					q[i].poll();
+					count--;
+				}
+			}
+
+			// 도착하거나 대기하고 있는 사람을 계단에 넣는다.
+			for (int i = 0; i < 2; i++) {
+				// 대기자가 없을 경우는 패스'
+				if (pq[i].isEmpty()) {
+					continue;
+				}
+
+				while (true) {
+					if (q[i].size() == 3 || (!pq[i].isEmpty() && pq[i].peek()[1] + 1 > time)) {
+						break;
+					}
+					if (pq[i].isEmpty()) {
+						break;
+					}
+					int[] curr = pq[i].poll();
+					q[i].add(new int[] { curr[1], time });
+				}
+			}
 		}
-		
 		return time;
-
 	}
-
 }
