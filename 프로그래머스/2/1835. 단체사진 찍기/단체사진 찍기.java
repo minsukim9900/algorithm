@@ -2,25 +2,22 @@ import java.io.*;
 import java.util.*;
 
 class Solution {
-    private static char[] person = {'A', 'C', 'F', 'J', 'M', 'N', 'R', 'T'};
-    private static boolean isCheck = false;
+    private static char[] c = {'A', 'C', 'F', 'J', 'M', 'N', 'R', 'T'};
+    private static Map<Character, Integer> map = Map.of('A', 0, 'C', 1, 'F', 2, 'J', 3, 'M', 4
+                                                           , 'N', 5, 'R', 6, 'T', 7);
     private static int count;
     
     private static class Info {
-        char start;
-        char end;
+        int start;
+        int end;
         int state;
         int value;
         
-        public Info(char start, char end, int state, int value) {
-            this.start = start;
-            this.end = end;
+        public Info(char s, char e, int state, int value) {
+            this.start = map.get(s);
+            this.end = map.get(e);
             this.state = state;
             this.value = value;
-        }
-        
-        public String toString() {
-            return start + " " + end +" " + state + " " + value;
         }
     }
     
@@ -32,6 +29,7 @@ class Solution {
         for(int i = 0; i < data.length; i++) {
             char tmp = data[i].charAt(3);
             int num = 0;
+            
             if(tmp == '>') {
                 num = 1;
             }else if(tmp == '<') {
@@ -41,31 +39,31 @@ class Solution {
         }
         
         count = 0;
-        perm(0, new boolean[person.length], new HashMap<Character, Integer>());
+        perm(0, new int[8], new boolean[8]);
+        
         int answer = count;
         return answer;
     }
     
-    private static void perm(int idx, boolean[] visited, Map<Character, Integer> map) {
-        if(idx == person.length && isPoss(map)) {
+    private static void perm(int idx, int[] pos, boolean[] visited) {
+        if(idx == 8 && isPoss(pos, visited)) {
             count++;
         } else {
-            for(int i = 0; i < person.length; i++) {
+            for(int i = 0; i < 8; i++) {
                 if(visited[i]) continue;
                 
+                pos[i] = idx;
                 visited[i] = true;
-                map.put(person[idx], i);
-                perm(idx + 1, visited, map);
+                perm(idx + 1, pos, visited);
                 visited[i] = false;
             }
         }
     }
     
-    private static boolean isPoss(Map<Character, Integer> map) {
+    private static boolean isPoss(int[] pos, boolean[] visited) {
         for(Info info : infos) {
-            int s = map.get(info.start);
-            int e = map.get(info.end);
-            
+            int s = pos[info.start];
+            int e = pos[info.end];
             int state = info.state;
             int range = info.value;
             
