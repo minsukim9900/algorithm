@@ -49,8 +49,6 @@ public class Solution {
 
 	private static int nextTime(int time) {
 		int result = Integer.MAX_VALUE;
-
-
 		if (!workA.isEmpty()) {
 			result = Math.min(result, workA.peek()[1]);
 		}
@@ -62,11 +60,7 @@ public class Solution {
 		if (!guest.isEmpty() && guest.peek()[1] > time) {
 			result = Math.min(result, guest.peek()[1]);
 		}
-		if (result > time) {
-			return time + 1;
-		}
-
-		return result;
+		return (result > time) ? result : time + 1;
 	}
 
 	private static int simulate() {
@@ -87,7 +81,7 @@ public class Solution {
 
 			// 차량 정비 대기하는 사람들을 순서대로 차량 정비 시작
 			startRepairsForWaitingGuests(time);
-			
+
 			time = nextTime(time);
 		}
 		return result == 0 ? -1 : result;
