@@ -51,18 +51,18 @@ public class Solution {
 		int result = Integer.MAX_VALUE;
 
 		if (!guest.isEmpty()) {
-			result = guest.peek()[1];
+			result = Math.min(result, guest.peek()[1]);
 		}
 
 		if (!workA.isEmpty()) {
-			result = workA.peek()[1];
+			result = Math.min(result, workA.peek()[1]);
 		}
 
 		if (!workB.isEmpty()) {
-			result = workB.peek()[1];
+			result = Math.min(result, workB.peek()[1]);
 		}
 
-		if (result > time) {
+		if (result <= time) {
 			return time + 1;
 		}
 
