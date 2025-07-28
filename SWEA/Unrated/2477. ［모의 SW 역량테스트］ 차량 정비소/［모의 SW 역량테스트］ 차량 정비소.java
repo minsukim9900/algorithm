@@ -5,7 +5,7 @@ public class Solution {
 	private static int N, M, K, A, B;
 	private static int[] infoA, infoB;
 	private static boolean[] visitedA, visitedB;
-	private static Queue<int[]> guest = new ArrayDeque<>();
+	private static Queue<int[]> guest;
 	private static PriorityQueue<int[]> workA;
 	private static PriorityQueue<int[]> workB;
 	private static Queue<int[]> waitB;
@@ -46,7 +46,29 @@ public class Solution {
 		}
 		System.out.println(sb.toString());
 	}
-	
+
+	private static int nextTime(int time) {
+		int result = Integer.MAX_VALUE;
+
+		if (!guest.isEmpty()) {
+			result = guest.peek()[1];
+		}
+
+		if (!workA.isEmpty()) {
+			result = workA.peek()[1];
+		}
+
+		if (!workB.isEmpty()) {
+			result = workB.peek()[1];
+		}
+
+		if (result > time) {
+			return time + 1;
+		}
+
+		return result;
+	}
+
 	private static int simulate() {
 		int time = guest.peek()[1];
 		int result = 0;
@@ -65,7 +87,8 @@ public class Solution {
 
 			// 차량 정비 대기하는 사람들을 순서대로 차량 정비 시작
 			startRepairsForWaitingGuests(time);
-			time++;
+			
+			time = nextTime(time);
 		}
 		return result == 0 ? -1 : result;
 	}
@@ -107,10 +130,13 @@ public class Solution {
 	private static int processRepairCompletions(int time) {
 		int result = 0;
 
+		// 차량 정비가 다 마무리 된다면
 		while (!workB.isEmpty() && workB.peek()[1] <= time) {
 			int[] curr = workB.poll();
+
 			visitedB[curr[3]] = false;
 			count++;
+			// A 창구와 B 창구를 들렸다면 result에 더하기
 			if (curr[2] == A && curr[3] == B) {
 				result += curr[0];
 			}
@@ -143,14 +169,14 @@ public class Solution {
 	}
 
 	private static void init() {
+		guest = new ArrayDeque<>();
 		infoA = new int[N + 1];
+		infoB = new int[M + 1];
 		visitedA = new boolean[N + 1];
-
+		visitedB = new boolean[M + 1];
 		workA = new PriorityQueue<>((a, b) -> a[1] == b[1] ? a[2] - b[2] : a[1] - b[1]);
 		workB = new PriorityQueue<>((a, b) -> a[1] - b[1]);
 		waitB = new ArrayDeque<>();
 		count = 0;
-		infoB = new int[M + 1];
-		visitedB = new boolean[M + 1];
 	}
 }
