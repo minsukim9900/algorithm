@@ -50,9 +50,6 @@ public class Solution {
 	private static int nextTime(int time) {
 		int result = Integer.MAX_VALUE;
 
-		if (!guest.isEmpty()) {
-			result = Math.min(result, guest.peek()[1]);
-		}
 
 		if (!workA.isEmpty()) {
 			result = Math.min(result, workA.peek()[1]);
@@ -62,7 +59,10 @@ public class Solution {
 			result = Math.min(result, workB.peek()[1]);
 		}
 
-		if (result <= time) {
+		if (!guest.isEmpty() && guest.peek()[1] > time) {
+			result = Math.min(result, guest.peek()[1]);
+		}
+		if (result > time) {
 			return time + 1;
 		}
 
