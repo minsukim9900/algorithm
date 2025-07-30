@@ -1,89 +1,52 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 public class Main {
 
-	private static int[] nums = new int[6];
-
-	private static PriorityQueue<Integer>[] pq = new PriorityQueue[2];
-
-	public static void main(String[] args) throws IOException {
-
+	public static void main(String[] args) throws Exception {
+//		System.setIn(new FileInputStream("Test3.txt"));
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
-		StringTokenizer st;
+		StringTokenizer st = null;
+		// ---------여기에 코드를 작성하세요.---------------//
 
-		int N = Integer.parseInt(br.readLine());
-
-		for (int i = 0; i < 2; i++) {
-			pq[i] = new PriorityQueue<>(new Comparator<Integer>() {
-
-				@Override
-				public int compare(Integer o1, Integer o2) {
-					return o2 - o1;
-				}
-			});
-		}
-
+		int K = Integer.parseInt(br.readLine());
+		int mw = 0;
+		int Windex = 0;
+		int mh = 0;
+		int Hindex = 0;
+		
+		int[] info = new int[6];
 		for (int i = 0; i < 6; i++) {
 			st = new StringTokenizer(br.readLine());
 			int dir = Integer.parseInt(st.nextToken());
-			int length = Integer.parseInt(st.nextToken());
-
-			if (dir == 1 || dir == 2) {
-				pq[0].add(length);
+			int len = Integer.parseInt(st.nextToken());
+			info[i] = len;
+			if (dir < 3) {
+				if(mh < len) {
+					Hindex = i;
+					mh = len;
+				}
 			} else {
-				pq[1].add(length);
+				if(mw < len) {
+					Windex = i;
+					mw = len;
+				}
 			}
-
-			nums[i] = length;
-
 		}
 		
-		System.out.println(process() * N);
-
-	}
-
-	private static int process() {
-
-		int heightMax = pq[0].poll();
-		int widthMax = pq[1].poll();
-
-		int hidx = 0;
-		int widx = 0;
-
-		for (int i = 0; i < 6; i++) {
-			if (heightMax == nums[i]) {
-				hidx = i;
-			}
-			if (widthMax == nums[i]) {
-				widx = i;
-			}
-		}
-
-		int extent = heightMax * widthMax;
-
-		int left_Hidx = hidx - 1;
-		if (left_Hidx == -1)
-			left_Hidx = 5;
-		int right_Hidx = hidx + 1;
-		if (right_Hidx == 6)
-			right_Hidx = 0;
-
-		int subHeight = Math.abs(nums[left_Hidx] - nums[right_Hidx]);
-
-		int left_Widx = widx - 1;
-		if (left_Widx == -1)
-			left_Widx = 5;
-		int right_Widx = widx + 1;
-		if (right_Widx == 6)
-			right_Widx = 0;
-
-		int subWidth = Math.abs(nums[left_Widx] - nums[right_Widx]);
-
-		int subArea = subHeight * subWidth;
-
-		return extent - subArea;
+		int hl = (Hindex - 1 + 6) % 6;
+		int wl = (Windex - 1 + 6) % 6;
+		int hr = (Hindex + 1) % 6;
+		int wr = (Windex + 1) % 6;
+		
+		int tmp = Math.abs(info[hl] - info[hr]) * Math.abs(info[wl] - info[wr]);
+		System.out.println(((mh * mw) - tmp ) * K);
 	}
 
 }
