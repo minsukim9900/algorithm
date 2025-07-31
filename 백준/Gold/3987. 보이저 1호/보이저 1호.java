@@ -59,12 +59,6 @@ public class Main {
 		for (int i = 0; i < 4; i++) {
 			q.add(new int[] { r, c, i, 1 });
 
-			char[][] tmp = new char[N][M];
-			for (int j = 0; j < N; j++) {
-				tmp[j] = board[j].clone();
-			}
-			tmp[r][c] = '*';
-
 			while (!q.isEmpty()) {
 				int[] curr = q.poll();
 
@@ -80,16 +74,14 @@ public class Main {
 					max = curr[3];
 				}
 
-				if (isRange(nr, nc) && tmp[nr][nc] != 'C') {
-					if (tmp[nr][nc] == '/') {
+				if (isRange(nr, nc) && board[nr][nc] != 'C') {
+					if (board[nr][nc] == '/') {
 						int num = 1;
 						if (curr[2] % 2 == 0) {
 							num = -1;
 						}
 						curr[2] = (curr[2] + ((-1) * num) + 4) % 4;
-					} else if (tmp[nr][nc] == '.' || tmp[nr][nc] == '*') {
-						tmp[nr][nc] = '*';
-					} else {
+					} else if (board[nr][nc] == '\\') {
 						int num = 1;
 						if (curr[2] % 2 == 0) {
 							num = -1;
