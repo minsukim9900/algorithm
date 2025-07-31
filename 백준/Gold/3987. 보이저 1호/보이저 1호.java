@@ -71,7 +71,7 @@ public class Main {
 				int nr = curr[0] + delta[curr[2]][0];
 				int nc = curr[1] + delta[curr[2]][1];
 
-				if (curr[3] > 500 * 501 * 2) {
+				if (curr[3] > 500 * 500 * 2) {
 					return new int[] { i, -1 };
 				}
 
