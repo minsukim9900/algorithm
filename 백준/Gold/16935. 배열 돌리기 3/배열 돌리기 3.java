@@ -2,216 +2,155 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-
-	private static int N, M, R;
-	private static int[][] map;
-
-	public static void main(String[] args) throws IOException {
-
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-		StringTokenizer st;
-
-		st = new StringTokenizer(br.readLine());
-
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
-		R = Integer.parseInt(st.nextToken());
-		map = new int[N][M];
-
-		for (int r = 0; r < N; r++) {
-			st = new StringTokenizer(br.readLine());
-			for (int c = 0; c < M; c++) {
-				map[r][c] = Integer.parseInt(st.nextToken());
-			}
-		}
-
-		st = new StringTokenizer(br.readLine());
-		for (int i = 0; i < R; i++) {
-			int order = Integer.parseInt(st.nextToken());
-			N = map.length;
-			M = map[0].length;
-
-			switch (order) {
-			case 1: {
-				first();
-
-				break;
-			}
-
-			case 2: {
-				second();
-				break;
-			}
-
-			case 3: {
-				map = third();
-				break;
-			}
-
-			case 4: {
-				map = fourth();
-				break;
-			}
-
-			case 5: {
-				fifth();
-				break;
-			}
-
-			case 6: {
-				sixth();
-				break;
-			}
-
-			}
-
-		}
-		
-		N = map.length;
-		M = map[0].length;
-		
-		StringBuilder sb = new StringBuilder();
-		for(int r = 0; r<N; r++) {
-			for(int c = 0; c<M; c++) {
-				sb.append(map[r][c]).append(" ");
-			}
-			sb.append("\n");
-		}
-		
-		System.out.println(sb.toString());
-
-	}
-
-	private static void first() {
-
-		for (int c = 0; c < M; c++) {
-			int left = 0;
-			int right = N - 1;
-			while (left < right) {
-				int tmp = map[left][c];
-				map[left][c] = map[right][c];
-				map[right][c] = tmp;
-				left++;
-				right--;
-			}
-		}
-
-	}
-
-	private static void second() {
-		for (int r = 0; r < N; r++) {
-
-			int left = 0;
-			int right = M - 1;
-
-			while (left < right) {
-
-				int tmp = map[r][left];
-				map[r][left] = map[r][right];
-				map[r][right] = tmp;
-				left++;
-				right--;
-
-			}
-		}
-
-	}
-
-	private static int[][] third() {
-		int[][] tmp = new int[M][N];
-
-		for (int c = 0; c < M; c++) {
-			for (int r = N - 1; r >= 0; r--) {
-				tmp[c][(N - 1) - r] = map[r][c];
-			}
-		}
-
-		return tmp;
-	}
-
-	private static int[][] fourth() {
-		int[][] tmp = new int[M][N];
-
-		for (int c = M - 1; c >= 0; c--) {
-			for (int r = 0; r < N; r++) {
-				tmp[(M - 1) - c][r] = map[r][c];
-			}
-		}
-
-		return tmp;
-
-	}
-
-	private static void fifth() {
-
-		for (int i = 0; i < 3; i++) {
-
-			for (int r = 0; r < N / 2; r++) {
-
-				for (int c = 0; c < M / 2; c++) {
-
-					if (i == 0) {
-
-						int tmp = map[r][c];
-						map[r][c] = map[r][c + (M / 2)];
-						map[r][c + (M / 2)] = tmp;
-
-					} else if (i == 1) {
-
-						int tmp = map[r][c];
-						map[r][c] = map[r + (N / 2)][c + (M / 2)];
-						map[r + (N / 2)][c + (M / 2)] = tmp;
-
-					} else {
-
-						int tmp = map[r][c];
-						map[r][c] = map[r + (N / 2)][c];
-						map[r + (N / 2)][c] = tmp;
-
-					}
-
-				}
-
-			}
-
-		}
-
-	}
-
-	private static void sixth() {
-
-		for (int i = 0; i < 3; i++) {
-
-			for (int r = 0; r < N / 2; r++) {
-
-				for (int c = M / 2; c < M; c++) {
-
-					if (i == 0) {
-
-						int tmp = map[r][c];
-						map[r][c] = map[r][(c + (M / 2)) % M];
-						map[r][(c + (M / 2)) % M] = tmp;
-
-					} else if (i == 1) {
-
-						int tmp = map[r][c];
-						map[r][c] = map[(r + (N / 2)) % N][(c + (M / 2)) % M];
-						map[(r + (N / 2)) % N][(c + (M / 2)) % M] = tmp;
-
-					} else {
-
-						int tmp = map[r][c];
-						map[r][c] = map[(r + (N / 2)) % N][c];
-						map[(r + (N / 2)) % N][c] = tmp;
-
-					}
-
-				}
-
-			}
-
-		}
-	}
-
+    static void swap(int[] arr, int i, int j) {
+        int tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+    }
+
+    static void swapR(int[] arr) {
+        int tmp = arr[0];
+        arr[0] = arr[3];
+        arr[3] = arr[2];
+        arr[2] = arr[1];
+        arr[1] = tmp;
+    }
+
+    static void swapL(int[] arr) {
+        int tmp = arr[0];
+        arr[0] = arr[1];
+        arr[1] = arr[2];
+        arr[2] = arr[3];
+        arr[3] = tmp;
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        int r = Integer.parseInt(st.nextToken());
+
+        int[][] arr = new int[n][m];
+        int[][] brr = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < m; j++) {
+                arr[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
+
+        List<Integer> ops = new ArrayList<>(r);
+        while (ops.size() < r) {
+            String line = br.readLine();
+            if (line == null || line.isEmpty()) continue;
+            StringTokenizer st2 = new StringTokenizer(line);
+            while (st2.hasMoreTokens() && ops.size() < r) {
+                ops.add(Integer.parseInt(st2.nextToken()));
+            }
+        }
+
+        int v = 0, h = 0, ro = 0;
+        int[] pos = {0, 1, 2, 3};
+
+        for (int i = 0; i < r; i++) {
+            int t = ops.get(i);
+            if (t == 1) {
+                if (ro == 0 || ro == 2) {
+                    v ^= 1;
+                    swap(pos, 0, 3);
+                    swap(pos, 1, 2);
+                } else {
+                    h ^= 1;
+                    swap(pos, 0, 1);
+                    swap(pos, 2, 3);
+                }
+            } else if (t == 2) {
+                if (ro == 0 || ro == 2) {
+                    h ^= 1;
+                    swap(pos, 0, 1);
+                    swap(pos, 2, 3);
+                } else {
+                    v ^= 1;
+                    swap(pos, 0, 3);
+                    swap(pos, 1, 2);
+                }
+            } else if (t == 3) {
+                ro = (ro + 1) % 4;
+            } else if (t == 4) {
+                ro = (ro - 1);
+                if (ro == -1) ro = 3;
+            } else if (t == 5) {
+                swapR(pos);
+            } else if (t == 6) {
+                swapL(pos);
+            }
+        }
+
+        int nh = n / 2;
+        int mh = m / 2;
+        int[] bnv = {0, 0, nh, nh};
+        int[] bmv = {0, mh, mh, 0};
+
+        for (int i = 0; i < 4; i++) {
+            int nv, mv;
+            if (pos[i] == 0) {
+                nv = 0; mv = 0;
+            } else if (pos[i] == 1) {
+                nv = 0; mv = mh;
+            } else if (pos[i] == 2) {
+                nv = nh; mv = mh;
+            } else {
+                nv = nh; mv = 0;
+            }
+
+            for (int j = 0; j < nh; j++) {
+                for (int k = 0; k < mh; k++) {
+                    int sourceJ = j;
+                    int sourceK = k;
+                    if (v == 1) sourceJ = nh - 1 - j;
+                    if (h == 1) sourceK = mh - 1 - k;
+
+                    brr[j + bnv[i]][k + bmv[i]] = arr[sourceJ + nv][sourceK + mv];
+                }
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        
+        if (ro == 0) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < m; j++) {
+                    sb.append(brr[i][j]).append(' ');
+                }
+                sb.setLength(sb.length() - 1);
+                sb.append('\n');
+            }
+        } else if (ro == 1) {
+            for (int i = 0; i < m; i++) {
+                for (int j = n - 1; j >= 0; j--) {
+                    sb.append(brr[j][i]).append(' ');
+                }
+                sb.setLength(sb.length() - 1);
+                sb.append('\n');
+            }
+        } else if (ro == 2) {
+            for (int i = n - 1; i >= 0; i--) {
+                for (int j = m - 1; j >= 0; j--) {
+                    sb.append(brr[i][j]).append(' ');
+                }
+                sb.setLength(sb.length() - 1);
+                sb.append('\n');
+            }
+        } else if (ro == 3) {
+            for (int i = m - 1; i >= 0; i--) {
+                for (int j = 0; j < n; j++) {
+                    sb.append(brr[j][i]).append(' ');
+                }
+                sb.setLength(sb.length() - 1);
+                sb.append('\n');
+            }
+        }
+        System.out.print(sb);
+    }
 }
