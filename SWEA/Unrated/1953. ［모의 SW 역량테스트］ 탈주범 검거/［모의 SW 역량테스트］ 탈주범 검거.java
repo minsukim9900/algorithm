@@ -2,47 +2,59 @@ import java.io.*;
 import java.util.*;
 
 public class Solution {
-
 	private static int N, M, R, C, L;
-	private static int[][] map;
-	private static int[][] delta = { { -1, 0 }, { 0, -1 }, { 1, 0 }, { 0, 1 } };
-	private static Set<Integer>[] ternal = new HashSet[4];
-	private static boolean[][] visited;
-
+	private static int[][] board;
+	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+	private static boolean[][] isInPoss = new boolean[8][4];
+	private static boolean[][] isOutPoss = new boolean[8][4];
+	private static Map<Integer, int[]> info = new HashMap<>();
 	static {
-		
-		for(int i = 0; i<4; i++) {
-			ternal[i] = new HashSet<>();
-		}
-		
-		ternal[0].add(1);
-		ternal[0].add(2);
-		ternal[0].add(5);
-		ternal[0].add(6);
-		ternal[1].add(1);
-		ternal[1].add(3);
-		ternal[1].add(4);
-		ternal[1].add(5);
-		ternal[2].add(1);
-		ternal[2].add(2);
-		ternal[2].add(4);
-		ternal[2].add(7);
-		ternal[3].add(1);
-		ternal[3].add(3);
-		ternal[3].add(6);
-		ternal[3].add(7);
+		Arrays.fill(isInPoss[1], true);
+		isInPoss[2][0] = true;
+		isInPoss[2][1] = true;
+
+		isInPoss[3][2] = true;
+		isInPoss[3][3] = true;
+
+		isInPoss[4][1] = true;
+		isInPoss[4][2] = true;
+
+		isInPoss[5][0] = true;
+		isInPoss[5][2] = true;
+
+		isInPoss[6][0] = true;
+		isInPoss[6][3] = true;
+
+		isInPoss[7][1] = true;
+		isInPoss[7][3] = true;
+
+		Arrays.fill(isOutPoss[1], true);
+		isOutPoss[2][0] = true;
+		isOutPoss[2][1] = true;
+
+		isOutPoss[3][2] = true;
+		isOutPoss[3][3] = true;
+
+		isOutPoss[4][0] = true;
+		isOutPoss[4][3] = true;
+
+		isOutPoss[5][1] = true;
+		isOutPoss[5][3] = true;
+
+		isOutPoss[6][1] = true;
+		isOutPoss[6][2] = true;
+
+		isOutPoss[7][0] = true;
+		isOutPoss[7][2] = true;
 	}
 
 	public static void main(String[] args) throws IOException {
-
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = null;
 		StringBuilder sb = new StringBuilder();
-		StringTokenizer st;
 
 		int T = Integer.parseInt(br.readLine());
-
 		for (int t = 1; t <= T; t++) {
-
 			st = new StringTokenizer(br.readLine());
 			N = Integer.parseInt(st.nextToken());
 			M = Integer.parseInt(st.nextToken());
@@ -50,95 +62,52 @@ public class Solution {
 			C = Integer.parseInt(st.nextToken());
 			L = Integer.parseInt(st.nextToken());
 
-			map = new int[N][M];
-			visited = new boolean[N][M];
+			board = new int[N][M];
 
 			for (int r = 0; r < N; r++) {
 				st = new StringTokenizer(br.readLine());
 				for (int c = 0; c < M; c++) {
-					map[r][c] = Integer.parseInt(st.nextToken());
+					board[r][c] = Integer.parseInt(st.nextToken());
 				}
 			}
-			
-			
-			sb.append("#" + t + " " + bfs() + "\n");
-
+			sb.append("#").append(t).append(" ").append(bfs()).append("\n");
 		}
-		
 		System.out.println(sb.toString());
-
 	}
 
 	private static int bfs() {
-
-		Queue<int[]> q = new ArrayDeque<>();
+		int count = 0;
+		boolean[][] visited = new boolean[N][M];
 		visited[R][C] = true;
 
-		q.add(new int[] { R, C, map[R][C] });
-		int cnt = 0;
-		for (int i = 0; i < L; i++) {
-			
-			
-			
-			int size = q.size();
-			cnt += size;
-			for (int j = 0; j < size; j++) {
-				
-				int[] curr = q.poll();
-				int[] posDir = selectDirect(curr[2]);
+		Queue<int[]> q = new ArrayDeque<>();
+		q.add(new int[] { R, C, 1 });
 
-				for (int k = 0; k < posDir.length; k++) {
-
-					int nr = curr[0] + delta[posDir[k]][0];
-					int nc = curr[1] + delta[posDir[k]][1];
-
-					if (nr >= 0 && nr < N && nc >= 0 && nc < M && ternal[posDir[k]].contains(map[nr][nc])
-							&& !visited[nr][nc]) {
-						visited[nr][nc] = true;
-						q.offer(new int[] {nr, nc, map[nr][nc]});
-					}
-					
-				}
-
+		while (!q.isEmpty()) {
+			int[] curr = q.poll();
+			if (curr[2] > L) {
+				break;
 			}
+			count++;
 
+			int r = curr[0];
+			int c = curr[1];
+			for (int i = 0; i < 4; i++) {
+				if (isOutPoss[board[r][c]][i]) {
+					int nr = r + delta[i][0];
+					int nc = c + delta[i][1];
+
+					if (isRange(nr, nc) && board[nr][nc] != 0 && !visited[nr][nc] && isInPoss[board[nr][nc]][i]) {
+						visited[nr][nc] = true;
+						q.add(new int[] { nr, nc, curr[2] + 1 });
+					}
+				}
+			}
 		}
-		
-		return cnt;
-
+		return count;
 	}
 
-	private static int[] selectDirect(int ternal) {
-		int[] arr = null;
-
-		switch (ternal) {
-		// 상 좌 하 우;
-		case 1:
-			arr = new int[] { 0, 1, 2, 3 };
-			break;
-		case 2:
-			arr = new int[] { 0, 2 };
-			break;
-		case 3:
-			arr = new int[] { 1, 3 };
-			break;
-		case 4:
-			arr = new int[] { 0, 3 };
-			break;
-		case 5:
-			arr = new int[] { 2, 3 };
-			break;
-		case 6:
-			arr = new int[] { 1, 2 };
-			break;
-		case 7:
-			arr = new int[] { 0, 1 };
-			break;
-
-		}
-
-		return arr;
-
+	private static boolean isRange(int r, int c) {
+		return r >= 0 && r < N && c >= 0 && c < M;
 	}
-
 }
