@@ -33,11 +33,13 @@ public class Main {
 			st = new StringTokenizer(br.readLine());
 			int k = Integer.parseInt(st.nextToken());
 			int s = Integer.parseInt(st.nextToken());
-			System.out.println(dfs(s, Integer.MAX_VALUE, k, new boolean[N + 1]));
+
+			sb.append(dfs(s, Integer.MAX_VALUE, k, s, new boolean[N + 1])).append("\n");
 		}
+		System.out.println(sb.toString());
 	}
 
-	private static int dfs(int s, int pre, int k, boolean[] visited) {
+	private static int dfs(int s, int pre, int k, int p, boolean[] visited) {
 		int count = 0;
 		visited[s] = true;
 
@@ -51,7 +53,8 @@ public class Main {
 			if (w >= k) {
 				count++;
 			}
-			count += dfs(node[0], w, k, visited);
+
+			count += dfs(node[0], w, k, p, visited);
 		}
 		return count;
 	}
