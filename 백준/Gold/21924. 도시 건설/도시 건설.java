@@ -35,8 +35,8 @@ public class Main {
 		// 간선의 가중치 기준으로 오름차순 정렬
 		Collections.sort(edges, (a, b) -> a[2] - b[2]);
 
-		int pick = 0;
 		int idx = 0;
+		int pick = 0;
 		while (idx < M) {
 			int px = findP(edges.get(idx)[0]);
 			int py = findP(edges.get(idx)[1]);
@@ -48,25 +48,13 @@ public class Main {
 			}
 			idx++;
 		}
-		
-		if(!isCheck()) {
-			System.out.println(-1);
-		}else {
-			System.out.println(sum);
-		}
-	}
 
-	private static boolean isCheck() {
-		for (int i = 1; i <= N; i++) {
-			p[i] = findP(i);
+		if (pick == N - 1) {
+			System.out.println(sum);
+		} else {
+			System.out.println(-1);
 		}
-		int tmp = p[1];
-		for (int i = 2; i <= N; i++) {
-			if (tmp != p[i]) {
-				return false;
-			}
-		}
-		return true;
+
 	}
 
 	private static int findP(int x) {
