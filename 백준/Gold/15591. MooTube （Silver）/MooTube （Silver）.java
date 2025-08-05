@@ -49,7 +49,10 @@ public class Main {
 			}
 
 			int w = Math.min(pre, node[1]);
-
+            if(w < k) {
+                continue;
+            }
+            
 			if (w >= k) {
 				count++;
 			}
