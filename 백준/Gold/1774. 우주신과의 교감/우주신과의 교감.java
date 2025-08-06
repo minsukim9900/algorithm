@@ -12,11 +12,6 @@ public class Main {
 			this.to = to;
 			this.w = w;
 		}
-
-		@Override
-		public String toString() {
-			return "Edge [from=" + from + ", to=" + to + ", w=" + w + "]";
-		}
 	}
 
 	private static int N, M;
@@ -42,20 +37,12 @@ public class Main {
 			infos[i][1] = Integer.parseInt(st.nextToken());
 		}
 
-		ArrayList<Edge> edges = new ArrayList<>();
-		for (int i = 1; i <= N - 1; i++) {
-			for (int j = i + 1; j <= N; j++) {
-				long x = Math.abs(infos[i][0] - infos[j][0]);
-				long y = Math.abs(infos[i][1] - infos[j][1]);
-				double w = Math.sqrt(x * x + y * y);
-
-				edges.add(new Edge(i, j, w));
-			}
-		}
+		List<Edge> edges = saveInfo(infos);
 
 		Collections.sort(edges, (a, b) -> Double.compare(a.w, b.w));
 
 		int pick = 0;
+		
 		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
 			int x = Integer.parseInt(st.nextToken());
@@ -69,6 +56,25 @@ public class Main {
 			}
 		}
 
+		System.out.println(String.format("%.2f", cal(pick, edges)));
+	}
+
+	private static List<Edge> saveInfo(int[][] infos) {
+		List<Edge> edges = new ArrayList<>();
+
+		for (int i = 1; i <= N - 1; i++) {
+			for (int j = i + 1; j <= N; j++) {
+				long x = Math.abs(infos[i][0] - infos[j][0]);
+				long y = Math.abs(infos[i][1] - infos[j][1]);
+				double w = Math.sqrt(x * x + y * y);
+
+				edges.add(new Edge(i, j, w));
+			}
+		}
+		return edges;
+	}
+
+	private static double cal(int pick, List<Edge> edges) {
 		int idx = 0;
 		double ans = 0;
 		while (pick < N - 1) {
@@ -85,7 +91,7 @@ public class Main {
 			}
 			idx++;
 		}
-		System.out.println(String.format("%.2f", ans));
+		return ans;
 	}
 
 	private static int findP(int x) {
