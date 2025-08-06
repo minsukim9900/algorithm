@@ -69,10 +69,6 @@ public class Main {
 			}
 		}
 
-		for (int i = 1; i <= N; i++) {
-			p[i] = findP(i);
-		}
-
 		int idx = 0;
 		double ans = 0;
 		while (pick < N - 1) {
