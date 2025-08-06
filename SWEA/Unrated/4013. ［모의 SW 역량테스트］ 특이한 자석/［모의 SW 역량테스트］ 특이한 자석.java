@@ -2,89 +2,84 @@ import java.io.*;
 import java.util.*;
 
 public class Solution {
-
+	private static int N, M, K;
 	private static int[][] tobni;
-	private static int[] currIdx;
-	private static int M;
+	private static int[] arrow;
 
 	public static void main(String[] args) throws IOException {
-
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
+		StringBuilder sb = new StringBuilder();
 
 		int T = Integer.parseInt(br.readLine());
+
 		for (int t = 1; t <= T; t++) {
-			M = 4;
-			tobni = new int[M][8];
-			currIdx = new int[M];
+			N = 4;
+			M = 8;
+			K = Integer.parseInt(br.readLine());
+			tobni = new int[N][M];
+			arrow = new int[N];
 
-			int K = Integer.parseInt(br.readLine());
-
-			for (int i = 0; i < M; i++) {
+			for (int i = 0; i < N; i++) {
 				st = new StringTokenizer(br.readLine());
-
-				for (int j = 0; j < 8; j++) {
+				for (int j = 0; j < M; j++) {
 					tobni[i][j] = Integer.parseInt(st.nextToken());
 				}
-
 			}
 
 			for (int i = 0; i < K; i++) {
-
 				st = new StringTokenizer(br.readLine());
-				int idx = Integer.parseInt(st.nextToken());
-				int dir = Integer.parseInt(st.nextToken());
-				circulate(idx - 1, dir);
-
+				int idx = Integer.parseInt(st.nextToken()) - 1;
+				int dir = Integer.parseInt(st.nextToken()) * -1;
+				simulate(idx, dir);
 			}
 
-			int i = 0;
-			int sum = 0;
-			int x = 1;
-			for(int idx : currIdx) {
-				sum += (tobni[i++][idx] * x);
-				x *= 2;
+			int num = 1;
+			int answer = 0;
+
+			for (int i = 0; i < N; i++) {
+				int tmp = tobni[i][arrow[i]] == 0 ? 0 : num;
+				answer += tmp;
+				num *= 2;
 			}
-			
-			sb.append("#" + t + " " + sum + "\n");
+			sb.append("#").append(t).append(" ").append(answer).append("\n");
 		}
 		System.out.println(sb.toString());
 	}
 
-	private static void circulate(int idx, int dir) {
+	private static void simulate(int idx, int dir) {
+		int[] result = turn(idx, dir);
 
-		int left = tobni[idx][(6 + currIdx[idx]) % 8];
-		int right = tobni[idx][(2 + currIdx[idx]) % 8];
+		for (int i = 0; i < result.length; i++) {
+			arrow[i] = (arrow[i] + result[i] + 8) % 8;
+		}
+	}
 
-		int tmpDir = dir;
-
-		for (int i = idx - 1; i >= 0; i--) {
-
-			if (tobni[i][(2 + currIdx[i]) % 8] == left) {
+	private static int[] turn(int idx, int dir) {
+		int[] result = new int[N];
+		result[idx] = dir;
+		// 왼쪽 탐색
+		int tmp = dir;
+		for (int i = idx; i > 0; i--) {
+			if (tobni[i][(arrow[i] + 6) % 8] != tobni[i - 1][(arrow[i - 1] + 2) % 8]) {
+				tmp *= -1;
+				result[i - 1] = tmp;
+			} else {
 				break;
 			}
-			left = tobni[i][(6 + currIdx[i]) % 8];
-			tmpDir *= -1;
-			currIdx[i] = (currIdx[i] - tmpDir + 8) % 8;
-
 		}
 
-		tmpDir = dir;
-
-		for (int i = idx + 1; i < M; i++) {
-
-			if (tobni[i][(6 + currIdx[i]) % 8] == right) {
+		// 오른쪽 탐색
+		tmp = dir;
+		for (int i = idx; i < N - 1; i++) {
+			if (tobni[i][(arrow[i] + 2) % 8] != tobni[i + 1][(arrow[i + 1] + 6) % 8]) {
+				tmp *= -1;
+				result[i + 1] = tmp;
+			} else {
 				break;
 			}
-
-			right = tobni[i][(2 + currIdx[i]) % 8];
-			tmpDir *= -1;
-			currIdx[i] = (currIdx[i] - tmpDir + 8) % 8;
-
 		}
 
-		currIdx[idx] = (currIdx[idx] - dir + 8) % 8;
-
+		return result;
 	}
 }
