@@ -31,49 +31,42 @@ public class Solution {
 				nums[i] = Integer.parseInt(st.nextToken());
 			}
 
-			dfs(0, new int[N - 1]);
+			dfs(0, nums[0]);
 			sb.append("#").append(t).append(" ").append(max - min).append("\n");
 		}
 		System.out.println(sb.toString());
 	}
 
-	private static void dfs(int depth, int[] operator) {
+	private static void dfs(int depth, int result) {
 		if (depth == N - 1) {
-			int result = cal(operator);
 			min = Math.min(min, result);
 			max = Math.max(max, result);
 		} else {
 			for (int i = 0; i < 4; i++) {
 				if (cnt[i] == 0)
 					continue;
-				operator[depth] = i;
+
+				int tmp = result;
+				result = cal(result, i, depth + 1);
 				cnt[i]--;
-				dfs(depth + 1, operator);
+				dfs(depth + 1, result);
+				result = tmp;
 				cnt[i]++;
 			}
 		}
 	}
 
-	private static int cal(int[] operator) {
-		int sum = nums[0];
-
-		for (int i = 1; i < N; i++) {
-			int curr = nums[i];
-			switch (operator[i - 1]) {
-			case 0:
-				sum += curr;
-				break;
-			case 1:
-				sum -= curr;
-				break;
-			case 2:
-				sum *= curr;
-				break;
-			case 3:
-				sum /= curr;
-				break;
-			}
+	private static int cal(int sum, int operator, int index) {
+		switch (operator) {
+		case 0:
+			return sum += nums[index];
+		case 1:
+			return sum -= nums[index];
+		case 2:
+			return sum *= nums[index];
+		case 3:
+			return sum /= nums[index];
 		}
-		return sum;
+		return 0;
 	}
 }
