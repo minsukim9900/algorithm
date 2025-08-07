@@ -6,23 +6,28 @@ public class Main {
 	private static int[][] board;
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -2, -1 }, { -2, 1 }, { -1, -2 },
 			{ -1, 2 }, { 1, -2 }, { 1, 2 }, { 2, -1 }, { 2, 1 } };
+	
+	static int readInt() throws Exception {
+        int y, x = System.in.read() & 15;
+        while ((y = System.in.read()) > 47) {
+            x = (x << 3) + (x << 1) + (y & 15);
+        }
+        return x;
+    }
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static void main(String[] args) throws Exception {
 		StringTokenizer st;
 
-		K = Integer.parseInt(br.readLine());
+		K = readInt();
 
-		st = new StringTokenizer(br.readLine());
-		W = Integer.parseInt(st.nextToken());
-		H = Integer.parseInt(st.nextToken());
+		W = readInt();
+		H = readInt();
 
 		board = new int[H][W];
 
 		for (int r = 0; r < H; r++) {
-			st = new StringTokenizer(br.readLine());
 			for (int c = 0; c < W; c++) {
-				board[r][c] = Integer.parseInt(st.nextToken());
+				board[r][c] = readInt();
 			}
 		}
 		System.out.println(simulate());
