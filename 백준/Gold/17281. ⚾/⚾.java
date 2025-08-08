@@ -64,14 +64,11 @@ public class Main {
 					outCount++;
 					continue;
 				}
-				state = state << (runner);
-				state += (1 << (runner) - 1);
-				for (int i = 6; i >= 3; i--) {
-					if ((state & (1 << i)) != 0) {
-						state ^= (1 << i);
-						score++;
-					}
-				}
+
+				state <<= (runner);
+				state += (1 << (runner - 1));
+				score += Integer.bitCount(state >> 3);
+				state = state & 7;
 			}
 		}
 		return score;
