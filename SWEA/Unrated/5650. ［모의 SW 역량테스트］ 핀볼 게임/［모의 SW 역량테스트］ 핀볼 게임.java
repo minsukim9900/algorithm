@@ -2,129 +2,158 @@ import java.io.*;
 import java.util.*;
 
 public class Solution {
-
-	private static int N, max;
+	private static int N;
 	private static int[][] board;
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
-	private static ArrayList<int[]>[] hole;
-	private static int[][] block = new int[5][4];
-
-	static {
-		block[0] = new int[] { 1, 3, 0, 2 };
-		block[1] = new int[] { 3, 0, 1, 2 };
-		block[2] = new int[] { 2, 0, 3, 1 };
-		block[3] = new int[] { 1, 2, 3, 0 };
-		block[4] = new int[] { 1, 0, 3, 2 };
-	}
+	private static List<int[]>[] teleport;
+	private static Map<Integer, Integer> infos;
 
 	public static void main(String[] args) throws IOException {
-
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
-		StringTokenizer st = null;
+		StringTokenizer st;
 		int T = Integer.parseInt(br.readLine().trim());
 
 		for (int t = 1; t <= T; t++) {
 			N = Integer.parseInt(br.readLine().trim());
-			max = 0;
 			board = new int[N][N];
-			hole = new ArrayList[5];
 
+			List<int[]> loc = new ArrayList<>();
+			teleport = new ArrayList[5];
 			for (int i = 0; i < 5; i++) {
-				hole[i] = new ArrayList<>();
+				teleport[i] = new ArrayList<>();
 			}
-
-			ArrayList<int[]> loc = new ArrayList<>();
+			infos = new HashMap<>();
 
 			for (int r = 0; r < N; r++) {
-				st = new StringTokenizer(br.readLine().trim());
+				st = new StringTokenizer(br.readLine());
+
 				for (int c = 0; c < N; c++) {
 					board[r][c] = Integer.parseInt(st.nextToken());
 
-					if (board[r][c] > 5) {
-						hole[board[r][c] - 6].add(new int[] { r, c });
-					}
 					if (board[r][c] == 0) {
 						loc.add(new int[] { r, c });
 					}
+
+					if (board[r][c] >= 6 && board[r][c] <= 10) {
+						infos.put(r * N + c, teleport[board[r][c] - 6].size());
+						teleport[board[r][c] - 6].add(new int[] { r, c });
+					}
 				}
 			}
 
-			for (int[] w : loc) {
+
+			int answer = 0;
+			for (int[] start : loc) {
 				for (int i = 0; i < 4; i++) {
-					dfs(w[0], w[1], i);
+					answer = Math.max(answer, simulate(start, i));
 				}
 			}
-
-			sb.append("#" + t + " " + max + "\n");
+			sb.append("#").append(t).append(" ").append(answer).append("\n");
 		}
 		System.out.println(sb.toString());
 	}
 
-	private static void dfs(int sr, int sc, int dir) {
-
-		int r = sr;
-		int c = sc;
-		int d = dir;
-		int cnt = 0;
-
+	private static int simulate(int[] start, int dir) {
+		int count = 0;
+		int[] curr = new int[] { start[0], start[1], dir };
+		boolean isStart = false;
 		while (true) {
-			r += delta[d][0];
-			c += delta[d][1];
 
-			if ((r == sr && sc == c) || (isRange(r, c) && board[r][c] == -1)) {
-				max = Math.max(max, cnt);
+			if (isStart && start[0] == curr[0] && start[1] == curr[1]) {
+				break;
+			}
+			
+			if (!isStart && start[0] == curr[0] && start[1] == curr[1]) {
+				isStart = true;
+			}
+
+			int nr = curr[0] + delta[curr[2]][0];
+			int nc = curr[1] + delta[curr[2]][1];
+
+			if (!isRange(nr, nc)) {
+				int d = changeDir(5, curr[2]);
+				count++;
+				curr = new int[] { nr, nc, d };
+				continue;
+			}
+
+			if (board[nr][nc] >= 6 && board[nr][nc] <= 10) {
+				int value = infos.get(nr * N + nc) ^ 1;
+
+				int[] next = teleport[board[nr][nc] - 6].get(value);
+				curr = new int[] { next[0], next[1], curr[2] };
+				continue;
+			}
+
+			if (board[nr][nc] == -1) {
 				break;
 			}
 
-			if (!isRange(r, c)) {
-				d = visitWall(d);
-				cnt++;
+			if (board[nr][nc] >= 1 && board[nr][nc] <= 5) {
+				int d = changeDir(board[nr][nc], curr[2]);
+				curr = new int[] { nr, nc, d };
+				count++;
 				continue;
 			}
 
-			if (board[r][c] >= 1 && board[r][c] <= 5) {
-				d = block[board[r][c] - 1][d];
-				cnt++;
-				continue;
-			}
-
-			if (board[r][c] >= 6 && board[r][c] <= 10) {
-				int[] info = potal(r, c);
-				r = info[0];
-				c = info[1];
-				continue;
-			}
+			curr = new int[] { nr, nc, curr[2] };
 		}
-
+		return count;
 	}
 
 	private static boolean isRange(int r, int c) {
-
 		return r >= 0 && r < N && c >= 0 && c < N;
 	}
 
-	private static int visitWall(int dir) {
-		if (dir == 0)
-			return 1;
-		if (dir == 1)
-			return 0;
-		if (dir == 2)
-			return 3;
-		return 2;
-	}
-
-	private static int[] potal(int r, int c) {
-		int[] location = null;
-		int[] pos1 = hole[board[r][c] - 6].get(0);
-		int[] pos2 = hole[board[r][c] - 6].get(1);
-		
-		if(pos1[0] == r && pos1[1] == c) {
-			return pos2;
-		}else {
-			return pos1;
+	private static int changeDir(int block, int dir) {
+		switch (block) {
+		case 1:
+			switch (dir) {
+			case 0:
+				return 1;
+			case 1:
+				return 3;
+			case 2:
+				return 0;
+			case 3:
+				return 2;
+			}
+		case 2:
+			switch (dir) {
+			case 0:
+				return 3;
+			case 1:
+				return 0;
+			case 2:
+				return 1;
+			case 3:
+				return 2;
+			}
+		case 3:
+			switch (dir) {
+			case 0:
+				return 2;
+			case 1:
+				return 0;
+			case 2:
+				return 3;
+			case 3:
+				return 1;
+			}
+		case 4:
+			switch (dir) {
+			case 0:
+				return 1;
+			case 1:
+				return 2;
+			case 2:
+				return 3;
+			case 3:
+				return 0;
+			}
+		default:
+			return dir ^ 1;
 		}
-
 	}
-
 }
