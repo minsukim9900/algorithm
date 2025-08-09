@@ -6,6 +6,9 @@ public class Solution {
 	private static int[][] board;
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
 	private static List<int[]>[] teleport;
+	private static int[][] pairs;
+	private static final int[][] REFLECT = { { 0, 0, 0, 0 }, { 1, 3, 0, 2 }, { 3, 0, 1, 2 }, { 2, 0, 3, 1 },
+			{ 1, 2, 3, 0 }, { 1, 0, 3, 2 } };
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -23,6 +26,8 @@ public class Solution {
 				teleport[i] = new ArrayList<>();
 			}
 
+			pairs = new int[5][4];
+
 			for (int r = 0; r < N; r++) {
 				st = new StringTokenizer(br.readLine());
 
@@ -36,6 +41,17 @@ public class Solution {
 					if (board[r][c] >= 6 && board[r][c] <= 10) {
 						teleport[board[r][c] - 6].add(new int[] { r, c });
 					}
+				}
+			}
+
+			for (int i = 0; i < 5; i++) {
+				if (!teleport[i].isEmpty()) {
+					int[] portal1 = teleport[i].get(0);
+					int[] portal2 = teleport[i].get(1);
+					pairs[i][0] = portal2[0];
+					pairs[i][1] = portal2[1];
+					pairs[i][2] = portal1[0];
+					pairs[i][3] = portal1[1];
 				}
 			}
 
@@ -63,100 +79,46 @@ public class Solution {
 
 			isStart = true;
 
-			int nr = curr[0] + delta[curr[2]][0];
-			int nc = curr[1] + delta[curr[2]][1];
+			curr[0] += delta[curr[2]][0];
+			curr[1] += delta[curr[2]][1];
 
-			if (!isRange(nr, nc)) {
-				int d = changeDir(5, curr[2]);
+			if (!isRange(curr[0], curr[1])) {
+				int d = REFLECT[5][curr[2]];
 				count++;
-				curr = new int[] { nr, nc, d };
+				curr = new int[] { curr[0], curr[1], d };
 				continue;
 			}
 
-			if (board[nr][nc] >= 6 && board[nr][nc] <= 10) {
-				int[] next = findPortal(nr, nc, board[nr][nc]);
+			if (board[curr[0]][curr[1]] >= 6 && board[curr[0]][curr[1]] <= 10) {
+				int r = pairs[board[curr[0]][curr[1]] - 6][0];
+				int c = pairs[board[curr[0]][curr[1]] - 6][1];
 
-				curr = new int[] { next[0], next[1], curr[2] };
+				if (curr[0] == r && curr[1] == c) {
+					r = pairs[board[curr[0]][curr[1]] - 6][2];
+					c = pairs[board[curr[0]][curr[1]] - 6][3];
+				}
+
+				curr = new int[] { r, c, curr[2] };
 				continue;
 			}
 
-			if (board[nr][nc] == -1) {
+			if (board[curr[0]][curr[1]] == -1) {
 				break;
 			}
 
-			if (board[nr][nc] >= 1 && board[nr][nc] <= 5) {
-				int d = changeDir(board[nr][nc], curr[2]);
-				curr = new int[] { nr, nc, d };
+			if (board[curr[0]][curr[1]] >= 1 && board[curr[0]][curr[1]] <= 5) {
+				int d = REFLECT[board[curr[0]][curr[1]]][curr[2]];
+				curr = new int[] { curr[0], curr[1], d };
 				count++;
 				continue;
 			}
 
-			curr = new int[] { nr, nc, curr[2] };
+			curr = new int[] { curr[0], curr[1], curr[2] };
 		}
 		return count;
 	}
 
 	private static boolean isRange(int r, int c) {
 		return r >= 0 && r < N && c >= 0 && c < N;
-	}
-
-	private static int[] findPortal(int r, int c, int portalNumber) {
-		for (int[] portal : teleport[portalNumber - 6]) {
-			if (!(portal[0] == r && portal[1] == c)) {
-				return portal;
-			}
-		}
-		return null;
-	}
-
-	private static int changeDir(int block, int dir) {
-		switch (block) {
-		case 1:
-			switch (dir) {
-			case 0:
-				return 1;
-			case 1:
-				return 3;
-			case 2:
-				return 0;
-			case 3:
-				return 2;
-			}
-		case 2:
-			switch (dir) {
-			case 0:
-				return 3;
-			case 1:
-				return 0;
-			case 2:
-				return 1;
-			case 3:
-				return 2;
-			}
-		case 3:
-			switch (dir) {
-			case 0:
-				return 2;
-			case 1:
-				return 0;
-			case 2:
-				return 3;
-			case 3:
-				return 1;
-			}
-		case 4:
-			switch (dir) {
-			case 0:
-				return 1;
-			case 1:
-				return 2;
-			case 2:
-				return 3;
-			case 3:
-				return 0;
-			}
-		default:
-			return dir ^ 1;
-		}
 	}
 }
