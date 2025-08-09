@@ -6,7 +6,6 @@ public class Solution {
 	private static int[][] board;
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
 	private static List<int[]>[] teleport;
-	private static Map<Integer, Integer> infos;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -23,7 +22,6 @@ public class Solution {
 			for (int i = 0; i < 5; i++) {
 				teleport[i] = new ArrayList<>();
 			}
-			infos = new HashMap<>();
 
 			for (int r = 0; r < N; r++) {
 				st = new StringTokenizer(br.readLine());
@@ -36,37 +34,34 @@ public class Solution {
 					}
 
 					if (board[r][c] >= 6 && board[r][c] <= 10) {
-						infos.put(r * N + c, teleport[board[r][c] - 6].size());
 						teleport[board[r][c] - 6].add(new int[] { r, c });
 					}
 				}
 			}
 
-
 			int answer = 0;
+
 			for (int[] start : loc) {
 				for (int i = 0; i < 4; i++) {
-					answer = Math.max(answer, simulate(start, i));
+					answer = Math.max(answer, simulate(start, i, false));
 				}
 			}
+
 			sb.append("#").append(t).append(" ").append(answer).append("\n");
 		}
 		System.out.println(sb.toString());
 	}
 
-	private static int simulate(int[] start, int dir) {
+	private static int simulate(int[] start, int dir, boolean isStart) {
 		int count = 0;
 		int[] curr = new int[] { start[0], start[1], dir };
-		boolean isStart = false;
-		while (true) {
 
+		while (true) {
 			if (isStart && start[0] == curr[0] && start[1] == curr[1]) {
 				break;
 			}
-			
-			if (!isStart && start[0] == curr[0] && start[1] == curr[1]) {
-				isStart = true;
-			}
+
+			isStart = true;
 
 			int nr = curr[0] + delta[curr[2]][0];
 			int nc = curr[1] + delta[curr[2]][1];
@@ -79,9 +74,8 @@ public class Solution {
 			}
 
 			if (board[nr][nc] >= 6 && board[nr][nc] <= 10) {
-				int value = infos.get(nr * N + nc) ^ 1;
+				int[] next = findPortal(nr, nc, board[nr][nc]);
 
-				int[] next = teleport[board[nr][nc] - 6].get(value);
 				curr = new int[] { next[0], next[1], curr[2] };
 				continue;
 			}
@@ -104,6 +98,15 @@ public class Solution {
 
 	private static boolean isRange(int r, int c) {
 		return r >= 0 && r < N && c >= 0 && c < N;
+	}
+
+	private static int[] findPortal(int r, int c, int portalNumber) {
+		for (int[] portal : teleport[portalNumber - 6]) {
+			if (!(portal[0] == r && portal[1] == c)) {
+				return portal;
+			}
+		}
+		return null;
 	}
 
 	private static int changeDir(int block, int dir) {
