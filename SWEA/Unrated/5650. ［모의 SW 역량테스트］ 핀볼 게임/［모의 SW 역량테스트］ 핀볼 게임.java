@@ -14,7 +14,7 @@ public class Solution {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
-		int T = Integer.parseInt(br.readLine().trim());
+		int T = Integer.parseInt(br.readLine());
 
 		for (int t = 1; t <= T; t++) {
 			N = Integer.parseInt(br.readLine().trim());
@@ -73,47 +73,51 @@ public class Solution {
 		int[] curr = new int[] { start[0], start[1], dir };
 
 		while (true) {
+			// 출발지에 또 왔을 경우 종료
 			if (isStart && start[0] == curr[0] && start[1] == curr[1]) {
 				break;
 			}
-
+			
+			// 출발 flag true
 			isStart = true;
 
 			curr[0] += delta[curr[2]][0];
 			curr[1] += delta[curr[2]][1];
-
+			
+			// 벽을 만났다면
 			if (!isRange(curr[0], curr[1])) {
-				int d = REFLECT[5][curr[2]];
+				curr[2] = REFLECT[5][curr[2]];
 				count++;
-				curr = new int[] { curr[0], curr[1], d };
 				continue;
 			}
-
+			
+			// 포탈을 만났다면
 			if (board[curr[0]][curr[1]] >= 6 && board[curr[0]][curr[1]] <= 10) {
 				int r = pairs[board[curr[0]][curr[1]] - 6][0];
 				int c = pairs[board[curr[0]][curr[1]] - 6][1];
-
+				
+				// 다음 포탈을 찾는다
 				if (curr[0] == r && curr[1] == c) {
 					r = pairs[board[curr[0]][curr[1]] - 6][2];
 					c = pairs[board[curr[0]][curr[1]] - 6][3];
 				}
-
-				curr = new int[] { r, c, curr[2] };
+				
+				curr[0] = r;
+				curr[1] = c;
 				continue;
 			}
-
+			
+			// 블랙홀을 만났을 때
 			if (board[curr[0]][curr[1]] == -1) {
 				break;
 			}
-
+			
+			// 반사각을 만났다면
 			if (board[curr[0]][curr[1]] >= 1 && board[curr[0]][curr[1]] <= 5) {
-				int d = REFLECT[board[curr[0]][curr[1]]][curr[2]];
-				curr = new int[] { curr[0], curr[1], d };
+				curr[2] = REFLECT[board[curr[0]][curr[1]]][curr[2]];
 				count++;
 				continue;
 			}
-
-			curr = new int[] { curr[0], curr[1], curr[2] };
 		}
 		return count;
 	}
