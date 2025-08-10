@@ -42,10 +42,13 @@ public class Main {
 		if (!isUsed[next]) {
 			cycle += dfs(next);
 		} else if (!isFinished[next]) {
-			cycle++;
-			for (int curr = next; curr != start; curr = arr[curr]) {
+			int v = next;
+
+			while (v != start) {
 				cycle++;
+				v = arr[v];
 			}
+			cycle++;
 		}
 
 		isFinished[start] = true;
