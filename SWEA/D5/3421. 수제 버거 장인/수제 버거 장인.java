@@ -22,28 +22,38 @@ public class Solution {
 				int y = Integer.parseInt(st.nextToken()) - 1;
 
 				int num = 0;
-				num ^= (1<< x);
-				num ^= (1<< y);
+				num ^= (1 << x);
+				num ^= (1 << y);
 				arr.add(num);
 			}
-			
-			int answer = 0;
-			for (int i = 0; i < (1 << N); i++) {
-				boolean isPoss = true;
 
-				for (int j = 0; j < arr.size(); j++) {
-					if ((i & (arr.get(j))) == arr.get(j)) {
-						isPoss = false;
-						break;
+			int answer = 1;
+
+			for (int i = 1; i <= N; i++) {
+				int comb = (1 << i) - 1;
+				int limit = (1 << N);
+
+				while (comb < limit) {
+					if (isPoss(comb, arr)) {
+						answer++;
 					}
-				}
 
-				if (isPoss) {
-					answer++;
+					int u = comb & -comb;
+					int v = comb + u;
+					comb = v + (((v ^ comb) / u) >> 2);
 				}
 			}
 			sb.append("#").append(t).append(" ").append(answer).append("\n");
 		}
 		System.out.println(sb.toString());
+	}
+
+	private static boolean isPoss(int mask, List<Integer> arr) {
+		for (int j = 0; j < arr.size(); j++) {
+			if ((mask & (arr.get(j))) == arr.get(j)) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
