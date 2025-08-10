@@ -2,47 +2,44 @@ import java.io.*;
 import java.util.*;
 
 public class Solution {
-
-	private static int N, L;
-	private static int[] dp;
+	private static int N, L, answer;
+	private static int[][] infos;
 
 	public static void main(String[] args) throws IOException {
-
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
-		StringTokenizer st = null;
-
+		StringTokenizer st;
 		int T = Integer.parseInt(br.readLine());
 
-		for (int t = 1; t <= T; t++) {
-
+		for (int test_case = 1; test_case <= T; test_case++) {
 			st = new StringTokenizer(br.readLine());
 			N = Integer.parseInt(st.nextToken());
 			L = Integer.parseInt(st.nextToken());
-
-			dp = new int[L + 1];
-
-			int[][] items = new int[N + 1][2];
+			answer = 0;
+			infos = new int[N + 1][2];
 			for (int i = 1; i <= N; i++) {
 				st = new StringTokenizer(br.readLine());
-				items[i][0] = Integer.parseInt(st.nextToken());
-				items[i][1] = Integer.parseInt(st.nextToken());
-
+				int flavor = Integer.parseInt(st.nextToken());
+				int cal = Integer.parseInt(st.nextToken());
+				infos[i][0] = flavor;
+				infos[i][1] = cal;
 			}
-
-			for (int i = 1; i <= N; i++) {
-				for (int j = L; j >= items[i][1]; j--) {
-
-					dp[j] = Math.max(dp[j], items[i][0] + dp[j - items[i][1]]);
-
-				}
+			
+			for(int i = 1; i <= N; i++) {
+				combi(1, 0, 0, 0, i);
 			}
-
-			sb.append("#" + t + " ").append(dp[L]).append("\n");
-
+			sb.append("#").append(test_case).append(" ").append(answer).append("\n");
 		}
 		System.out.println(sb.toString());
-
 	}
 
+	private static void combi(int idx, int depth, int flavorSum, int calSum, int range) {
+		if (depth == range && calSum <= L && answer < flavorSum) {
+			answer = flavorSum;
+		} else {
+			for (int i = idx; i <= N; i++) {
+				combi(i + 1, depth + 1, flavorSum + infos[i][0], calSum + infos[i][1], range);
+			}
+		}
+	}
 }
