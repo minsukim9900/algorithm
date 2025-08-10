@@ -4,6 +4,7 @@ import java.util.*;
 public class Solution {
 	private static int N, L, answer;
 	private static int[][] infos;
+	private static int[] total_flavor;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -17,6 +18,7 @@ public class Solution {
 			L = Integer.parseInt(st.nextToken());
 			answer = 0;
 			infos = new int[N + 1][2];
+			
 			for (int i = 1; i <= N; i++) {
 				st = new StringTokenizer(br.readLine());
 				int flavor = Integer.parseInt(st.nextToken());
@@ -24,8 +26,8 @@ public class Solution {
 				infos[i][0] = flavor;
 				infos[i][1] = cal;
 			}
-			
-			for(int i = 1; i <= N; i++) {
+
+			for (int i = 1; i <= N; i++) {
 				combi(1, 0, 0, 0, i);
 			}
 			sb.append("#").append(test_case).append(" ").append(answer).append("\n");
@@ -34,6 +36,10 @@ public class Solution {
 	}
 
 	private static void combi(int idx, int depth, int flavorSum, int calSum, int range) {
+		if (calSum > L ) {
+			return;
+		}
+
 		if (depth == range && calSum <= L && answer < flavorSum) {
 			answer = flavorSum;
 		} else {
