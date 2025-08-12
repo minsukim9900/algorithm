@@ -2,56 +2,30 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+	private static int N, answer;
 
-	private static int[] result;
-	private static int cnt = 0;
-
-	public static void main(String[] args) throws IOException {
-
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = null;
 		StringBuilder sb = new StringBuilder();
-		
-		int N = Integer.parseInt(br.readLine());
-		result = new int[N];
-		combi(N, 0, 0);
-		System.out.println(cnt);
+
+		N = Integer.parseInt(br.readLine());
+		solve(0, 0, 0);
+		System.out.println(answer);
 	}
 
-	private static void combi(int N, int depth, int visited) {
+	private static void solve(int curr, int diag1, int diag2) {
+		if (curr == (1 << N) - 1) {
+			answer++;
+			return;
+		}
 
-		if (depth == N) {
-			
-				cnt++;
+		int possible = ~(curr | diag1 | diag2) & ((1 << N) - 1);
 
-		} else {
-
-			for (int i = 0; i < N; i++) {
-				if (depth >= 1 && Math.abs(result[depth - 1] - i) == 1)
-					continue;
-				if ((visited & (1 << i)) == 0) {
-					visited |= (1 << i);
-					result[depth] = i;
-					if(isPut(depth)) {
-						combi(N, depth + 1, visited);
-					}
-					visited ^= (1 << i);
-				}
-
-			}
-
+		while (possible != 0) {
+			int u = possible & -possible;
+			possible -= u;
+			solve(curr | u, (diag1 | u) << 1, (diag2 | u) >> 1);
 		}
 	}
-
-	private static boolean isPut(int depth) {
-
-		for (int i = 0; i < depth; i++) {
-			if(Math.abs(result[i] - result[depth]) == Math.abs(i - depth)) return false;
-		}
-		
-		return true;
-
-	}
-	
-	
-
 }
