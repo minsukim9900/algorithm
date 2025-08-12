@@ -13,6 +13,7 @@ public class Main {
 		N = Integer.parseInt(br.readLine());
 		answer = -1L;
 		for (int i = 1; i < 11; i++) {
+			if(isEnd) break;
 			dfs(0, 10, i, 0);
 		}
 		System.out.println(answer);
