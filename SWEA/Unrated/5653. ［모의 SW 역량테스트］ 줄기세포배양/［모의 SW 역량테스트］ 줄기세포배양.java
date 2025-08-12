@@ -4,7 +4,6 @@ import java.util.*;
 public class Solution {
 	private static int N, M, K;
 	private static int[][] board;
-	private static final int MAX_LENGTH = 800;
 	private static boolean[][] visited;
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
 
@@ -20,21 +19,20 @@ public class Solution {
 			N = Integer.parseInt(st.nextToken());
 			M = Integer.parseInt(st.nextToken());
 			K = Integer.parseInt(st.nextToken());
-			board = new int[MAX_LENGTH][MAX_LENGTH];
-			visited = new boolean[MAX_LENGTH][MAX_LENGTH];
+			board = new int[2 * K + N][2 * K + M];
+			visited = new boolean[2 * K + N][2 * K + M];
 
 			Queue<int[]> cell = new ArrayDeque<>();
 
-			for (int r = 0; r < N; r++) {
+			for (int r = K; r < N + K; r++) {
 				st = new StringTokenizer(br.readLine());
 
-				for (int c = 0; c < M; c++) {
-					int state = Integer.parseInt(st.nextToken());
-					board[(MAX_LENGTH / 2) + r][(MAX_LENGTH / 2) + c] = state;
+				for (int c = K; c < M + K; c++) {
+					board[r][c] = Integer.parseInt(st.nextToken());
 
-					if (state > 0) {
-						cell.add(new int[] { (MAX_LENGTH / 2) + r, (MAX_LENGTH / 2) + c, state, state, state });
-						visited[(MAX_LENGTH / 2) + r][(MAX_LENGTH / 2) + c] = true;
+					if (board[r][c] > 0) {
+						cell.add(new int[] { r, c, board[r][c], board[r][c], board[r][c] });
+						visited[r][c] = true;
 					}
 				}
 			}
@@ -67,13 +65,11 @@ public class Solution {
 				for (int i = 0; i < 4; i++) {
 					int nr = c[0] + delta[i][0];
 					int nc = c[1] + delta[i][1];
-
-					if (nr >= 0 && nr < MAX_LENGTH && nc >= 0 && nc < MAX_LENGTH && !visited[nr][nc]) {
+					if (!visited[nr][nc]) {
 						board[nr][nc] = c[4];
 						visited[nr][nc] = true;
 						cell.add(new int[] { nr, nc, board[nr][nc], board[nr][nc], board[nr][nc] });
 					}
-
 				}
 				c[3]--;
 				if (c[3] > 0) {
