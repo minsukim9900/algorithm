@@ -2,10 +2,23 @@ import java.io.*;
 import java.util.*;
 
 public class Solution {
-	private static int N, M, K;
-	private static int[][] board;
+	private static int N, M, K, count;
 	private static boolean[][] visited;
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+	private static Cell[] cell;
+
+	private static class Cell {
+		int r, c, life;
+		Cell next;
+
+		public Cell(int r, int c, int life, Cell next) {
+			super();
+			this.r = r;
+			this.c = c;
+			this.life = life << 1;
+			this.next = next;
+		}
+	}
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -19,65 +32,59 @@ public class Solution {
 			N = Integer.parseInt(st.nextToken());
 			M = Integer.parseInt(st.nextToken());
 			K = Integer.parseInt(st.nextToken());
-			board = new int[2 * K + N][2 * K + M];
-			visited = new boolean[2 * K + N][2 * K + M];
-
-			Queue<int[]> cell = new ArrayDeque<>();
+			visited = new boolean[(K * 2) + N][(K * 2) + M];
+			cell = new Cell[11];
+			count = 0;
 
 			for (int r = K; r < N + K; r++) {
 				st = new StringTokenizer(br.readLine());
 
 				for (int c = K; c < M + K; c++) {
-					board[r][c] = Integer.parseInt(st.nextToken());
-
-					if (board[r][c] > 0) {
-						cell.add(new int[] { r, c, board[r][c], board[r][c], board[r][c] });
+					int life = Integer.parseInt(st.nextToken());
+					
+					if (life > 0) {
 						visited[r][c] = true;
+						cell[life] = new Cell(r, c, life, cell[life]);
+						count++;
 					}
 				}
 			}
-			sb.append("#").append(t).append(" ").append(simulate(cell)).append("\n");
+			simulate();
+			sb.append("#").append(t).append(" ").append(count).append("\n");
 		}
 		System.out.println(sb.toString());
 	}
 
-	private static int simulate(Queue<int[]> cell) {
-		int count = 0;
-
+	private static void simulate() {
 		while (K-- > 0) {
-			int size = cell.size();
-			List<int[]> growCell = new ArrayList<>();
+			for (int life = 10; life > 0; life--) {
+				for (Cell curr = cell[life]; curr != null; curr = curr.next) {
+					if (curr.life == 0) {
+						break;
+					}
 
-			for (int i = 0; i < size; i++) {
-				int[] curr = cell.poll();
+					curr.life--;
 
-				curr[2]--;
-				if (curr[2] < 0) {
-					growCell.add(curr);
-				} else {
-					cell.add(curr);
-				}
-			}
+					if (curr.life == life - 1) {
+						for (int dir = 0; dir < 4; dir++) {
+							int nr = curr.r + delta[dir][0];
+							int nc = curr.c + delta[dir][1];
 
-			Collections.sort(growCell, (a, b) -> a[4] == b[4] ? a[1] - b[1] : b[4] - a[4]);
+							if (visited[nr][nc]) {
+								continue;
+							}
 
-			for (int[] c : growCell) {
-				for (int i = 0; i < 4; i++) {
-					int nr = c[0] + delta[i][0];
-					int nc = c[1] + delta[i][1];
-					if (!visited[nr][nc]) {
-						board[nr][nc] = c[4];
-						visited[nr][nc] = true;
-						cell.add(new int[] { nr, nc, board[nr][nc], board[nr][nc], board[nr][nc] });
+							visited[nr][nc] = true;
+							cell[life] = new Cell(nr, nc, life, cell[life]);
+							count++;
+						}
+					}
+
+					if (curr.life == 0) {
+						count--;
 					}
 				}
-				c[3]--;
-				if (c[3] > 0) {
-					cell.add(c);
-				}
 			}
-			count = cell.size();
 		}
-		return count;
 	}
 }
