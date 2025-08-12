@@ -4,7 +4,7 @@ import java.util.*;
 public class Solution {
 	private static int N, M, K;
 	private static int[][] board;
-	private static final int MAX_LENGTH = 1000;
+	private static final int MAX_LENGTH = 800;
 	private static boolean[][] visited;
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
 
