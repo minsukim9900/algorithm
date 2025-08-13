@@ -12,13 +12,6 @@ public class Main {
 			this.left = left;
 			this.right = right;
 		}
-
-		@Override
-		public String toString() {
-			return "Node [value=" + value + ", head=" + (head == null ? 0 : head.value) + ", left="
-					+ (left == null ? 0 : left.value) + ", right=" + (right == null ? 0 : right.value) + "]";
-		}
-
 	}
 
 	public static void main(String[] args) throws Exception {
