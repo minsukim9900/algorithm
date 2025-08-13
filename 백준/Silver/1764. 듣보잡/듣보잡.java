@@ -2,35 +2,35 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		StringTokenizer st = null;
 		StringBuilder sb = new StringBuilder();
+
+		Set<String> set = new HashSet<>();
+		TreeSet<String> ts = new TreeSet<>();
+		st = new StringTokenizer(br.readLine());
 		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
-		Set<String> person = new HashSet<>();
-		ArrayList<String> personEarsEyes = new ArrayList<>();
-		
+
 		for (int i = 0; i < N; i++) {
-			String human = br.readLine();
-			person.add(human);
-		}
-		int count = 0;
-		for(int i = 0; i<M; i++) {
-			String human = br.readLine();
-			if(person.contains(human)) {
-				count++;
-				personEarsEyes.add(human);
-			}
-			person.add(human);
+			set.add(br.readLine());
 		}
 
-		personEarsEyes.sort(null);
-		sb.append(count).append("\n");
-		for(int i = 0; i<personEarsEyes.size(); i++) {
-			sb.append(personEarsEyes.get(i)).append("\n");
+		for (int i = 0; i < M; i++) {
+			String look = br.readLine();
+
+			if (set.contains(look)) {
+				ts.add(look);
+			}
 		}
+		sb.append(ts.size()).append("\n");
+		Iterator<String> iterator = ts.iterator();
+		while (iterator.hasNext()) {
+			sb.append(iterator.next()).append("\n");
+		}
+
 		System.out.println(sb.toString());
+
 	}
 }
