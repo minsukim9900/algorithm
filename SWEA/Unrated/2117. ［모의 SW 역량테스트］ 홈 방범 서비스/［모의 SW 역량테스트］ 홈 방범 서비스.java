@@ -2,103 +2,84 @@ import java.io.*;
 import java.util.*;
 
 public class Solution {
-
-	private static int N, M;
-	private static int[][] map;
-	private static int[] price;
-	private static int[][] delta = { { 0, -1 }, { 0, 1 } };
+	private static int N, M, answer;
+	private static int[][] board;
+	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
 
 	public static void main(String[] args) throws IOException {
-
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = null;
-
-		price = new int[30];
-
-		for (int i = 1; i < 30; i++) {
-			price[i] = (i * i) + ((i - 1) * (i - 1));
-		}
+		StringBuilder sb = new StringBuilder();
 
 		int T = Integer.parseInt(br.readLine());
 
 		for (int t = 1; t <= T; t++) {
-
 			st = new StringTokenizer(br.readLine());
-
 			N = Integer.parseInt(st.nextToken());
 			M = Integer.parseInt(st.nextToken());
-			map = new int[N][N];
+			board = new int[N][N];
+			answer = 0;
 
 			for (int r = 0; r < N; r++) {
-
 				st = new StringTokenizer(br.readLine());
-
 				for (int c = 0; c < N; c++) {
-
-					map[r][c] = Integer.parseInt(st.nextToken());
+					board[r][c] = Integer.parseInt(st.nextToken());
 				}
-
 			}
 
-			int max = 0;
-			// N의 범위가 21까지 주어짐
-			for (int k = 1; k <= 21; k++) {
-
+			int maxCost = 0;
+			for (int k = 1; k <= N + 2; k++) {
+				int firstCost = (int) Math.pow(k, 2) + (int) Math.pow(k - 1, 2);
 				for (int r = 0; r < N; r++) {
-
 					for (int c = 0; c < N; c++) {
-
-						// 각 좌표에 k를 증가시켜주면서 탐색
-						int cnt = cntHouse(new int[] { r, c }, k);
-
-						// 이윤 계산
-						int profit = M * cnt - price[k];
-
-						if (profit >= 0) {
-
-							if (max < cnt) {
-								max = cnt;
-							}
-
+						int houses = simulate(r, c, k - 1);
+						int cost = houses * M - firstCost;
+						if (cost >= 0) {
+							answer = Math.max(answer, houses);
 						}
-
 					}
-
 				}
-
 			}
 
-			sb.append("#" + t + " " + max + "\n");
-
+			sb.append("#").append(t).append(" ").append(answer).append("\n");
 		}
 		System.out.println(sb.toString());
-
 	}
 
-	private static int cntHouse(int[] curr, int K) {
+	private static int simulate(int sr, int sc, int k) {
+		int count = board[sr][sc];
+		boolean[][] visited = new boolean[N][N];
+		visited[sr][sc] = true;
 
-		int cnt = 0;
-		
-		for (int dr = -K + 1; dr < K; dr++) {
+		Queue<int[]> q = new ArrayDeque<>();
+		q.add(new int[] { sr, sc, k });
 
-			for (int dc = -K + 1; dc < K; dc++) {
-				
-				if(Math.abs(dr) + Math.abs(dc) < K) {
-					
-					int nr = curr[0] + dr;
-					int nc = curr[1] + dc;
-					
-					if(nr >= 0 && nr <N && nc >= 0 && nc < N && map[nr][nc] == 1) {
-						cnt++;
+		while (!q.isEmpty()) {
+			int[] curr = q.poll();
+			int r = curr[0];
+			int c = curr[1];
+			int l = curr[2];
+
+			if (l > 0) {
+				for (int i = 0; i < 4; i++) {
+					int nr = r + delta[i][0];
+					int nc = c + delta[i][1];
+
+					if (isRange(nr, nc) && !visited[nr][nc]) {
+						if (board[nr][nc] == 1) {
+							count++;
+						}
+						visited[nr][nc] = true;
+						q.add(new int[] { nr, nc, l - 1 });
 					}
 				}
-				
-			}
-			
-		}
 
-		return cnt;
+			}
+		}
+		return count;
 	}
 
+	private static boolean isRange(int r, int c) {
+		return r >= 0 && r < N && c >= 0 && c < N;
+	}
 }
