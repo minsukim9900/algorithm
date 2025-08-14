@@ -7,28 +7,18 @@ public class Main {
 		StringTokenizer st = null;
 		StringBuilder sb = new StringBuilder();
 
-		String str = br.readLine();
+		String[] constraction = br.readLine().split(":", -1);
 		StringBuilder tmp = new StringBuilder();
 
-		List<String> contraction = new ArrayList<>();
-		for (int c = 0; c < str.length(); c++) {
-			if (str.charAt(c) == ':') {
-				contraction.add(tmp.toString());
-				tmp = new StringBuilder();
-			} else {
-				tmp.append(str.charAt(c));
-			}
-		}
-		contraction.add(tmp.toString());
-
 		int count = 0;
-		for (String s : contraction) {
+		for (String s : constraction) {
 			if (!s.equals("")) {
 				count++;
 			}
 		}
+
 		int zeroCount = 8 - count;
-		for (String s : contraction) {
+		for (String s : constraction) {
 			if (s.equals("")) {
 				while (zeroCount-- > 0) {
 					sb.append("0000:");
