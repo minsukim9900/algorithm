@@ -33,28 +33,25 @@ public class Main {
 				st = new StringTokenizer(br.readLine());
 				int from = Integer.parseInt(st.nextToken());
 				int to = Integer.parseInt(st.nextToken());
-				int w = Integer.parseInt(st.nextToken());
+				int w = Integer.parseInt(st.nextToken()) << 1;
+				if ((from == pointX && to == pointY) || (from == pointY && to == pointX)) {
+					w--;
+				}
 				arr[from].add(new int[] { to, w });
 				arr[to].add(new int[] { from, w });
 			}
 
 			int[] result = dijkstra(start);
-			int point = pointX;
-			if (result[pointX] < result[pointY]) {
-				point = pointY;
-			}
-
-			int[] compare = dijkstra(point);
 
 			TreeSet<Integer> answer = new TreeSet<>();
 			for (int i = 0; i < T; i++) {
 				int end = Integer.parseInt(br.readLine());
-				if(result[end] == result[point] + compare[end]) {
+				if (result[end] % 2 == 1) {
 					answer.add(end);
 				}
 			}
-			
-			for(int ans : answer ) {
+
+			for (int ans : answer) {
 				sb.append(ans).append(" ");
 			}
 			sb.append("\n");
