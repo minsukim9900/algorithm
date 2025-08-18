@@ -34,51 +34,44 @@ public class Main {
 	}
 
 	private static int bfs(int[] start) {
-		Queue<int[]> q = new ArrayDeque<>();
-		q.add(new int[] { start[0], start[1], 0, 0, -1 });
 		boolean[][][] visited = new boolean[1 << 6][N][M];
-		int answer = 0;
+		visited[0][start[0]][start[1]] = true;
+		Queue<int[]> q = new ArrayDeque<>();
+		q.add(new int[] { start[0], start[1], 0, 0 });
+		int result = 0;
 
 		while (!q.isEmpty()) {
 			int[] curr = q.poll();
 
 			if (board[curr[0]][curr[1]] == '1') {
-				answer = curr[3];
+				result = curr[3];
 				break;
 			}
 
 			for (int i = 0; i < 4; i++) {
-				if (curr[4] != -1 && (curr[4] ^ 1) == i) {
-					continue;
-				}
-
 				int nr = curr[0] + delta[i][0];
 				int nc = curr[1] + delta[i][1];
 
-				if (isRange(nr, nc) && board[nr][nc] != '#' && !visited[curr[2]][nr][nc]) {
+				if (nr >= 0 && nr < N && nc >= 0 && nc < M && board[nr][nc] != '#' && !visited[curr[2]][nr][nc]) {
 					if (board[nr][nc] >= 'A' && board[nr][nc] <= 'F' && containsKey(curr[2], board[nr][nc] - 'A')) {
 						visited[curr[2]][nr][nc] = true;
-						q.add(new int[] { nr, nc, curr[2], curr[3] + 1, i });
+						q.add(new int[] { nr, nc, curr[2], curr[3] + 1 });
 					}
 
 					if (board[nr][nc] >= 'a' && board[nr][nc] <= 'f') {
-						visited[curr[2]][nr][nc] = true;
-						q.add(new int[] { nr, nc, curr[2] | (1 << (board[nr][nc] - 'a')), curr[3] + 1, -1 });
+						visited[curr[2] | (1 << (board[nr][nc] - 'a'))][nr][nc] = true;
+						q.add(new int[] { nr, nc, curr[2] | (1 << (board[nr][nc] - 'a')), curr[3] + 1 });
 					}
 
 					if (board[nr][nc] == '0' || board[nr][nc] == '1' || board[nr][nc] == '.') {
 						visited[curr[2]][nr][nc] = true;
-						q.add(new int[] { nr, nc, curr[2], curr[3] + 1, i });
+						q.add(new int[] { nr, nc, curr[2], curr[3] + 1 });
 					}
 
 				}
 			}
 		}
-		return answer == 0 ? -1 : answer;
-	}
-
-	private static boolean isRange(int r, int c) {
-		return r >= 0 && r < N && c >= 0 && c < M;
+		return result == 0 ? -1 : result;
 	}
 
 	private static boolean containsKey(int key, int door) {
