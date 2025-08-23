@@ -3,35 +3,23 @@ import java.util.*;
 
 public class Main {
 
-	private static int N, M;
-	private static Map<Integer, String> book = new HashMap<>();
-	private static Map<String, Integer> book2 = new HashMap<>();
-
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		StringTokenizer st = null;
 		StringBuilder sb = new StringBuilder();
 
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
-
-		for (int i = 1; i <= N; i++) {
-			String tmp = br.readLine();
-			book.put(i, tmp);
-			book2.put(tmp, i);
+		st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		Map<String, String> info = new HashMap<>();
+		for (int i = 0; i < N; i++) {
+			String str = br.readLine();
+			info.put(String.valueOf(i + 1), str);
+			info.put(str, String.valueOf(i + 1));
 		}
 
 		for (int i = 0; i < M; i++) {
-			String tmp = br.readLine();
-			char c = tmp.charAt(0);
-			if(Character.isDigit(c)) {
-				sb.append(book.get(Integer.parseInt(tmp))).append("\n");
-			}else {
-				sb.append(book2.get(tmp)).append("\n");
-			}
+			System.out.println(info.get(br.readLine()));
 		}
-		
-		System.out.println(sb.toString());
-
 	}
 }
