@@ -42,21 +42,13 @@ public class Main {
 				version[idx]++;
 				pq.add(new Info(idx, v, version[idx]));
 			} else {
-				int idx = -1;
-				Info pick = null;
 				while (!pq.isEmpty()) {
-					Info curr = pq.poll();
-
-					if (curr.version == version[curr.idx]) {
-						idx = curr.idx;
-						pick = curr;
-						break;
+					if (pq.peek().version != version[pq.peek().idx]) {
+						pq.poll();
+						continue;
 					}
-				}
-
-				if (idx != -1) {
-					sb.append(idx).append("\n");
-					pq.add(pick);
+					sb.append(pq.peek().idx).append("\n");
+					break;
 				}
 			}
 		}
