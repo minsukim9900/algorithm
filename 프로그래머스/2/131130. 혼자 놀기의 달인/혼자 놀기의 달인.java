@@ -6,37 +6,36 @@ class Solution {
     
     public int solution(int[] cards) {
         visited = new boolean[cards.length + 1];
-        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> Integer.compare(b, a));
+        List<Integer> arr = new ArrayList<>();
         
         for(int i = 0; i < cards.length; i++) {
             if(visited[i]) continue;
             int cnt = dfs(i, cards);
-            pq.add(cnt);
+            arr.add(cnt);
         }
         
-        int count = 0;
-        int answer = 1;
+        Collections.sort(arr);
         
-        while(!pq.isEmpty()) {
-            int curr = pq.poll();
-            count++;
-            answer *= curr;
+        int cnt = 0;
+        int answer = 1;
+        for(int i = arr.size() - 1; i >= 0; i--) {
+            answer *= arr.get(i);
+            cnt++;
             
-            if(count == 2) {
+            if(cnt == 2) {
                 break;
             }
-        }
-        
-        return count != 2 ? 0 : answer;
+        }      
+        return cnt != 2 ? 0 : answer;
     }
     
     private static int dfs(int node, int[] cards) {
         visited[node] = true;
         int cnt = 1;
+        
         if(!visited[cards[node] - 1]) {
             cnt += dfs(cards[node] - 1, cards);
         }
-        
         return cnt;
     }
 }
