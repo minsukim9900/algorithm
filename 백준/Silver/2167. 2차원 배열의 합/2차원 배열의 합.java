@@ -1,43 +1,52 @@
 import java.io.*;
+import java.text.DateFormatSymbols;
 import java.util.*;
 
 public class Main {
+	private static int N, M, K;
+	private static int[][] nums;
+	private static int[][] prefix;
 
-	public static void calculator(int[][] nums, int i, int j, int x, int y) {
-		int sum = 0;
-		for (int r = i; r < x; r++) {
-			for (int c = j; c < y; c++) {
-				sum += nums[r][c]-10000;
-			}
-		}
-		System.out.println(sum);
-	}
-
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = null;
+		StringBuilder sb = new StringBuilder();
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
-		int[][] nums = new int[N][M];
+		st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
 
+		nums = new int[N + 1][M + 1];
+		prefix = new int[N + 1][M + 1];
 
-		for (int r = 0; r < N; r++) {
+		for (int r = 1; r <= N; r++) {
 			st = new StringTokenizer(br.readLine());
-			for (int c = 0; c < M; c++) {
-				nums[r][c] = Integer.parseInt(st.nextToken()) + 10000;
+			for (int c = 1; c <= M; c++) {
+				nums[r][c] = Integer.parseInt(st.nextToken());
 			}
 		}
 
-		int K = Integer.parseInt(br.readLine());
-		for (int t = 0; t < K; t++) {
-			st = new StringTokenizer(br.readLine());
-
-			int i = Integer.parseInt(st.nextToken()) - 1;
-			int j = Integer.parseInt(st.nextToken()) - 1;
-			int x = Integer.parseInt(st.nextToken());
-			int y = Integer.parseInt(st.nextToken());
-			calculator(nums, i, j, x, y);
+		for (int r = 1; r <= N; r++) {
+			int sum = 0;
+			for (int c = 1; c <= M; c++) {
+				sum += nums[r][c];
+				prefix[r][c] = prefix[r - 1][c] + sum;
+			}
 		}
+
+		K = Integer.parseInt(br.readLine());
+		for (int i = 0; i < K; i++) {
+			st = new StringTokenizer(br.readLine());
+			int sr = Integer.parseInt(st.nextToken());
+			int sc = Integer.parseInt(st.nextToken());
+			int er = Integer.parseInt(st.nextToken());
+			int ec = Integer.parseInt(st.nextToken());
+			
+			int total = prefix[er][ec];
+			int minusValue = prefix[er][sc - 1] + prefix[sr-1][ec];
+			int plusValue = prefix[sr - 1][sc -1];
+			sb.append(total - minusValue + plusValue).append("\n");
+		}
+		System.out.println(sb.toString());
 	}
 }
