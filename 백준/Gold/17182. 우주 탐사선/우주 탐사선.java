@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	private static int N, K, answer;
+	private static int N, K;
 	private static int[][] nums;
 
 	public static void main(String[] args) throws Exception {
@@ -27,27 +27,30 @@ public class Main {
 			dist[i] = dijkstra(i);
 		}
 
-		answer = Integer.MAX_VALUE;
-		boolean[] visited = new boolean[N];
-		visited[K] = true;
-		dfs(K, 0, 0, visited, dist);
-		System.out.println(answer);
+		int[][] dp = new int[N][1 << N];
+		for (int i = 0; i < N; i++) {
+			Arrays.fill(dp[i], -1);
+		}
+
+		int full = (1 << N) - 1;
+		int ans = solve(K, 1 << K, full, dp, dist);
+		System.out.println(ans);
 	}
 
-	private static void dfs(int k, int sum, int depth, boolean[] visited, int[][] dist) {
-		if (depth == N - 1) {
-			answer = Math.min(answer, sum);
-			return;
-		}
+	private static int solve(int u, int mask, int full, int[][] dp, int[][] dist) {
+		if (mask == full)
+			return 0;
+		if (dp[u][mask] != -1)
+			return dp[u][mask];
 
-		for (int i = 0; i < N; i++) {
-			if (visited[i] || i == k)
+		int best = Integer.MAX_VALUE;
+		for (int v = 0; v < N; v++) {
+			if ((mask & (1 << v)) != 0)
 				continue;
-
-			visited[i] = true;
-			dfs(i, sum + dist[k][i], depth + 1, visited, dist);
-			visited[i] = false;
+			int cand = dist[u][v] + solve(v, mask | (1 << v), full, dp, dist);
+			best = Math.min(cand, best);
 		}
+		return dp[u][mask] = best;
 	}
 
 	private static int[] dijkstra(int start) {
