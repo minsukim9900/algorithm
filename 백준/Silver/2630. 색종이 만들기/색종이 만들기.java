@@ -35,10 +35,6 @@ public class Main {
 	}
 
 	private static void search(int sr, int sc, int length) {
-		if (length == 0) {
-			return;
-		}
-
 		int er = sr + length - 1;
 		int ec = sc + length - 1;
 		int extent = length * length;
