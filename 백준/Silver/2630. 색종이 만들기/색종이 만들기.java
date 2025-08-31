@@ -30,8 +30,8 @@ public class Main {
 			}
 		}
 		search(0, 0, N);
-		System.out.println(white);
-		System.out.println(blue);
+		sb.append(white).append("\n").append(blue).append("\n");
+		System.out.println(sb.toString());
 	}
 
 	private static void search(int sr, int sc, int length) {
@@ -41,7 +41,7 @@ public class Main {
 
 		int er = sr + length - 1;
 		int ec = sc + length - 1;
-		int extent = (er - sr + 1) * (ec - sc + 1);
+		int extent = length * length;
 		int count = cal(sr, sc, er, ec);
 
 		if (count == 0) {
@@ -49,12 +49,13 @@ public class Main {
 		} else if (count == extent) {
 			blue++;
 		} else {
-			int nr = sr + length / 2;
-			int nc = sc + length / 2;
-			search(sr, sc, length / 2);
-			search(sr, nc, length / 2);
-			search(nr, sc, length / 2);
-			search(nr, nc, length / 2);
+			int half = length / 2;
+			int nr = sr + half;
+			int nc = sc + half;
+			search(sr, sc, half);
+			search(sr, nc, half);
+			search(nr, sc, half);
+			search(nr, nc, half);
 		}
 	}
 
