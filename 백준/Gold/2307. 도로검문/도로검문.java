@@ -30,7 +30,12 @@ public class Main {
 			arr[y].add(new int[] { x, w });
 		}
 		int firstState = dijkstra(1, -1, -1, true);
-
+		
+		if(firstState == -1) {
+			System.out.println(-1);
+			return;
+		}
+		
 		int answer = 0;
 		for (int i = 2; i <= N; i++) {
 			int distance = dijkstra(1, i, p[i], false);
