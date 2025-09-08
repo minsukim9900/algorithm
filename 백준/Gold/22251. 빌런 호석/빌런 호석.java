@@ -10,11 +10,7 @@ public class Main {
 		StringTokenizer st;
 		StringBuilder sb = new StringBuilder();
 
-		Map<Integer, Integer>[] info = new HashMap[10];
-		for (int i = 0; i < 10; i++) {
-			info[i] = new HashMap<>();
-			info[i].put(i, 0);
-		}
+		int[][] dff = new int[10][10];
 
 		for (int i = 0; i < nums.length - 1; i++) {
 			int x = nums[i];
@@ -22,8 +18,8 @@ public class Main {
 				int y = nums[j];
 				int cnt = Integer.bitCount(x ^ y);
 
-				info[i].put(j, cnt);
-				info[j].put(i, cnt);
+				dff[i][j] = cnt;
+				dff[j][i] = cnt;
 			}
 		}
 
@@ -45,7 +41,7 @@ public class Main {
 				int x = comA % 10;
 				int y = comB % 10;
 
-				cnt += info[x].get(y);
+				cnt += dff[x][y];
 				comA /= 10;
 				comB /= 10;
 			}
