@@ -20,7 +20,7 @@ public class Main {
 			int x = Integer.parseInt(br.readLine());
 
 			for (int j = x; j <= K; j++) {
-				dp[j] = dp[j - x] + dp[j];
+				dp[j] += dp[j - x];
 			}
 		}
 		System.out.println(dp[K]);
