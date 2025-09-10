@@ -1,37 +1,36 @@
 import java.util.*;
 
 class Solution {
-    private static long[] d5, d4;
-
+    private static long[] p5, p4;
     public long solution(int n, long l, long r) {
         init(n);
-        return prefix(n, r) - prefix(n, l - 1);
+        return prefix(r, n) - prefix(l - 1, n);
     }
     
-    private static long prefix(int n, long x) {
-        if(x <= 0) return 0;
-        if(n == 0) return Math.min(1L, x);
-        if(x >= d5[n]) return d4[n];
+    private static long prefix(long point, int size) {
+        if(size <= 0) {
+           return 0;
+        }
         
-        long blk = d5[n - 1];
-        long full = x / blk;
-        long rem = x % blk;
+        long page = point / p5[size - 1];
+        long rem = point % p5[size - 1];
+        long prePageOneCount = p4[size - 1] * (page >= 3 ? page - 1 : page);
         
-        long blocks = full - (full >= 3 ? 1 : 0);
-        long sum = blocks * d4[n - 1];
-        
-        if(full != 2) sum += prefix(n - 1, rem);
-        return sum;
+        long sum = prePageOneCount;
+        if(page == 2) {
+            return sum;
+        }else {
+            return sum += prefix(rem, size - 1);
+        }
     }
     
-    private void init(int n) {
-        d5 = new long[n + 1];
-        d4 = new long[n + 1];
-        d5[0] = 1L; d4[0] = 1L;
-        
+    private static void init(int n) {
+        p5 = new long[n + 1];
+        p4 = new long[n + 1];
+        p5[0] = 1; p4[0] = 1;
         for(int i = 1; i <= n; i++) {
-            d5[i] = d5[i - 1] * 5;
-            d4[i] = d4[i - 1] * 4;
+            p4[i] = p4[i - 1] * 4;
+            p5[i] = p5[i - 1] * 5;
         }
     }
 }
