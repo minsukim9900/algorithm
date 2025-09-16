@@ -14,12 +14,14 @@ class Solution {
             this.time = time;
             this.runTime = 0;
         }
-    }    
+    }
+    
     public String[] solution(String[][] plans) {
         int N = plans.length;
         String[] answer = new String[N];
         
         PriorityQueue<Info> pq = new PriorityQueue<>((a, b) -> a.startTime - b.startTime);
+        
         for(String[] plan : plans) {
             String subject = plan[0];
             String[] temp = plan[1].split(":");
@@ -46,11 +48,9 @@ class Solution {
                     stack.pop();
                     answer[idx++] = info.subject;
                 }
-            }
-            
+            }       
             t++;
-        }
-        
+        }     
         return answer;
     }
 }
