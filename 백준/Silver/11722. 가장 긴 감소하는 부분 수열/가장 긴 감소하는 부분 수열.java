@@ -42,6 +42,6 @@ public class Main {
 				e = mid - 1;
 			}
 		}
-		return s;
+		return answer;
 	}
 }
