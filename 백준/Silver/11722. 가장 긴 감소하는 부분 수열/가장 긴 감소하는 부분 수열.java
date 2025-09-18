@@ -31,13 +31,14 @@ public class Main {
 	}
 
 	private static int binarySerach(int s, int e, int target) {
-
+		int answer = 0;
 		while (s <= e) {
 			int mid = (s + e) / 2;
 
 			if (dp[mid] < target) {
 				s = mid + 1;
 			} else {
+				answer = mid;
 				e = mid - 1;
 			}
 		}
