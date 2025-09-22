@@ -19,12 +19,16 @@ public class Main {
 		}
 
 		st = new StringTokenizer(br.readLine());
-		int p = Integer.parseInt(st.nextToken());
-		int answer = p * dis[0];
+		for (int i = 0; i < N; i++) {
+			price[i] = Integer.parseInt(st.nextToken());
+		}
+
+		long min = price[0];
+		long answer = dis[0] * min;
 
 		for (int i = 1; i < N - 1; i++) {
-			p = Math.min(p, Integer.parseInt(st.nextToken()));
-			answer += p * dis[i];
+			min = Math.min(min, price[i]);
+			answer += (min * dis[i]);
 		}
 		System.out.println(answer);
 	}
