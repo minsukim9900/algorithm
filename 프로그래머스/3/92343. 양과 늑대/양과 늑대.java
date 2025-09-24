@@ -20,6 +20,7 @@ class Solution {
         
         for(int[] e : edges) {
             adj[e[0]].add(e[1]);
+            adj[e[1]].add(e[0]);
         }
         used[1] = true;
         dfs(1, 1, 0);
