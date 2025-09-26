@@ -16,7 +16,8 @@ public class Main {
 		dp = new long[56];
 		long d = 1L;
 		for (int i = 1; i <= 55; i++) {
-			dp[i] = (dp[i - 1] << 1) + (1L << (i - 1));
+			dp[i] = i * d;
+			d *= 2;
 		}
 		System.out.println(countOne(B) - countOne(A - 1));
 	}
@@ -25,10 +26,9 @@ public class Main {
 		if (x <= 0)
 			return 0;
 
-		long temp = Long.highestOneBit(x);
 		int idx = 63 - Long.numberOfLeadingZeros(x);
-		long preCount = dp[idx];
-		long postCount = x - temp + 1;
-		return preCount + postCount + countOne(postCount - 1);
+		long first_One = (1L << (idx));
+		long postCount = x - first_One + 1;
+		return dp[idx] + postCount + countOne(postCount - 1);
 	}
 }
