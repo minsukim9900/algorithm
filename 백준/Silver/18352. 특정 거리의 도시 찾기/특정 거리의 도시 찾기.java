@@ -52,6 +52,7 @@ public class Main {
 
 			if (curr[1] == K) {
 				result.add(curr[0]);
+				continue;
 			}
 
 			for (Integer next : adj[curr[0]]) {
