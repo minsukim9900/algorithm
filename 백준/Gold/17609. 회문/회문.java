@@ -19,12 +19,15 @@ public class Main {
 	private static int check(String str) {
 		int s = 0;
 		int e = str.length() - 1;
-		while (s < e) {
+		
+		while (s <= e) {
+			
 			if(str.charAt(s) == str.charAt(e)) {
 				s++;
 				e--;
+			} else if(isPoss(str, s + 1, e) || isPoss(str, s, e - 1)){
+				return 1;
 			} else {
-				if(isPoss(str, s + 1, e) || isPoss(str, s, e - 1)) return 1;
 				return 2;
 			}
 		}
@@ -32,8 +35,8 @@ public class Main {
 	}
 
 	private static boolean isPoss(String str, int s, int e) {
-
-		while (s < e) {
+		while (s <= e) {
+			
 			if (str.charAt(s) != str.charAt(e)) {
 				return false;
 			}
