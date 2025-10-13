@@ -21,12 +21,7 @@ public class Main {
 				break;
 			}
 
-			if (B < A) {
-				count = 0;
-				break;
-			}
-			
-			if (tmp.charAt(tmp.length() - 1) - '0' != 1 && (tmp.charAt(tmp.length() - 1) - '0') % 2 == 1) {
+			if (B < A || (tmp.charAt(tmp.length() - 1) - '0' != 1 && (tmp.charAt(tmp.length() - 1) - '0') % 2 == 1)) {
 				count = 0;
 				break;
 			}
