@@ -14,6 +14,7 @@ public class Main {
 		int A = Integer.parseInt(st.nextToken());
 		int B = Integer.parseInt(st.nextToken());
 		int count = 0;
+		boolean isPoss = true;
 		while (true) {
 			String tmp = String.valueOf(B);
 
@@ -22,7 +23,7 @@ public class Main {
 			}
 
 			if (B < A || (tmp.charAt(tmp.length() - 1) - '0' != 1 && (tmp.charAt(tmp.length() - 1) - '0') % 2 == 1)) {
-				count = 0;
+				isPoss = false;
 				break;
 			}
 
@@ -35,6 +36,6 @@ public class Main {
 			count++;
 		}
 
-		System.out.println(count == 0 ? -1 : count + 1);
+		System.out.println(isPoss ? count + 1 : -1);
 	}
 }
