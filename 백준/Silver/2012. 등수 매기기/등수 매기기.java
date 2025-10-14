@@ -9,17 +9,19 @@ public class Main {
 		StringTokenizer st;
 
 		int N = Integer.parseInt(br.readLine());
-		int[] nums = new int[N];
+		
+		int[] count = new int[500_001];
 		for (int i = 0; i < N; i++) {
-			nums[i] = Integer.parseInt(br.readLine());
+			count[Integer.parseInt(br.readLine())]++;
 		}
 
-		Arrays.sort(nums);
-
-		int B = 1;
-		long ans = 0;
-		for (int i = 0; i < N; i++) {
-			ans += Math.abs(nums[i] - B++);
+		long B = 1L;
+		long ans = 0L;
+		for (int i = 1; i <= 500_000; i++) {
+			while (count[i] > 0) {
+				ans += (long) Math.abs(i - B++);
+				count[i]--;
+			}
 		}
 		System.out.println(ans);
 	}
