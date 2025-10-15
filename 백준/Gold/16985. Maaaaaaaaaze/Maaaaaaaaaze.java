@@ -30,8 +30,10 @@ public class Main {
 	}
 
 	private static void dfs(int depth, boolean[] visited, int[][][] maze) {
+		if(answer == 12) return;
+		
 		if (depth == 5) {
-			if (maze[0][0][0] == 1) {
+			if (maze[0][0][0] == 1 && maze[4][4][4] == 1) {
 				simulate(maze);
 			}
 			return;
@@ -57,6 +59,9 @@ public class Main {
 
 		while (!q.isEmpty()) {
 			int[] curr = q.poll();
+
+			if (curr[3] > answer)
+				break;
 
 			if (isEnd(curr)) {
 				answer = Math.min(answer, curr[3]);
@@ -94,9 +99,9 @@ public class Main {
 
 		for (int r = 0; r < 5; r++) {
 			for (int c = 0; c < 5; c++) {
-				result[1][Math.abs(4 - c)][r] = board[r][c];
-				result[2][Math.abs(4 - r)][Math.abs(4 - c)] = board[r][c];
-				result[3][c][Math.abs(4 - r)] = board[r][c];
+				result[1][4 - c][r] = board[r][c];
+				result[2][4 - r][4 - c] = board[r][c];
+				result[3][c][4 - r] = board[r][c];
 			}
 		}
 		return result;
