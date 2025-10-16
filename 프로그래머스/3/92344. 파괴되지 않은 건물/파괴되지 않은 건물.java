@@ -25,16 +25,15 @@ class Solution {
             prefix[er + 1][ec + 1] += (state * degree);
         }
         
-        
-        for(int r = 1; r < N; r++) {
-            for(int c =0; c < M; c++) {
-                prefix[r][c] += prefix[r - 1][c];
-            }
+        for(int c = 1; c < M; c++) {
+            prefix[0][c] += prefix[0][c - 1];
         }
         
-        for(int c = 1; c < M; c++) {
-            for(int r =0; r < N; r++) {
-                prefix[r][c] += prefix[r][c - 1];
+        for(int r = 1; r < N; r++) {
+            int sum = 0;
+            for(int c = 0; c < M; c++) {
+                sum += prefix[r][c];
+                prefix[r][c] = sum + prefix[r - 1][c];
             }
         }
         
