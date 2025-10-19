@@ -17,6 +17,10 @@ class Solution {
                     maxNumber = nums[i] - '0';
                     maxNumberIndex = i;
                 }
+                
+                if(maxNumber == 9) {
+                    break;
+                }
             }
             sb.append(maxNumber);
             s = maxNumberIndex + 1;
