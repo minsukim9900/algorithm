@@ -58,6 +58,7 @@ public class Main {
 				count = 0;
 			}
 		}
+		ans = Math.max(ans, count);
 		System.out.println(ans);
 	}
 
