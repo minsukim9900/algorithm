@@ -45,7 +45,7 @@ public class Main {
 
 	private static int answer() {
 		int count = 0;
-		
+
 		for (int r = 0; r < N; r++) {
 			for (int c = 0; c < M; c++) {
 				if (board[r][c] == 1) {
@@ -57,9 +57,15 @@ public class Main {
 	}
 
 	private static boolean isPoss(int sr, int sc, int[][] shape) {
+		if (sr + shape.length > N || sc + shape[0].length > M)
+			return false;
+
 		for (int r = 0; r < shape.length; r++) {
 			for (int c = 0; c < shape[r].length; c++) {
-				if (!isRange(sr + r, sc + c) || board[sr + r][sc + c] + shape[r][c] > 1)
+				if (shape[r][c] == 0)
+					continue;
+
+				if (board[sr + r][sc + c] == 1)
 					return false;
 			}
 		}
