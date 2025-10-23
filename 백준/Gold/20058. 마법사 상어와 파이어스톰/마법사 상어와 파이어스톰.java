@@ -12,7 +12,7 @@ public class Main {
 		StringTokenizer st;
 
 		st = new StringTokenizer(br.readLine());
-		N = (int) Math.pow(2, Integer.parseInt(st.nextToken()));
+		N = 1 << (Integer.parseInt(st.nextToken()));
 		Q = Integer.parseInt(st.nextToken());
 		board = new int[N][N];
 
@@ -23,13 +23,14 @@ public class Main {
 			}
 		}
 
+		boolean[][] change = null;
+		
 		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < Q; i++) {
 			int q = Integer.parseInt(st.nextToken());
-			int x = (int) Math.pow(2, q);
+			int x = 1 << q;
 
 			if (x > 1) {
-				int tmp = 0;
 				for (int r = 0; r < N; r += x) {
 					for (int c = 0; c < N; c += x) {
 						rotate(r, c, r + x, c + x);
@@ -37,17 +38,23 @@ public class Main {
 				}
 			}
 
-			List<int[]> changeAfter = new ArrayList<>();
+			change = new boolean[N][N];
+
+			
 			for (int r = 0; r < N; r++) {
 				for (int c = 0; c < N; c++) {
 					if (board[r][c] > 0 && !countIce(r, c)) {
-						changeAfter.add(new int[] { r, c });
+						change[r][c] = true;
 					}
 				}
 			}
 
-			for (int[] w : changeAfter) {
-				board[w[0]][w[1]] = Math.max(0, board[w[0]][w[1]] - 1);
+			for (int r = 0; r < N; r++) {
+				for (int c = 0; c < N; c++) {
+					if (change[r][c]) {
+						board[r][c] = Math.max(0, board[r][c] - 1);
+					}
+				}
 			}
 		}
 
