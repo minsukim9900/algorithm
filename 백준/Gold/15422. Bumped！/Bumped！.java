@@ -31,54 +31,57 @@ public class Main {
 			adj[y].add(new int[] { x, w });
 		}
 
+		int[] flight = new int[F + 1];
+		flight[0] = S;
+
 		for (int i = 1; i <= F; i++) {
 			st = new StringTokenizer(br.readLine());
 			int x = Integer.parseInt(st.nextToken());
 			int y = Integer.parseInt(st.nextToken());
 			int w = 0;
-			adj[x].add(new int[] { y, w });
+			adj[x].add(new int[] {y, w});
+			flight[i] = x;
 		}
-		System.out.println(dijkstra());
+		System.out.println(dijkstra(flight));
 	}
 
-	private static long dijkstra() {
-		PriorityQueue<long[]> pq = new PriorityQueue<>((a, b) -> Long.compare(a[1], b[1]));
-		long[][] dist = new long[2][N];
-		for (int i = 0; i < 2; i++) {
+	private static long dijkstra(int[] flight) {
+		PriorityQueue<long[]> pq = new PriorityQueue<>(
+				(a, b) -> Long.compare(a[1], b[1]));
+		long[][] dist = new long[F + 1][N];
+		for (int i = 0; i <= F; i++) {
 			Arrays.fill(dist[i], Long.MAX_VALUE);
+			dist[i][S] = 0;
+			pq.add(new long[] { S, dist[i][S], i });
 		}
-		dist[0][S] = 0;
-		pq.add(new long[] { S, dist[0][S], 0 });
 
 		while (!pq.isEmpty()) {
 			long[] curr = pq.poll();
 			int node = (int) curr[0];
 			long d = curr[1];
-			int isBoard = (int) curr[2];
+			int idx = (int) curr[2];
 
-			if (dist[isBoard][node] != d) {
+			if (dist[idx][node] != d)
 				continue;
-			}
 
 			if (node == T)
 				return d;
 
 			for (int[] next : adj[node]) {
-				if (next[1] == 0 && isBoard == 0) {
-					if (dist[isBoard][next[0]] > next[1] + d) {
-						isBoard = 1;
-						dist[isBoard][next[0]] = next[1] + d;
-						pq.add(new long[] { next[0], dist[isBoard][next[0]], isBoard });
+				if (next[1] == 0) {
+					if (node == flight[idx] && dist[idx][next[0]] > d + next[1]) {
+						dist[idx][next[0]] = d + next[1];
+						pq.add(new long[] { next[0], dist[idx][next[0]], idx });
 					}
-					continue;
-				}
-
-				if (next[1] > 0 && dist[isBoard][next[0]] > next[1] + d) {
-					dist[isBoard][next[0]] = next[1] + d;
-					pq.add(new long[] { next[0], dist[isBoard][next[0]], isBoard });
+				} else {
+					if (dist[idx][next[0]] > d + next[1]) {
+						dist[idx][next[0]] = d + next[1];
+						pq.add(new long[] { next[0], dist[idx][next[0]], idx });
+					}
 				}
 			}
 		}
+
 		return -1;
 	}
 }
