@@ -45,29 +45,22 @@ public class Main {
 			return;
 		}
 
-		for (int i = 0; i < MAX; i++) {
-			if ((mask & (1 << i)) == 0)
-				continue;
+		for (int r = 0; r < N; r++) {
+			for (int c = 0; c < N; c++) {
+				int curr = r * N + c;
+				if ((mask & (1 << curr)) != 0) {
 
-			int r = i / N;
-			int c = i % N;
+					for (int i = 0; i < 4; i++) {
+						int nr = r + delta[i][0];
+						int nc = c + delta[i][1];
 
-			for (int d = 0; d < 4; d++) {
-				int nr = r + delta[d][0];
-				int nc = c + delta[d][1];
-
-				if (!isRange(nr, nc))
-					continue;
-
-				int next = nr * N + nc;
-				if ((mask & (1 << next)) != 0)
-					continue;
-				
-				int nextMask = mask | (1 << next);
-				
-				if(!visited[nextMask]) {
-					visited[nextMask] = true;
-					dfs(depth + 1, count + (board[nr][nc] ? 1: 0), nextMask);
+						int next = nr * N + nc;
+						int nextMask = mask | (1 << next);
+						if (isRange(nr, nc) && (mask & (1 << next)) == 0 && !visited[nextMask]) {
+							visited[nextMask] = true;
+							dfs(depth + 1, count + (board[nr][nc] ? 1 : 0), nextMask);
+						}
+					}
 				}
 			}
 		}
