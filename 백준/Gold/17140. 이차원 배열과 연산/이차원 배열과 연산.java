@@ -2,98 +2,110 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    private static int R, C, K;
-    private static int[][] board;
-    private static int maxR, maxC;
+	private static int R, C, K, maxR, maxC;
+	private static int[][] board;
 
-    public static void main(String[] args) throws Exception {
-    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
 
-        st = new StringTokenizer(br.readLine());
-        R = Integer.parseInt(st.nextToken());
-        C = Integer.parseInt(st.nextToken());
-        K = Integer.parseInt(st.nextToken());
+		st = new StringTokenizer(br.readLine());
+		R = Integer.parseInt(st.nextToken()) - 1;
+		C = Integer.parseInt(st.nextToken()) - 1;
+		K = Integer.parseInt(st.nextToken());
 
-        board = new int[101][101];
-        maxR = 3;
-        maxC = 3;
+		maxR = 3;
+		maxC = 3;
+		board = new int[100][100];
+		for (int r = 0; r < maxR; r++) {
+			st = new StringTokenizer(br.readLine());
+			for (int c = 0; c < maxC; c++) {
+				board[r][c] = Integer.parseInt(st.nextToken());
+			}
+		}
 
-        for (int r = 1; r <= 3; r++) {
-            st = new StringTokenizer(br.readLine());
-            for (int c = 1; c <= 3; c++) {
-                board[r][c] = Integer.parseInt(st.nextToken());
-            }
-        }
+		for (int t = 0; t <= 100; t++) {
+			if (board[R][C] == K) {
+				System.out.println(t);
+				return;
+			}
 
-        for (int t = 0; t <= 100; t++) {
-            if (R <= maxR && C <= maxC && board[R][C] == K) {
-                System.out.println(t);
-                return;
-            }
-            if (t == 100) break;
+			if (maxR >= maxC) {
+				rowSort();
+			} else {
+				columnSort();
+			}
+		}
+		System.out.println(-1);
+	}
 
-            if (maxR >= maxC) changeRow();
-            else changeCol();
-        }
-        System.out.println(-1);
-    }
+	private static void columnSort() {
+		int length = 0;
+		for (int c = 0; c < maxC; c++) {
+			int[] number = new int[101];
+			for (int r = 0; r < maxR; r++) {
+				number[board[r][c]]++;
+			}
 
-    private static void changeRow() {
-        int newC = 0;
-        for (int i = 1; i <= maxR; i++) {
-            int[] count = new int[101];
-            for (int j = 1; j <= maxC; j++) {
-                int v = board[i][j];
-                if (v > 0) count[v]++;
-            }
+			List<int[]> arr = new ArrayList<>();
+			for (int n = 1; n <= 100; n++) {
+				if (number[n] > 0) {
+					arr.add(new int[] { n, number[n] });
+				}
+			}
+			arr.sort((a, b) -> a[1] == b[1] ? a[0] - b[0] : a[1] - b[1]);
 
-            List<int[]> pairs = new ArrayList<>();
-            for (int num = 1; num <= 100; num++) {
-                if (count[num] > 0) pairs.add(new int[]{num, count[num]});
-            }
+			int idx = 0;
+			for (int[] a : arr) {
+				if (idx >= 100)
+					break;
+				board[idx++][c] = a[0];
+				if (idx >= 100)
+					break;
+				board[idx++][c] = a[1];
+			}
 
-            pairs.sort((a, b) -> a[1] == b[1] ? a[0] - b[0] : a[1] - b[1]);
+			for (int i = idx; i < 100; i++) {
+				board[i][c] = 0;
+			}
 
-            int idx = 1;
-            for (int[] p : pairs) {
-                if (idx > 100) break;
-                board[i][idx++] = p[0];
-                if (idx > 100) break;
-                board[i][idx++] = p[1];
-            }
-            for (int j = idx; j <= 100; j++) board[i][j] = 0;
-            newC = Math.max(newC, idx - 1);
-        }
-        maxC = Math.min(newC, 100);
-    }
+			length = Math.max(length, idx);
+		}
+		maxR = Math.min(length, 100);
+	}
 
-    private static void changeCol() {
-        int newR = 0;
-        for (int j = 1; j <= maxC; j++) {
-            int[] count = new int[101];
-            for (int i = 1; i <= maxR; i++) {
-                int v = board[i][j];
-                if (v > 0) count[v]++;
-            }
+	private static void rowSort() {
+		int length = 0;
+		for (int r = 0; r < maxR; r++) {
+			int[] number = new int[101];
+			for (int c = 0; c < maxC; c++) {
+				number[board[r][c]]++;
+			}
 
-            List<int[]> pairs = new ArrayList<>();
-            for (int num = 1; num <= 100; num++) {
-                if (count[num] > 0) pairs.add(new int[]{num, count[num]});
-            }
+			List<int[]> arr = new ArrayList<>();
+			for (int n = 1; n <= 100; n++) {
+				if (number[n] > 0) {
+					arr.add(new int[] { n, number[n] });
+				}
+			}
+			arr.sort((a, b) -> a[1] == b[1] ? a[0] - b[0] : a[1] - b[1]);
 
-            pairs.sort((a, b) -> a[1] == b[1] ? a[0] - b[0] : a[1] - b[1]);
+			int idx = 0;
+			for (int[] a : arr) {
+				if (idx >= 100)
+					break;
+				board[r][idx++] = a[0];
+				if (idx >= 100)
+					break;
+				board[r][idx++] = a[1];
+			}
 
-            int idx = 1;
-            for (int[] p : pairs) {
-                if (idx > 100) break;
-                board[idx++][j] = p[0];
-                if (idx > 100) break;
-                board[idx++][j] = p[1];
-            }
-            for (int i = idx; i <= 100; i++) board[i][j] = 0;
-            newR = Math.max(newR, idx - 1);
-        }
-        maxR = Math.min(newR, 100);
-    }
+			for (int i = idx; i < 100; i++) {
+				board[r][i] = 0;
+			}
+
+			length = Math.max(length, idx);
+		}
+		maxC = Math.min(length, 100);
+	}
 }
