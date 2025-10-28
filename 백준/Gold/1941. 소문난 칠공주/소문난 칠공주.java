@@ -3,96 +3,74 @@ import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
 public class Main {
-	private static int N, answer;
-	private static int[][] board;
+	private static int N = 5;
+	private static int answer;
+	private static final int MAX = 25;
+	private static boolean[][] board;
+	private static boolean[] visited = new boolean[1 << MAX + 1];
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
-
-	private static boolean[][] visited;
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 
-		N = 5;
-		board = new int[N][N];
-		visited = new boolean[N][N];
+		board = new boolean[N][N];
 		for (int r = 0; r < N; r++) {
 			String str = br.readLine();
 			for (int c = 0; c < N; c++) {
-				board[r][c] = str.charAt(c) == 'Y' ? 0 : 1;
+				board[r][c] = str.charAt(c) == 'S' ? true : false;
 			}
 		}
 
-		dfs(0, 0, 0, 0);
+		for (int r = 0; r < N; r++) {
+			for (int c = 0; c < N; c++) {
+				if (board[r][c]) {
+					int mask = 1 << (r * 5 + c);
+					visited[mask] = true;
+					dfs(1, 1, mask);
+				}
+			}
+		}
 		System.out.println(answer);
 	}
 
-	private static void dfs(int depth, int count, int r, int c) {
-		if (count > 3)
-			return;
-
-		if (depth == 7) {
-			if (isConnected())
-				answer++;
+	private static void dfs(int depth, int count, int mask) {
+		if (7 - depth + count < 4) {
 			return;
 		}
-		
-		if(r == N) return;
 
-		int nr = r;
-		int nc = c + 1;
-
-		if (nc == N) {
-			nr = r + 1;
-			nc = 0;
+		if (depth == 7 && count >= 4) {
+			answer++;
+			return;
 		}
 
-		visited[r][c] = true;
-		dfs(depth + 1, count + (board[r][c] == 0 ? 1 : 0), nr, nc);
-		visited[r][c] = false;
-		dfs(depth, count, nr, nc);
-	}
+		for (int i = 0; i < MAX; i++) {
+			if ((mask & (1 << i)) == 0)
+				continue;
 
-	private static boolean isConnected() {
-		int sr = -1;
-		int sc = -1;
+			int r = i / N;
+			int c = i % N;
 
-		out: for (int r = 0; r < N; r++) {
-			for (int c = 0; c < N; c++) {
-				if (visited[r][c]) {
-					sr = r;
-					sc = c;
-					break out;
+			for (int d = 0; d < 4; d++) {
+				int nr = r + delta[d][0];
+				int nc = c + delta[d][1];
+
+				if (!isRange(nr, nc))
+					continue;
+
+				int next = nr * N + nc;
+				if ((mask & (1 << next)) != 0)
+					continue;
+				
+				int nextMask = mask | (1 << next);
+				
+				if(!visited[nextMask]) {
+					visited[nextMask] = true;
+					dfs(depth + 1, count + (board[nr][nc] ? 1: 0), nextMask);
 				}
 			}
 		}
-
-		if (sr == -1)
-			return false;
-
-		boolean[][] vis = new boolean[N][N];
-
-		Queue<int[]> q = new ArrayDeque<>();
-		vis[sr][sc] = true;
-		q.add(new int[] { sr, sc });
-		int cnt = 0;
-
-		while (!q.isEmpty()) {
-			int[] curr = q.poll();
-			cnt++;
-
-			for (int i = 0; i < 4; i++) {
-				int nr = curr[0] + delta[i][0];
-				int nc = curr[1] + delta[i][1];
-
-				if (isRange(nr, nc) && visited[nr][nc] && !vis[nr][nc]) {
-					vis[nr][nc] = true;
-					q.add(new int[] { nr, nc });
-				}
-			}
-		}
-		return cnt == 7;
 	}
 
 	private static boolean isRange(int r, int c) {
