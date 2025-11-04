@@ -3,11 +3,11 @@ import java.util.*;
 
 public class Main {
 	private static int N, M, K;
-	private static int[][][] board;
+	private static int[][] board;
 	private static int[][] passenger;
 	private static int[] taxi;
-	private static int[] dist;
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+	private static boolean[] isUsed;
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -19,133 +19,145 @@ public class Main {
 		M = Integer.parseInt(st.nextToken());
 		K = Integer.parseInt(st.nextToken());
 
-		board = new int[M + 1][N][N];
-		for (int r = 0; r < N; r++) {
+		board = new int[N + 1][N + 1];
+		for (int r = 1; r <= N; r++) {
 			st = new StringTokenizer(br.readLine());
-			for (int c = 0; c < N; c++) {
+			for (int c = 1; c <= N; c++) {
 				int state = Integer.parseInt(st.nextToken());
-
-				for (int i = 0; i < M + 1; i++) {
-					board[i][r][c] = state == 1 ? -1 : state;
-				}
+				board[r][c] = state == 1 ? -1 : state;
 			}
 		}
+
 		taxi = new int[2];
 		st = new StringTokenizer(br.readLine());
-		taxi[0] = Integer.parseInt(st.nextToken()) - 1;
-		taxi[1] = Integer.parseInt(st.nextToken()) - 1;
+		taxi[0] = Integer.parseInt(st.nextToken());
+		taxi[1] = Integer.parseInt(st.nextToken());
 
+		isUsed = new boolean[M + 1];
 		passenger = new int[M + 1][4];
 		for (int i = 1; i < M + 1; i++) {
 			st = new StringTokenizer(br.readLine());
-			int sr = Integer.parseInt(st.nextToken()) - 1;
-			int sc = Integer.parseInt(st.nextToken()) - 1;
-			int er = Integer.parseInt(st.nextToken()) - 1;
-			int ec = Integer.parseInt(st.nextToken()) - 1;
-			board[0][sr][sc] = i;
+			int sr = Integer.parseInt(st.nextToken());
+			int sc = Integer.parseInt(st.nextToken());
+			int er = Integer.parseInt(st.nextToken());
+			int ec = Integer.parseInt(st.nextToken());
 			passenger[i][0] = sr;
 			passenger[i][1] = sc;
 			passenger[i][2] = er;
 			passenger[i][3] = ec;
-			calDistination(sr, sc, er, ec, i);
+			board[sr][sc] = i;
 		}
 		System.out.println(simulate());
 	}
 
 	private static int simulate() {
-		boolean[] isUsed = new boolean[M + 1];
-		boolean isPoss = true;
-		int cnt = 0;
+		for (int served = 0; served < M; served++) {
+			int[] pick = findNearestPassenger(taxi[0], taxi[1]);
+			if (pick == null)
+				return -1;
 
-		while (cnt < M) {
-			int sr = taxi[0];
-			int sc = taxi[1];
+			int idx = pick[0];
+			int pr = pick[1];
+			int pc = pick[2];
+			int taxiAndPassengerDistance = pick[3];
 
-			Queue<int[]> q = new ArrayDeque<>();
-			q.add(new int[] { sr, sc, 0 });
-			boolean[][] visited = new boolean[N][N];
-			visited[sr][sc] = true;
+			if (K < taxiAndPassengerDistance)
+				return -1;
 
-			PriorityQueue<int[]> pq = new PriorityQueue<>(
-					(a, b) -> a[3] == b[3] ? a[1] == b[1] ? a[2] - b[2] : a[1] - b[1] : a[3] - b[3]);
-			while (!q.isEmpty()) {
-				int[] curr = q.poll();
-				int r = curr[0];
-				int c = curr[1];
-				int d = curr[2];
+			K -= taxiAndPassengerDistance;
 
-				if (board[0][r][c] > 0 && !isUsed[board[0][r][c]]) {
-					pq.add(new int[] { board[0][r][c], r, c, d });
-					continue;
-				}
+			int passengerDestinationDistance = bfsDistance(pr, pc, passenger[idx][2], passenger[idx][3]);
 
-				for (int i = 0; i < 4; i++) {
-					int nr = r + delta[i][0];
-					int nc = c + delta[i][1];
-
-					if (isRange(nr, nc) && board[0][nr][nc] != -1 && !visited[nr][nc]) {
-						visited[nr][nc] = true;
-						q.add(new int[] { nr, nc, d + 1 });
-					}
-				}
-			}
-
-			if (pq.isEmpty()) {
-				isPoss = false;
-				break;
-			} else {
-				int[] p = pq.poll();
-				int idx = p[0];
-				int d1 = p[3];
-				int d2 = board[idx][passenger[idx][2]][passenger[idx][3]] - 1;
-				if (d2 < 0) {
-					isPoss = false;
-					break;
-				}
-
-				int gas = d1 + d2;
-
-				if (gas <= K) {
-					cnt++;
-					K -= gas;
-					K += (d2 * 2);
-					taxi[0] = passenger[idx][2];
-					taxi[1] = passenger[idx][3];
-					isUsed[idx] = true;
-				} else {
-					isPoss = false;
-					break;
-				}
-			}
+			if (passengerDestinationDistance < 0 || K < passengerDestinationDistance)
+				return -1;
+			
+			K += (passengerDestinationDistance);
+			taxi[0] = passenger[idx][2];
+			taxi[1] = passenger[idx][3];
+			isUsed[idx] = true;
 		}
-
-		return isPoss ? K : -1;
+		return K;
 	}
 
-	private static void calDistination(int sr, int sc, int er, int ec, int idx) {
+	private static int bfsDistance(int sr, int sc, int er, int ec) {
+		int[][] dist = new int[N + 1][N + 1];
+		for (int[] row : dist) {
+			Arrays.fill(row, -1);
+		}
 		Queue<int[]> q = new ArrayDeque<>();
-		board[idx][sr][sc] = 1;
-		q.add(new int[] { sr, sc, 1 });
+		q.add(new int[] { sr, sc });
+		dist[sr][sc] = 0;
 
 		while (!q.isEmpty()) {
 			int[] curr = q.poll();
 			int r = curr[0];
 			int c = curr[1];
-			int d = curr[2];
+			int d = dist[r][c];
+
+			if (r == er && c == ec) {
+				return d;
+			}
 
 			for (int i = 0; i < 4; i++) {
 				int nr = r + delta[i][0];
 				int nc = c + delta[i][1];
 
-				if (isRange(nr, nc) && board[idx][nr][nc] == 0) {
-					board[idx][nr][nc] = d + 1;
-					q.add(new int[] { nr, nc, d + 1 });
+				if (isRange(nr, nc) && board[nr][nc] != -1 && dist[nr][nc] == -1) {
+					dist[nr][nc] = d + 1;
+					q.add(new int[] { nr, nc });
 				}
 			}
 		}
+		return -1;
+	}
+
+	private static int[] findNearestPassenger(int tr, int tc) {
+		int[][] dist = new int[N + 1][N + 1];
+		for (int[] row : dist) {
+			Arrays.fill(row, -1);
+		}
+		Queue<int[]> q = new ArrayDeque<>();
+		q.add(new int[] { tr, tc });
+		dist[tr][tc] = 0;
+
+		int bestD = Integer.MAX_VALUE;
+		List<int[]> cand = new ArrayList<>();
+
+		while (!q.isEmpty()) {
+			int[] curr = q.poll();
+			int r = curr[0];
+			int c = curr[1];
+			int d = dist[r][c];
+
+			if (d > bestD)
+				break;
+
+			if (board[r][c] > 0 && !isUsed[board[r][c]]) {
+				bestD = d;
+				cand.add(new int[] { board[r][c], r, c });
+				continue;
+			}
+
+			for (int i = 0; i < 4; i++) {
+				int nr = r + delta[i][0];
+				int nc = c + delta[i][1];
+
+				if (isRange(nr, nc) && board[nr][nc] != -1 && dist[nr][nc] == -1) {
+					dist[nr][nc] = d + 1;
+					q.add(new int[] { nr, nc });
+				}
+			}
+		}
+
+		if (cand.isEmpty())
+			return null;
+		cand.sort((a, b) -> a[1] == b[1] ? a[2] - b[2] : a[1] - b[1]);
+		int[] pick = cand.get(0);
+
+		return new int[] { pick[0], pick[1], pick[2], bestD };
 	}
 
 	private static boolean isRange(int r, int c) {
-		return r >= 0 && r < N && c >= 0 && c < N;
+		return r >= 1 && r <= N && c >= 1 && c <= N;
 	}
 }
