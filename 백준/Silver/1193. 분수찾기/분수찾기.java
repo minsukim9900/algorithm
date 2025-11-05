@@ -1,35 +1,33 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.*;
 
 public class Main {
+	private static int X;
 
-	public static void main(String[] args) throws IOException {
-		StringBuilder sb = new StringBuilder();
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st;
 
-		int X = Integer.parseInt(br.readLine());
-		 
-		int cross_count = 1, prev_count_sum = 0;
- 
-		while (true) {
-			if (X <= prev_count_sum + cross_count) {	
-				
-				if (cross_count % 2 == 1) {	 
-					System.out.print((cross_count - (X - prev_count_sum) + 1) + "/" + (X - prev_count_sum));
-					break;
-				} 
-				
-				else {	
-					System.out.print((X - prev_count_sum) + "/" + (cross_count - (X - prev_count_sum)+1));
-					break;
-				}
- 
-			} else {
-				prev_count_sum += cross_count;
-				cross_count++;
-			}
+		X = Integer.parseInt(br.readLine());
+
+		int line = 0;
+		int count = 0;
+
+		while (count < X) {
+			line++;
+			count = line * (line + 1) / 2;
 		}
 
+		if (line % 2 == 0) {
+			int bunza = line - (count - X);
+			int bunmo = 1 + (count - X);
+			System.out.println(bunza + "/" + bunmo);
+
+		} else {
+			int bunza = 1 + (count - X);
+			int bunmo = line - (count - X);
+			System.out.println(bunza + "/" + bunmo);
+		}
 	}
 }
