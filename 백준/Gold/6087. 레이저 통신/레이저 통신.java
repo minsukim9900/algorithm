@@ -85,7 +85,8 @@ public class Main {
                 int nc = c + delta[dir][1];
 
                 if (nr >= 0 && nr < H && nc >= 0 && nc < W && board[dir][nr][nc] != -1) {
-                    int next = curr[3] + (dir == d ? 0 : 1);
+                    int next = cost + (dir == d ? 0 : 1);
+                    if(next >= answer) continue;
 
                     if (board[dir][nr][nc] > next) {
                         board[dir][nr][nc] = next;
