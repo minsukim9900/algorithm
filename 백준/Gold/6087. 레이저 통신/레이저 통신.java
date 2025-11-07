@@ -67,7 +67,7 @@ public class Main {
             int d = curr[2];
             int cost = curr[3];
 
-            if(cost >= answer) {
+            if (cost >= answer) {
                 continue;
             }
 
@@ -84,20 +84,20 @@ public class Main {
                 int nr = r + delta[dir][0];
                 int nc = c + delta[dir][1];
 
-                if (isRange(nr, nc) && board[dir][nr][nc] != -1) {
+                if (nr >= 0 && nr < H && nc >= 0 && nc < W && board[dir][nr][nc] != -1) {
                     int next = curr[3] + (dir == d ? 0 : 1);
 
                     if (board[dir][nr][nc] > next) {
                         board[dir][nr][nc] = next;
-                        dq.add(new int[]{nr, nc, dir, next});
+                        if (dir == d) {
+                            dq.addFirst(new int[]{nr, nc, dir, next});
+                        } else {
+                            dq.addLast(new int[]{nr, nc, dir, next});
+                        }
                     }
                 }
             }
         }
         return answer;
-    }
-
-    private static boolean isRange(int r, int c) {
-        return r >= 0 && r < H && c >= 0 && c < W;
     }
 }
