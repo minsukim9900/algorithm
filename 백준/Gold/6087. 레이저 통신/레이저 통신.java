@@ -5,6 +5,7 @@ public class Main {
     private static int W, H;
     private static int[][][] board;
     private static int[][] delta = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    private static final int MAX = 1_000_000_000;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -25,9 +26,9 @@ public class Main {
                 for (int i = 0; i < 4; i++) {
 
                     if (ch == '.') {
-                        board[i][r][c] = Integer.MAX_VALUE;
+                        board[i][r][c] = MAX;
                     } else if (ch == 'C') {
-                        board[i][r][c] = Integer.MAX_VALUE;
+                        board[i][r][c] = MAX;
                     } else {
                         board[i][r][c] = -1;
                     }
@@ -38,49 +39,57 @@ public class Main {
             }
         }
 
-        int[] curr = locations.get(0);
-        for (int i = 0; i < 4; i++) {
-            board[i][curr[0]][curr[1]] = 0;
-        }
-        System.out.println(bfs(curr, locations.get(1)));
+        System.out.println(bfs(locations.get(0), locations.get(1)));
     }
 
     private static int bfs(int[] start, int[] end) {
-        Queue<int[]> q = new ArrayDeque<>();
-        q.add(new int[]{start[0], start[1], 0, 0});
-        q.add(new int[]{start[0], start[1], 1, 0});
-        q.add(new int[]{start[0], start[1], 2, 0});
-        q.add(new int[]{start[0], start[1], 3, 0});
+        int sr = start[0];
+        int sc = start[1];
+        int er = end[0];
+        int ec = end[1];
 
-        int answer = Integer.MAX_VALUE;
+        for (int i = 0; i < 4; i++) {
+            board[i][sr][sc] = 0;
+        }
 
-        while (!q.isEmpty()) {
-            int[] curr = q.poll();
+        Deque<int[]> dq = new ArrayDeque<>();
+        dq.add(new int[]{sr, sc, 0, 0});
+        dq.add(new int[]{sr, sc, 1, 0});
+        dq.add(new int[]{sr, sc, 2, 0});
+        dq.add(new int[]{sr, sc, 3, 0});
 
-            if (board[curr[2]][curr[0]][curr[1]] != curr[3]) {
+        int answer = MAX;
+
+        while (!dq.isEmpty()) {
+            int[] curr = dq.poll();
+            int r = curr[0];
+            int c = curr[1];
+            int d = curr[2];
+            int cost = curr[3];
+
+            if(cost >= answer) {
                 continue;
             }
 
-            if (curr[0] == end[0] && curr[1] == end[1]) {
-                answer = Math.min(answer, curr[3]);
+            if (board[d][r][c] != cost) {
                 continue;
             }
 
+            if (r == er && c == ec) {
+                answer = Math.min(answer, cost);
+                continue;
+            }
 
             for (int dir = 0; dir < 4; dir++) {
-                int nr = curr[0] + delta[dir][0];
-                int nc = curr[1] + delta[dir][1];
+                int nr = r + delta[dir][0];
+                int nc = c + delta[dir][1];
 
                 if (isRange(nr, nc) && board[dir][nr][nc] != -1) {
-                    int next = curr[3];
-
-                    if (curr[2] != dir) {
-                        next++;
-                    }
+                    int next = curr[3] + (dir == d ? 0 : 1);
 
                     if (board[dir][nr][nc] > next) {
                         board[dir][nr][nc] = next;
-                        q.add(new int[]{nr, nc, dir, next});
+                        dq.add(new int[]{nr, nc, dir, next});
                     }
                 }
             }
