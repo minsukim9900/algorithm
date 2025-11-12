@@ -21,22 +21,22 @@ public class Main {
 			}
 
 			Arrays.sort(arr);
-			int idx = 0;
-			for (int i = 0; i < N; i += 2) {
-				result[idx++] = arr[i];
+			int left = 0;
+			int right = N - 1;
+			
+			for (int i = 0; i < N; i++) {
+				if (i % 2 == 0) {
+					result[left++] = arr[i];
+				} else {
+					result[right--] = arr[i];
+				}
 			}
 
-			idx = N - 1;
-			for (int i = 1; i < N; i += 2) {
-				result[idx--] = arr[i];
-			}
-
-			int answer = 0;
+			int answer = Math.abs(result[N - 1] - result[0]);
 			for (int i = 0; i < N - 1; i++) {
 				answer = Math.max(answer, Math.abs(result[i] - result[i + 1]));
 			}
-			
-			answer = Math.max(answer, Math.abs(result[N - 1] - result[0]));
+
 			sb.append(answer).append("\n");
 		}
 		System.out.println(sb.toString());
