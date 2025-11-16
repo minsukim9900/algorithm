@@ -25,7 +25,7 @@ public class Main {
 			amount[l] = Math.max(amount[l], p);
 		}
 
-		long[] dp = new long[max + 1];
+		int[] dp = new int[max + 1];
 		for (int i = 1; i < max + 1; i++) {
 			dp[i] = Math.max(dp[Math.max(0, i - S)] + amount[i], dp[i - 1]);
 		}
