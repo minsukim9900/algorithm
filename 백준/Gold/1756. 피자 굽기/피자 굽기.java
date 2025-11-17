@@ -15,14 +15,14 @@ public class Main {
 		D = Integer.parseInt(st.nextToken());
 		N = Integer.parseInt(st.nextToken());
 
-		hole = new int[D];
+		hole = new int[D + 1];
 		st = new StringTokenizer(br.readLine());
-		hole[0] = Integer.parseInt(st.nextToken());
-		for (int i = 1; i < D; i++) {
+		hole[1] = Integer.parseInt(st.nextToken());
+		for (int i = 2; i <= D; i++) {
 			hole[i] = Math.min(hole[i - 1], Integer.parseInt(st.nextToken()));
 		}
 
-		end = D - 1;
+		end = D;
 		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < N; i++) {
 			int target = Integer.parseInt(st.nextToken());
@@ -36,12 +36,12 @@ public class Main {
 			end = result - 1;
 		}
 
-		System.out.println(end + 2);
+		System.out.println(end + 1);
 	}
 
 	private static int binarySearch(int target) {
 		int answer = -1;
-		int s = 0;
+		int s = 1;
 		int e = end;
 
 		while (s <= e) {
