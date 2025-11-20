@@ -33,20 +33,22 @@ class Solution {
         boolean[] used = new boolean[idx];
         
         visited = new boolean[N][N];
-        
         int answer = 0;
+        
         for(int r = 0; r < N; r++) {
             for(int c = 0; c < N; c++) {
                 if(visited[r][c] || table[r][c] == 0) continue;
+                
                 Shape sh = bfs(r, c, table, 1);
                 int[][] tmp = sh.shape;
                 int cnt = sh.cnt;
                 
                 for(int i = 0; i < holes[tmp.length][tmp[0].length].size(); i++) {
                     Hole comp = holes[tmp.length][tmp[0].length].get(i);
-                    if(used[comp.idx]) continue;
-                    boolean poss = true;
                     
+                    if(used[comp.idx]) continue;
+                    
+                    boolean poss = true;
                     out: for(int nr = 0; nr < tmp.length; nr++) {
                         for(int nc = 0; nc < tmp[0].length; nc++) {
                             if(tmp[nr][nc] != comp.hole[nr][nc]) {
@@ -131,6 +133,7 @@ class Solution {
         }
         
         int[][] result = new int[maxR - minR + 1][maxC - minC + 1];
+        
         for(int[] info : cor) {
             int nr = info[0] - minR;
             int nc = info[1] - minC;
