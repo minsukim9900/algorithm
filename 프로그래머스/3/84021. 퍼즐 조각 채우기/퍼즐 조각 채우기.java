@@ -7,6 +7,26 @@ class Solution {
     private static int[][] delta = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     private static List<Hole>[][] holes;
     
+    private static class Hole {
+        public int[][] hole;
+        public int idx;
+
+        public Hole(int[][] hole, int idx) {
+            this.hole = hole;
+            this.idx = idx;
+        }
+    }
+    
+    private static class Shape {
+        int[][] shape;
+        int cnt;
+
+        public Shape(int[][] shape, int cnt) {
+            this.shape = shape;
+            this.cnt = cnt;
+        }
+    }
+    
     public int solution(int[][] game_board, int[][] table) {
         N = table.length;
         visited = new boolean[N][N];
@@ -70,16 +90,6 @@ class Solution {
         return answer;
     }
     
-    private static class Hole {
-        public int[][] hole;
-        public int idx;
-        
-        public Hole(int[][] hole, int idx) {
-            this.hole = hole;
-            this.idx = idx;
-        }
-    }
-    
     private static int[][][] rotate(int[][] board) {
         int[][][] result = new int[4][][];
         result[0] = board;
@@ -140,16 +150,6 @@ class Solution {
             result[nr][nc] = 1;
         }
         return new Shape(result, cnt);
-    }
-    
-    private static class Shape {
-        int[][] shape;
-        int cnt;
-        
-        public Shape(int[][] shape, int cnt) {
-            this.shape = shape;
-            this.cnt = cnt;
-        }
     }
         
     private static boolean isRange(int r, int c) {
