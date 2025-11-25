@@ -12,23 +12,20 @@ public class Main {
 
 		int[] H = new int[N];
 
+		long answer = 0L;
+		st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < N; i++) {
+			answer += Integer.parseInt(st.nextToken());
+		}
+
 		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < N; i++) {
 			H[i] = Integer.parseInt(st.nextToken());
 		}
 
-		List<int[]> arr = new ArrayList<>();
-		st = new StringTokenizer(br.readLine());
+		Arrays.sort(H);
 		for (int i = 0; i < N; i++) {
-			int plus = Integer.parseInt(st.nextToken());
-			arr.add(new int[] { H[i], plus });
-		}
-		arr.sort((a, b) -> a[1] == b[1] ? a[0] - b[0] : a[1] - b[1]);
-
-		long answer = 0L;
-		for (int i = 0; i < N; i++) {
-			int[] curr = arr.get(i);
-			long sum = curr[0] + (curr[1] * i);
+			long sum = H[i] * i;
 			answer += sum;
 		}
 		System.out.println(answer);
