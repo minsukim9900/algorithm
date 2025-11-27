@@ -3,7 +3,6 @@ import java.util.*;
 
 public class Main {
 	private static int K, min, max;
-	private static int[] count;
 	private static List<Integer>[] arr;
 
 	public static void main(String[] args) throws Exception {
@@ -19,15 +18,14 @@ public class Main {
 
 			for (int i = 0; i < str.length(); i++) {
 				int index = str.charAt(i) - 'a';
-				count[index]++;
 				arr[index].add(i);
 			}
 
-			if (isPoss()) {
-				cal();
-				sb.append(min + " " + max);
-			} else {
+			cal();
+			if (max == 0) {
 				sb.append(-1);
+			} else {
+				sb.append(min + " " + max);
 			}
 			sb.append("\n");
 		}
@@ -53,18 +51,9 @@ public class Main {
 	private static void init() {
 		min = Integer.MAX_VALUE;
 		max = 0;
-		count = new int['z' - 'a' + 1];
 		arr = new ArrayList['z' - 'a' + 1];
 		for (int i = 0; i < 'z' - 'a' + 1; i++) {
 			arr[i] = new ArrayList<>();
 		}
-	}
-
-	private static boolean isPoss() {
-		for (int w : count) {
-			if (K <= w)
-				return true;
-		}
-		return false;
 	}
 }
