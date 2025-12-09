@@ -39,17 +39,16 @@ public class Main {
 		}
 		dist[start[0]][start[1]] = 0;
 
-		Queue<int[]> q = new ArrayDeque<>();
-		q.add(new int[] { start[0], start[1] });
+		Deque<int[]> dq = new ArrayDeque<>();
+		dq.add(new int[] { start[0], start[1] });
 		int answer = INF;
-		while (!q.isEmpty()) {
-			int[] curr = q.poll();
+		while (!dq.isEmpty()) {
+			int[] curr = dq.poll();
 			int r = curr[0];
 			int c = curr[1];
 
 			if (r == end[0] && c == end[1]) {
-				answer = Math.min(dist[r][c], INF);
-				continue;
+				return dist[r][c];
 			}
 
 			for (int i = 0; i < 4; i++) {
@@ -61,13 +60,19 @@ public class Main {
 
 					if (dist[nr][nc] > dist[r][c] + w) {
 						dist[nr][nc] = dist[r][c] + w;
-						q.add(new int[] { nr, nc });
+
+						if (w == 0) {
+							dq.addFirst(new int[] { nr, nc });
+						} else {
+							dq.addLast(new int[] { nr, nc });
+						}
+
 					}
 				}
 
 			}
 		}
-		return answer;
+		return -1;
 	}
 
 	private static boolean isRange(int r, int c) {
