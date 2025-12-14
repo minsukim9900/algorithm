@@ -2,155 +2,91 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	private static int N, x, y, sum, answer;
-	private static int[][] board;
-	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
-	private static final int INF = 100_000_000;
+    static int N;
+    static int[][] A;
+    static int totalSum = 0;
+    static int answer = Integer.MAX_VALUE;
 
-	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		StringBuilder sb = new StringBuilder();
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine().trim());
 
-		N = Integer.parseInt(br.readLine());
-		board = new int[N][N];
-		answer = INF;
-		sum = 0;
-		for (int r = 0; r < N; r++) {
-			st = new StringTokenizer(br.readLine());
-			for (int c = 0; c < N; c++) {
-				board[r][c] = Integer.parseInt(st.nextToken());
-				sum += board[r][c];
-			}
-		}
+        A = new int[N + 1][N + 1];
 
-		for (int r = 0; r < N; r++) {
-			for (int c = 0; c < N; c++) {
-				for (int d1 = 1; d1 <= c; d1++) {
-					for (int d2 = 1; d2 < N - c; d2++) {
-						if (r + d1 + d2 >= N)
-							continue;
-						x = r;
-						y = c;
-						checkArea(d1, d2);
-					}
-				}
-			}
-		}
-		System.out.println(answer);
-	}
+        for (int r = 1; r <= N; r++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for (int c = 1; c <= N; c++) {
+                A[r][c] = Integer.parseInt(st.nextToken());
+                totalSum += A[r][c];
+            }
+        }
 
-	private static void checkArea(int d1, int d2) {
-		boolean[][] visited = new boolean[N][N];
-		visited[x][y] = true;
+        for (int x = 1; x <= N; x++) {
+            for (int y = 1; y <= N; y++) {
+                for (int d1 = 1; d1 <= N; d1++) {
+                    for (int d2 = 1; d2 <= N; d2++) {
 
-		if (!checkFirstFourthBoundary(x, y, d1, visited)) {
-			return;
-		}
-		if (!checkSecondThirdBoundary(x, y, d2, visited)) {
-			return;
-		}
-		if (!checkSecondThirdBoundary(x + d1, y - d1, d2, visited)) {
-			return;
-		}
-		if (!checkFirstFourthBoundary(x + d2, y + d2, d1, visited)) {
-			return;
-		}
-		simulate(d1, d2, visited);
-	}
+                        if (x + d1 + d2 > N) continue;
+                        if (y - d1 < 1) continue;
+                        if (y + d2 > N) continue;
 
-	private static void simulate(int d1, int d2, boolean[][] area) {
-		int max = 0;
-		int min = INF;
-		int five = sum;
-		int result = bfs(0, 0, d1, d2, 1, area);
-		five -= result;
-		max = Math.max(max, result);
-		min = Math.min(min, result);
+                        answer = Math.min(answer, calcDiff(x, y, d1, d2));
+                    }
+                }
+            }
+        }
 
-		result = bfs(0, N - 1, d1, d2, 2, area);
-		five -= result;
-		max = Math.max(max, result);
-		min = Math.min(min, result);
+        System.out.println(answer);
+    }
 
-		result = bfs(N - 1, 0, d1, d2, 3, area);
-		five -= result;
-		max = Math.max(max, result);
-		min = Math.min(min, result);
+    static int calcDiff(int x, int y, int d1, int d2) {
+        int[][] border = new int[N + 1][N + 1];
+        int[] sum = new int[6];
 
-		result = bfs(N - 1, N - 1, d1, d2, 4, area);
-		five -= result;
-		max = Math.max(max, result);
-		min = Math.min(min, result);
+        for (int i = 0; i <= d1; i++) {
+            border[x + i][y - i] = 5;
+            border[x + d2 + i][y + d2 - i] = 5;
+        }
+        for (int i = 0; i <= d2; i++) {
+            border[x + i][y + i] = 5;
+            border[x + d1 + i][y - d1 + i] = 5;
+        }
 
-		max = Math.max(max, five);
-		min = Math.min(min, five);
-		answer = Math.min(answer, (max - min));
-	}
+        for (int r = 1; r < x + d1; r++) {
+            for (int c = 1; c <= y; c++) {
+                if (border[r][c] == 5) break;
+                sum[1] += A[r][c];
+            }
+        }
 
-	private static int bfs(int r, int c, int d1, int d2, int gu, boolean[][] area) {
-		Queue<int[]> q = new ArrayDeque<>();
-		q.add(new int[] { r, c });
-		area[r][c] = true;
+        for (int r = 1; r <= x + d2; r++) {
+            for (int c = N; c > y; c--) {
+                if (border[r][c] == 5) break;
+                sum[2] += A[r][c];
+            }
+        }
 
-		int result = 0;
-		while (!q.isEmpty()) {
-			int[] curr = q.poll();
-			result += board[curr[0]][curr[1]];
+        for (int r = x + d1; r <= N; r++) {
+            for (int c = 1; c < y - d1 + d2; c++) {
+                if (border[r][c] == 5) break;
+                sum[3] += A[r][c];
+            }
+        }
 
-			for (int i = 0; i < 4; i++) {
-				int nr = curr[0] + delta[i][0];
-				int nc = curr[1] + delta[i][1];
+        for (int r = x + d2 + 1; r <= N; r++) {
+            for (int c = N; c >= y - d1 + d2; c--) {
+                if (border[r][c] == 5) break;
+                sum[4] += A[r][c];
+            }
+        }
 
-				if (isAreaRange(nr, nc, d1, d2, gu) && !area[nr][nc]) {
-					area[nr][nc] = true;
-					q.add(new int[] { nr, nc });
-				}
-			}
-		}
-		return result;
-	}
+        sum[5] = totalSum - (sum[1] + sum[2] + sum[3] + sum[4]);
 
-	private static boolean checkFirstFourthBoundary(int r, int c, int dir, boolean[][] visited) {
-		for (int i = 0; i <= dir; i++) {
-			int nx = r + i;
-			int ny = c - i;
-
-			if (!isRange(nx, ny)) {
-				return false;
-			}
-			visited[nx][ny] = true;
-		}
-		return true;
-	}
-
-	private static boolean checkSecondThirdBoundary(int r, int c, int dir, boolean[][] visited) {
-		for (int i = 0; i <= dir; i++) {
-			int nx = r + i;
-			int ny = c + i;
-
-			if (!isRange(nx, ny)) {
-				return false;
-			}
-			visited[nx][ny] = true;
-		}
-		return true;
-	}
-
-	private static boolean isRange(int r, int c) {
-		return r >= 0 && r < N && c >= 0 && c < N;
-	}
-
-	private static boolean isAreaRange(int r, int c, int d1, int d2, int gu) {
-		switch (gu) {
-		case 1:
-			return r >= 0 && r < (x + d1) && c >= 0 && c <= y;
-		case 2:
-			return r >= 0 && r <= (x + d2) && c > y && c < N;
-		case 3:
-			return r >= (x + d1) && r < N && c >= 0 && c < (y - d1 + d2);
-		default:
-			return r > (x + d2) && r < N && c >= (y - d1 + d2) && c < N;
-		}
-	}
+        int max = 0, min = Integer.MAX_VALUE;
+        for (int i = 1; i <= 5; i++) {
+            max = Math.max(max, sum[i]);
+            min = Math.min(min, sum[i]);
+        }
+        return max - min;
+    }
 }
