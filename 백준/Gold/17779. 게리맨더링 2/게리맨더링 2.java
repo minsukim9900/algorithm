@@ -62,24 +62,23 @@ public class Main {
 	private static void simulate(int d1, int d2, boolean[][] area) {
 		int max = 0;
 		int min = INF;
-		boolean[][] visited = new boolean[N][N];
 		int five = sum;
-		int result = bfs(0, 0, d1, d2, 1, area, visited);
+		int result = bfs(0, 0, d1, d2, 1, area);
 		five -= result;
 		max = Math.max(max, result);
 		min = Math.min(min, result);
 
-		result = bfs(0, N - 1, d1, d2, 2, area, visited);
+		result = bfs(0, N - 1, d1, d2, 2, area);
 		five -= result;
 		max = Math.max(max, result);
 		min = Math.min(min, result);
 
-		result = bfs(N - 1, 0, d1, d2, 3, area, visited);
+		result = bfs(N - 1, 0, d1, d2, 3, area);
 		five -= result;
 		max = Math.max(max, result);
 		min = Math.min(min, result);
 
-		result = bfs(N - 1, N - 1, d1, d2, 4, area, visited);
+		result = bfs(N - 1, N - 1, d1, d2, 4, area);
 		five -= result;
 		max = Math.max(max, result);
 		min = Math.min(min, result);
@@ -89,10 +88,10 @@ public class Main {
 		answer = Math.min(answer, (max - min));
 	}
 
-	private static int bfs(int r, int c, int d1, int d2, int gu, boolean[][] area, boolean[][] visited) {
+	private static int bfs(int r, int c, int d1, int d2, int gu, boolean[][] area) {
 		Queue<int[]> q = new ArrayDeque<>();
 		q.add(new int[] { r, c });
-		visited[r][c] = true;
+		area[r][c] = true;
 
 		int result = 0;
 		while (!q.isEmpty()) {
@@ -103,8 +102,8 @@ public class Main {
 				int nr = curr[0] + delta[i][0];
 				int nc = curr[1] + delta[i][1];
 
-				if (isAreaRange(nr, nc, d1, d2, gu) && !visited[nr][nc] && !area[nr][nc]) {
-					visited[nr][nc] = true;
+				if (isAreaRange(nr, nc, d1, d2, gu) && !area[nr][nc]) {
+					area[nr][nc] = true;
 					q.add(new int[] { nr, nc });
 				}
 			}
