@@ -26,9 +26,10 @@ public class Main {
 
 		for (int r = 0; r < N; r++) {
 			for (int c = 0; c < N; c++) {
-				for (int d1 = 1; d1 < N; d1++) {
-
-					for (int d2 = 1; d2 < N; d2++) {
+				for (int d1 = 1; d1 <= c; d1++) {
+					for (int d2 = 1; d2 < N - c; d2++) {
+						if (r + d1 + d2 >= N)
+							continue;
 						x = r;
 						y = c;
 						checkArea(d1, d2);
@@ -46,7 +47,6 @@ public class Main {
 		if (!checkFirstFourthBoundary(x, y, d1, visited)) {
 			return;
 		}
-
 		if (!checkSecondThirdBoundary(x, y, d2, visited)) {
 			return;
 		}
