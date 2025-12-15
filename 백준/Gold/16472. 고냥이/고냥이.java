@@ -11,29 +11,24 @@ public class Main {
 		int N = Integer.parseInt(br.readLine());
 
 		char[] s = br.readLine().toCharArray();
-		int[] cnt = new int[26];
-		int distinct = 0;
+		int[] alpha = new int[26];
+		int cnt = 0;
 
 		int left = 0;
 		int right = 0;
-		int max = 0;
+		int answer = 0;
 
 		while (right < s.length) {
-			int r = s[right] - 'a';
-			if (cnt[r] == 0)
-				distinct++;
-			cnt[r]++;
-			right++;
-
-			while (distinct > N) {
-				int l = s[left] - 'a';
-				cnt[l]--;
-				if (cnt[l] == 0)
-					distinct--;
+			if (alpha[s[right++] - 'a']++ == 0)
+				cnt++;
+			
+			while (cnt > N) {
+				if (--alpha[s[left] - 'a'] == 0)
+					cnt--;
 				left++;
 			}
-			max = Math.max(max, right - left);
+			answer = Math.max(answer, right - left);
 		}
-		System.out.println(max);
+		System.out.println(answer);
 	}
 }
