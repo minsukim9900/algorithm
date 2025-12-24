@@ -41,23 +41,16 @@ public class Main {
 				pq.add(i);
 		}
 
-		List<Integer> answer = new ArrayList<>();
 		while (!pq.isEmpty()) {
 			int curr = pq.poll();
 
-			answer.add(curr);
+			sb.append(curr).append(" ");
 
 			for (int next : adj[curr]) {
-				in[next]--;
-
-				if (in[next] == 0) {
+				if (--in[next] == 0) {
 					pq.add(next);
 				}
 			}
-		}
-
-		for (int w : answer) {
-			sb.append(w).append(" ");
 		}
 		return sb.toString();
 	}
