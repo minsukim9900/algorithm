@@ -27,13 +27,15 @@ public class Main {
 		for (int i = 0; i < M + K; i++) {
 			st = new StringTokenizer(br.readLine());
 			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken()) - 1;
-			long c = Long.parseLong(st.nextToken());
 
 			if ((a & 1) == 1) {
+				int b = Integer.parseInt(st.nextToken()) - 1;
+				long c = Long.parseLong(st.nextToken());
 				update(1, 0, N - 1, b, c);
 			} else {
-				sb.append(querySum(1, 0, N - 1, b, (int) c - 1)).append("\n");
+				int b = Integer.parseInt(st.nextToken()) - 1;
+				int c = Integer.parseInt(st.nextToken()) - 1;
+				sb.append(querySum(1, 0, N - 1, b, c)).append("\n");
 			}
 		}
 		System.out.println(sb.toString());
