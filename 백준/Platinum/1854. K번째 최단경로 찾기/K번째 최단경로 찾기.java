@@ -56,6 +56,8 @@ public class Main {
 			long[] curr = pq.poll();
 			int node = (int) curr[0];
 			long currCost = curr[1];
+			
+			if (dist[node].size() == K && dist[node].peek() < currCost) continue;
 
 			for (int[] next : adj[node]) {
 				int nextNode = next[0];
