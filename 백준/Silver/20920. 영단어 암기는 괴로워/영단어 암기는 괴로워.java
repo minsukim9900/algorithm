@@ -4,7 +4,6 @@ import java.util.*;
 public class Main {
 	private static int N, M, index;
 	private static Map<String, Integer> map;
-	private static Set<String> set;
 	private static int[] count;
 
 	public static void main(String[] args) throws Exception {
@@ -13,7 +12,6 @@ public class Main {
 		StringBuilder sb = new StringBuilder();
 
 		map = new HashMap<>();
-		set = new HashSet<>();
 
 		st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
@@ -32,7 +30,7 @@ public class Main {
 				continue;
 			}
 
-			set.add(str);
+			count[index] = 1;
 			map.put(str, index++);
 		}
 		PriorityQueue<String> pq = new PriorityQueue<>(
@@ -40,14 +38,14 @@ public class Main {
 				(a, b) -> count[map.get(a)] == count[map.get(b)]
 						? a.length() == b.length() ? a.compareTo(b) : Integer.compare(b.length(), a.length())
 						: Integer.compare(count[map.get(b)], count[map.get(a)]));
-		for (String str : set) {
+		for (String str : map.keySet()) {
 			pq.add(str);
 		}
-		
-		while(!pq.isEmpty()) {
+
+		while (!pq.isEmpty()) {
 			sb.append(pq.poll()).append("\n");
 		}
-		
+
 		System.out.println(sb.toString());
 	}
 }
