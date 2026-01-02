@@ -12,37 +12,29 @@ public class Main {
 
 		boolean flag = false;
 		Stack<Character> stack = new Stack<>();
-		for (int i = 0; i < words.length; i++) {
-
-			if (words[i] == '<') {
-
-				while (!stack.isEmpty()) {
-					sb.append(stack.pop());
-				}
-				flag = true;
-				sb.append(words[i]);
-				continue;
-			}
-
-			if (words[i] == '>') {
-				sb.append(words[i]);
-				flag = false;
-				continue;
-			}
-
+		for (char c : words) {
 			if (flag) {
-				sb.append(words[i]);
+				sb.append(c);
+				if (c == '>') {
+					flag = false;
+				}
 				continue;
 			}
 
-			if (words[i] == ' ') {
-				while (!stack.isEmpty()) {
-					sb.append(stack.pop());
-				}
-				sb.append(words[i]);
+			if (c == '<') {
+				flush(stack, sb);
+				sb.append(c);
+				flag = true;
 				continue;
 			}
-			stack.push(words[i]);
+
+			if (c == ' ') {
+				flush(stack, sb);
+				sb.append(c);
+				continue;
+			}
+			
+			stack.push(c);
 		}
 
 		while (!stack.isEmpty()) {
@@ -50,5 +42,11 @@ public class Main {
 		}
 
 		System.out.println(sb.toString());
+	}
+
+	private static void flush(Stack<Character> stack, StringBuilder sb) {
+		while (!stack.isEmpty()) {
+			sb.append(stack.pop());
+		}
 	}
 }
