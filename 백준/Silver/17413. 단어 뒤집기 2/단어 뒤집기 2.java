@@ -1,55 +1,54 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Stack;
+import java.util.*;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
 		StringBuilder sb = new StringBuilder();
 
-		Stack<Character> stack = new Stack<>();
+		char[] words = br.readLine().toCharArray();
 
-		String str = br.readLine();
-		
-		boolean turn = false;
-		
-		for(int i = 0; i<str.length();i++) {
-			if(str.charAt(i)=='<') {
-				while(!stack.isEmpty()) {
+		boolean flag = false;
+		Stack<Character> stack = new Stack<>();
+		for (int i = 0; i < words.length; i++) {
+
+			if (words[i] == '<') {
+
+				while (!stack.isEmpty()) {
 					sb.append(stack.pop());
 				}
-				turn = true;
-				sb.append(str.charAt(i));
+				flag = true;
+				sb.append(words[i]);
+				continue;
 			}
-			else if(str.charAt(i)=='>') {
-				turn = false;
-				sb.append(str.charAt(i));
+
+			if (words[i] == '>') {
+				sb.append(words[i]);
+				flag = false;
+				continue;
 			}
-			else if(turn) {
-				sb.append(str.charAt(i));
+
+			if (flag) {
+				sb.append(words[i]);
+				continue;
 			}
-			else if(!turn) {
-				if(str.charAt(i)==' ') {
-					while(!stack.isEmpty()) {
-						sb.append(stack.pop());
-					}
-					sb.append(str.charAt(i));
+
+			if (words[i] == ' ') {
+				while (!stack.isEmpty()) {
+					sb.append(stack.pop());
 				}
-				else {
-					stack.push(str.charAt(i));
-				}
-				
+				sb.append(words[i]);
+				continue;
 			}
+			stack.push(words[i]);
 		}
-		
-		while(!stack.isEmpty()) {
+
+		while (!stack.isEmpty()) {
 			sb.append(stack.pop());
 		}
-		
 
-
-        System.out.println(sb.toString());
-
+		System.out.println(sb.toString());
 	}
 }
