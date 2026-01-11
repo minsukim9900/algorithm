@@ -3,8 +3,7 @@ import java.util.*;
 
 public class Main {
 	private static int N, answer;
-	private static int[] s;
-	private static Set<Integer>[] arr;
+	private static int[] s, p;
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -13,15 +12,10 @@ public class Main {
 
 		N = Integer.parseInt(br.readLine());
 
-		arr = new HashSet[3];
-		for (int i = 0; i < 3; i++) {
-			arr[i] = new HashSet<>();
-		}
-
+		p = new int[N];
 		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < N; i++) {
-			int num = Integer.parseInt(st.nextToken());
-			arr[num].add(i);
+			p[i] = Integer.parseInt(st.nextToken());
 		}
 
 		s = new int[N];
@@ -60,14 +54,11 @@ public class Main {
 	}
 
 	private static boolean checkPossible(int[] cards) {
-		for (int i = 0; i < N; i += 3) {
-			int x = cards[i];
-			int y = cards[i + 1];
-			int z = cards[i + 2];
-
-			if (!arr[0].contains(x) || !arr[1].contains(y) || !arr[2].contains(z)) {
+		for (int i = 0; i < N; i++) {
+			int cardNum = cards[i];
+			int player = i % 3;
+			if (p[cardNum] != player)
 				return false;
-			}
 		}
 		return true;
 	}
