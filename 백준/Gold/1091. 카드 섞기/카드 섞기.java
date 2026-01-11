@@ -26,23 +26,21 @@ public class Main {
 			cards[i] = i;
 		}
 
-		simulate(cards, 0);
-		System.out.println(answer);
-	}
+		int count = 0;
+		while (true) {
+			if (checkPossible(cards)) {
+				System.out.println(count);
+				return;
+			}
 
-	private static void simulate(int[] cards, int count) {
-		if (checkPossible(cards)) {
-			answer = count;
-			return;
+			cards = shuffle(cards);
+			count++;
+
+			if (checkInfinite(cards)) {
+				System.out.println(-1);
+				return;
+			}
 		}
-
-		if (count > 0 && checkInfinite(cards)) {
-			answer = -1;
-			return;
-		}
-
-		int[] result = shuffle(cards);
-		simulate(result, count + 1);
 	}
 
 	private static int[] shuffle(int[] cards) {
