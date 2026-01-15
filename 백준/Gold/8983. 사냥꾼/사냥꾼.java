@@ -4,8 +4,6 @@ import java.util.*;
 public class Main {
 	private static int M, N, L;
 	private static int[] saro;
-	private static List<int[]> arr;
-	private static final int END = 1_000_000;
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -25,28 +23,33 @@ public class Main {
 
 		Arrays.sort(saro);
 
-		arr = new ArrayList<>();
+		int answer = 0;
 		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
-			int x = Integer.parseInt(st.nextToken());
-			int y = Integer.parseInt(st.nextToken());
-			arr.add(new int[] { x, y });
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			
+			int x1 = saro[lowerBound(a)];
+			int x2 = saro[upperBound(a)];
+			
+			int distance1 = Math.abs(x1 - a) + b;
+			int distance2 = Math.abs(x2 - a) + b;
+			
+			if(distance1 <= L || distance2 <= L) {
+				answer++;
+			}
 		}
-
-		arr.sort((a, b) -> a[0] == b[0] ? Integer.compare(a[1], b[1]) : Integer.compare(a[0], b[0]));
-
-		System.out.println(binarySearch());
+		System.out.println(answer);
 	}
 
-	private static int binarySearch() {
+	private static int lowerBound(int a) {
 		int s = 0;
-		int e = END;
+		int e = M - 1;
 		int answer = 0;
-
 		while (s <= e) {
 			int mid = (s + e) / 2;
 
-			if (check(mid)) {
+			if (saro[mid] <= a) {
 				answer = mid;
 				s = mid + 1;
 			} else {
@@ -56,28 +59,21 @@ public class Main {
 		return answer;
 	}
 
-	private static boolean check(int value) {
-		int count = 0;
-		int index = 0;
-		for (int i = 0; i < M; i++) {
-			int x = saro[i];
+	private static int upperBound(int a) {
+		int s = 0;
+		int e = M - 1;
+		int answer = 0;
+		while (s <= e) {
+			int mid = (s + e) / 2;
 
-			for (int j = index; j < N; j++) {
-				int[] curr = arr.get(j);
-				int a = curr[0];
-				int b = curr[1];
-				int distance = Math.abs(x - a) + b;
-
-				if (distance <= L) {
-					count++;
-					index = j + 1;
-
-					if (count >= value) {
-						return true;
-					}
-				}
+			if (saro[mid] >= a) {
+				answer = mid;
+				e = mid - 1;
+			} else {
+				s = mid + 1;
 			}
 		}
-		return false;
+		
+		return answer;
 	}
 }
