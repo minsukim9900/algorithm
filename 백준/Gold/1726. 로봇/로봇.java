@@ -38,27 +38,21 @@ public class Main {
 	}
 
 	private static int bfs(int sr, int sc, int sDir, int er, int ec, int eDir) {
-		int[][][] dist = new int[4][M][N];
+		boolean[][][] visited = new boolean[4][M][N];
 
-		for (int i = 0; i < 4; i++) {
-			for (int r = 0; r < M; r++) {
-				Arrays.fill(dist[i][r], INF);
-			}
-		}
-
-		dist[sDir][sr][sc] = 0;
+		visited[sDir][sr][sc] = true;
 
 		Queue<int[]> q = new ArrayDeque<>();
 
-		q.add(new int[] { sr, sc, sDir});
+		q.add(new int[] { sr, sc, sDir, 0});
 
 		while (!q.isEmpty()) {
 			int[] curr = q.poll();
 
 			int r = curr[0];
-			int c = curr[1];
+			int c = curr[1]; 
 			int dir = curr[2];
-			int currDist = dist[dir][r][c];
+			int currDist = curr[3];
 			
 			if (r == er && c == ec && eDir == dir) {
 				return currDist;
@@ -71,9 +65,9 @@ public class Main {
 				if (!isRange(nr, nc) || board[nr][nc] == 1)
 					break;
 
-				if (dist[dir][nr][nc] > currDist + 1) {
-					dist[dir][nr][nc] = currDist + 1;
-					q.add(new int[] { nr, nc, dir});
+				if (!visited[dir][nr][nc]) {
+					visited[dir][nr][nc] = true;
+					q.add(new int[] { nr, nc, dir, currDist + 1});
 				}
 			}
 
@@ -83,14 +77,14 @@ public class Main {
 				newLeftDir = changeLeftDir(newLeftDir);
 				newRightDir = changeRightDir(newRightDir);
 
-				if (dist[newLeftDir][r][c] > currDist + cost) {
-					dist[newLeftDir][r][c] = currDist + cost;
-					q.add(new int[] { r, c, newLeftDir});
+				if (!visited[newLeftDir][r][c]) {
+					visited[newLeftDir][r][c] = true;
+					q.add(new int[] { r, c, newLeftDir, currDist + cost});
 				}
 
-				if (dist[newRightDir][r][c] > currDist + cost) {
-					dist[newRightDir][r][c] = currDist + cost;
-					q.add(new int[] { r, c, newRightDir});
+				if (!visited[newRightDir][r][c]) {
+					visited[newRightDir][r][c] = true;
+					q.add(new int[] { r, c, newRightDir, currDist + cost});
 				}
 			}
 		}
