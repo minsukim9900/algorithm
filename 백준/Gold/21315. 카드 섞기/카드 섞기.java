@@ -84,7 +84,7 @@ public class Main {
 			return true;
 		}
 		if (!state) {
-			cards = card.clone();
+			cards = card;
 		}
 		return false;
 	}
