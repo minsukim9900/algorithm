@@ -2,61 +2,51 @@ import java.io.*;
 import java.util.*;
 
 class Solution {
-    
-    private static boolean[] visited, light;
-    private static int answer = 0;
-    private static List<Integer>[] arr;
+    private static int N;
+    private static List<Integer>[] adj;
+    private static int answer;
     
     public int solution(int n, int[][] lighthouse) {
+        N = n;
         
-        visited = new boolean[n + 1];
-        light = new boolean[n + 1]; 
-
-        arr = new ArrayList[n + 1];
-        for(int i = 1; i<=n; i++) {
-            arr[i] = new ArrayList<>();
+        adj = new ArrayList[N + 1];
+        for(int i = 1; i <= N; i++) {
+            adj[i] = new ArrayList<>();
         }
         
+        for(int i = 0; i < N - 1; i++) {
+            adj[lighthouse[i][0]].add(lighthouse[i][1]);
+            adj[lighthouse[i][1]].add(lighthouse[i][0]);
+        }
         
-        for (int i = 0; i<lighthouse.length; i++) {
-            
-            int from = lighthouse[i][0];
-            int to = lighthouse[i][1];
-            
-           arr[from].add(to);
-           arr[to].add(from);
-            
-        }      
+        answer = 0; 
         
-        dfs(1, 1);
-
-
+        search(1, new boolean[N + 1]);
+        
         return answer;
     }
     
-    private static boolean dfs(int st, int pt) {
-        visited[st] = true;
+    private static boolean search(int node, boolean[] visited) {
+        visited[node] = true;
         
-        boolean isLight = true;
+        int childCount = 0;
+        int lightCount = 0;
         
-        for(int w : arr[st]) {
-            if(visited[w] || w == pt) continue;
-            boolean state = dfs(w, st);
-            if(!state) {
-                isLight = false;
-            }
+        for(int next : adj[node]) {
+            if(visited[next]) continue;
             
+            childCount++;
+            
+            if(search(next, visited)) {
+                lightCount++;
+            }
         }
         
-        if(!isLight) {
+        if(childCount == lightCount) {
+            return false;
+        } else {
             answer++;
             return true;
         }
-        
-        
-        return false;
-        
     }
-    
-
 }
