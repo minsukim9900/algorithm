@@ -3,21 +3,27 @@ import java.util.*;
 
 public class Main {
 
-
-
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		String N = br.readLine();
-		int tmp = N.length();
-		int[] ten = {0,1,10,100,1000,10000,100000,1000000,10000000,100000000};
-		int sum = 0;
-		for(int i = 0; i<tmp; i++) {
-			sum += 9 *ten[i]*i;
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st;
+
+		String number = br.readLine();
+		long length = number.length();
+		long num = Long.parseLong(number);
+
+		long mod = 1L;
+		long answer = 0L;
+		long digit = 1;
+		long count = 9;
+
+		for (int i = 0; i < length - 1; i++) {
+			answer += (digit * count);
+			digit++;
+			count *= 10;
+			mod *= 10;
 		}
-		int num = (Integer.parseInt(N)-ten[tmp]+1)*tmp;
-		System.out.println(sum+num);
-		
-		
+
+		System.out.println((num - mod + 1) * length + answer);
 	}
 }
