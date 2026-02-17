@@ -67,15 +67,8 @@ public class Main {
 	}
 
 	private static int cal(int sr, int sc, int[][] puzzle) {
-		int[][] copyBoard = new int[MAX][MAX];
-		for (int r = 0; r < MAX; r++) {
-			copyBoard[r] = board[r].clone();
-		}
-
 		int N = puzzle.length;
 		int M = puzzle[0].length;
-
-		boolean isPoss = true;
 
 		int minR = Math.min(sr, STANDARD);
 		int minC = Math.min(sc, STANDARD);
@@ -83,21 +76,21 @@ public class Main {
 		int maxR = Math.max(sr + N - 1, STANDARD + N1 - 1);
 		int maxC = Math.max(sc + M - 1, STANDARD + M1 - 1);
 
-		int x = maxR - minR + 1;
-		int y = maxC - minC + 1;
+		int height = maxR - minR + 1;
+		int width = maxC - minC + 1;
 
-		out: for (int r = 0; r < N; r++) {
-			for (int c = 0; c < M; c++) {
-				copyBoard[r + sr][c + sc] += puzzle[r][c];
+		for (int r = Math.max(STANDARD, sr); r <= Math.min(STANDARD + N1 - 1, sr + N - 1); r++) {
+			int pr = r - sr;
+			for (int c = Math.max(STANDARD, sc); c <= Math.min(STANDARD + M1 - 1, sc + M - 1); c++) {
+				int pc = c - sc;
 
-				if (copyBoard[r + sr][c + sc] > 1) {
-					isPoss = false;
-					break out;
+				if (puzzle[pr][pc] == 1 && board[r][c] == 1) {
+					return INF;
 				}
 			}
 		}
 
-		return isPoss ? x * y : INF;
+		return height * width;
 	}
 
 	private static void rotate(int[][][] puzzle) {
