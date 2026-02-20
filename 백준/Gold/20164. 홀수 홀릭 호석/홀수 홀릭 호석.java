@@ -9,17 +9,24 @@ public class Main {
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 
+		String number = br.readLine();
+		int count = countOddNumber(number);
 		max = 0;
 		min = Integer.MAX_VALUE;
 
-		String number = br.readLine();
-		comb(1, 0, new int[2], number, countOddNumber(number));
+		comb(1, 0, new int[2], number, count);
 		sb.append(min).append(" ").append(max);
 		System.out.println(sb.toString());
 	}
 
 	private static void comb(int idx, int depth, int[] result, String number, int count) {
 		int n = number.length();
+
+		if (n <= 2) {
+			nextJob(number, 0);
+			return;
+		}
+
 		if (depth == 2) {
 			int sum = 0;
 			for (int i = 0; i < 2; i++) {
