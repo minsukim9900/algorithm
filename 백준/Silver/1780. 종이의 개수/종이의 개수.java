@@ -19,6 +19,7 @@ public class Main {
 				board[r][c] = Integer.parseInt(st.nextToken());
 			}
 		}
+
 		search(0, 0, N);
 		for (int ans : answer) {
 			sb.append(ans).append("\n");
@@ -27,10 +28,9 @@ public class Main {
 	}
 
 	private static void search(int sr, int sc, int N) {
-		int state = check(sr, sc, N);
 
-		if (state >= -1 && state <= 1) {
-			answer[state + 1]++;
+		if (check(sr, sc, N)) {
+			answer[board[sr][sc] + 1]++;
 			return;
 		}
 
@@ -43,17 +43,17 @@ public class Main {
 		}
 	}
 
-	private static int check(int sr, int sc, int N) {
+	private static boolean check(int sr, int sc, int N) {
 		int num = board[sr][sc];
 
 		for (int r = sr; r < sr + N; r++) {
 			for (int c = sc; c < sc + N; c++) {
 				if (board[r][c] != num) {
-					return 2;
+					return false;
 				}
 			}
 		}
 
-		return num;
+		return true;
 	}
 }
