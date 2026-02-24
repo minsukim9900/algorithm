@@ -20,7 +20,7 @@ public class Main {
 			}
 		}
 		search(0, 0, N);
-		for(int ans : answer) {
+		for (int ans : answer) {
 			sb.append(ans).append("\n");
 		}
 		System.out.println(sb.toString());
@@ -36,17 +36,11 @@ public class Main {
 
 		int divideNum = N / 3;
 
-		search(sr, sc, divideNum);
-		search(sr, sc + divideNum, divideNum);
-		search(sr, sc + (divideNum * 2), divideNum);
-
-		search(sr + divideNum, sc, divideNum);
-		search(sr + divideNum, sc + divideNum, divideNum);
-		search(sr + divideNum, sc + (divideNum * 2), divideNum);
-
-		search(sr + (divideNum * 2), sc, divideNum);
-		search(sr + (divideNum * 2), sc + divideNum, divideNum);
-		search(sr + (divideNum * 2), sc + (divideNum * 2), divideNum);
+		for (int r = sr; r < sr + N; r += divideNum) {
+			for (int c = sc; c < sc + N; c += divideNum) {
+				search(r, c, divideNum);
+			}
+		}
 	}
 
 	private static int check(int sr, int sc, int N) {
