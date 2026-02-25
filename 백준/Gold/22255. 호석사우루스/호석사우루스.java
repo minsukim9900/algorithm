@@ -29,7 +29,7 @@ public class Main {
 				board[r][c] = Integer.parseInt(st.nextToken());
 			}
 		}
-		
+
 		int answer = bfs(sr, sc, er, ec);
 		System.out.println(answer);
 	}
@@ -51,8 +51,8 @@ public class Main {
 			}
 		}
 
-		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> Integer.compare(a[2], b[2]));
-		pq.add(new int[] { sr, sc, 0 });
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> Integer.compare(a[3], b[3]));
+		pq.add(new int[] { sr, sc, 0, 0 });
 		dist[0][sr][sc] = 0;
 
 		int answer = INF;
@@ -62,10 +62,13 @@ public class Main {
 			int r = curr[0];
 			int c = curr[1];
 			int d = curr[2];
+			int weight = curr[3];
+
+			if (dist[d][r][c] != weight)
+				continue;
 
 			if (r == er && c == ec) {
-				answer = Math.min(answer, dist[d][r][c]);
-				continue;
+				return dist[d][r][c];
 			}
 
 			int idx = (d + 1) % 3;
@@ -77,11 +80,11 @@ public class Main {
 
 				if (isRange(nr, nc) && board[nr][nc] != -1 && dist[idx][nr][nc] > dist[d][r][c] + board[nr][nc]) {
 					dist[idx][nr][nc] = dist[d][r][c] + board[nr][nc];
-					pq.add(new int[] { nr, nc, idx });
+					pq.add(new int[] { nr, nc, idx, dist[idx][nr][nc] });
 				}
 			}
 		}
-		return answer == INF ? -1 : answer;
+		return -1;
 	}
 
 	private static boolean isRange(int r, int c) {
