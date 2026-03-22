@@ -25,7 +25,7 @@ public class Main {
 		updateQuery(1, 0, N - 1, 0, nums[0]);
 
 		for (int i = 1; i < N; i++) {
-			long value = getQuery(1, 0, N - 1, Math.max(0, i - D), i - 1) + nums[i];
+			long value = Math.max(0, getQuery(1, 0, N - 1, Math.max(0, i - D), i - 1)) + nums[i];
 			updateQuery(1, 0, N - 1, i, value);
 		}
 
@@ -53,7 +53,7 @@ public class Main {
 
 	private static long getQuery(int node, int nodeLeft, int nodeRight, int queryLeft, int queryRight) {
 		if (queryRight < nodeLeft || nodeRight < queryLeft) {
-			return 0;
+			return Integer.MIN_VALUE;
 		}
 
 		if (queryLeft <= nodeLeft && nodeRight <= queryRight) {
