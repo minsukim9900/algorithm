@@ -4,6 +4,7 @@ import java.util.*;
 public class Main {
 	private static int N;
 	private static Trie root = new Trie();
+	private static final String TOKEN = "--";
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -23,7 +24,7 @@ public class Main {
 
 			init(words);
 		}
-		
+
 		traverse(root, "", sb);
 		System.out.println(sb.toString());
 	}
@@ -50,7 +51,7 @@ public class Main {
 	private static void traverse(Trie current, String token, StringBuilder sb) {
 		for (String word : current.children.keySet()) {
 			sb.append(token).append(word).append("\n");
-			traverse(current.children.get(word), token + "--", sb);
+			traverse(current.children.get(word), token + TOKEN, sb);
 		}
 	}
 
