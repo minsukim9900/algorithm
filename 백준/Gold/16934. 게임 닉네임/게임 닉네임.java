@@ -40,10 +40,8 @@ public class Main {
 
 			curr.count++;
 
-			if (!flag) {
-				if(curr.count > 1) {
-					sb.append(curr.count);
-				}
+			if (curr.count > 1) {
+				sb.append(curr.count);
 			}
 
 			sb.append("\n");
