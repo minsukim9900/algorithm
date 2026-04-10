@@ -12,7 +12,6 @@ public class Main {
 
 		int[] nums = new int[4];
 
-		int idx = 0;
 
 		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < N; i++) {
@@ -22,7 +21,6 @@ public class Main {
 			for (int index = 0; index < 4; index++) {
 				if (nums[index] < currNum) {
 					nums[index] = currNum;
-					idx = index;
 					isPoss = true;
 					break;
 				}
