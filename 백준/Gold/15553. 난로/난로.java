@@ -13,42 +13,30 @@ public class Main {
 		int N = Integer.parseInt(st.nextToken());
 		int K = Integer.parseInt(st.nextToken());
 
-		int pre = Integer.parseInt(br.readLine());
-		int minTime = pre;
-		int maxTime = pre + 1;
+		long[] time = new long[N];
 
-		List<int[]> edges = new ArrayList<>();
-
-		for (int i = 0; i < N - 1; i++) {
-			int currTime = Integer.parseInt(br.readLine());
-
-			edges.add(new int[] { currTime, currTime - pre, 0 });
-			pre = currTime;
+		for (int i = 0; i < N; i++) {
+			time[i] = Long.parseLong(br.readLine());
 		}
 
-		edges.sort((a, b) -> Integer.compare(b[1], a[1]));
+		if (K >= N) {
+			System.out.println(N);
+			return;
+		}
+
+		List<Long> gaps = new ArrayList<>();
+		for (int i = 1; i < N; i++) {
+			gaps.add(time[i] - time[i - 1] - 1);
+		}
+
+		gaps.sort((a, b) -> Long.compare(b, a));
+
+		long answer = time[N - 1] - time[0] + 1;
 
 		for (int i = 0; i < K - 1; i++) {
-			int[] curr = edges.get(i);
-			curr[2] = 1;
+			answer -= gaps.get(i);
 		}
 
-		edges.sort((a, b) -> Integer.compare(a[0], b[0]));
-
-		long answer = 0;
-
-		for (int[] edge : edges) {
-			if (edge[2] == 0) {
-				minTime = Math.min(edge[0], minTime);
-				maxTime = Math.max(edge[0] + 1, maxTime);
-			} else {
-				answer += (maxTime - minTime);
-				minTime = edge[0];
-				maxTime = edge[0] + 1;
-			}
-		}
-
-		answer += (maxTime - minTime);
 		System.out.println(answer);
 	}
 }
