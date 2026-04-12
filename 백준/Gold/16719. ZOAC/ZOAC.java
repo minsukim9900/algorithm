@@ -2,55 +2,49 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	private static char[] str;
-	private static List<Integer>[] adj;
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 
-		str = br.readLine().toCharArray();
-		adj = new ArrayList[str.length + 1];
+		String input = br.readLine();
+		int size = input.length();
+		boolean[] visited = new boolean[size];
 
-		for (int i = 0; i < str.length + 1; i++) {
-			adj[i] = new ArrayList<>();
-
-			for (int j = i + 1; j < str.length + 1; j++) {
-				adj[i].add(j);
-			}
-		}
-
-		for (int i = 0; i < str.length + 1; i++) {
-			adj[i].sort((a, b) -> Integer.compare(str[a - 1], str[b - 1]));
-		}
-
-		boolean[] visited = new boolean[str.length + 1];
-		TreeSet<Integer> ts = new TreeSet<>();
-
-		for (int i = 0; i < str.length; i++) {
-			if (visited[adj[0].get(i)])
-				continue;
-
-			search(adj[0].get(i), visited, ts, sb);
-		}
+		recur(0, input, size, visited, sb);
+		
 		System.out.println(sb.toString());
 	}
 
-	private static void search(int start, boolean[] visited, TreeSet<Integer> ts, StringBuilder sb) {
-		visited[start] = true;
-		ts.add(start);
+	private static void recur(int idx, String input, int size, boolean[] visited, StringBuilder sb) {
+		while (true) {
+			int minChar = 'Z' + 1;
+			int minIdx = -1;
 
-		for (int x : ts) {
-			sb.append(str[x - 1]);
-		}
-		sb.append("\n");
+			for (int i = idx; i < size; i++) {
+				char c = input.charAt(i);
 
-		for (int i = 0; i < adj[start].size(); i++) {
-			if (visited[adj[start].get(i)])
-				continue;
+				if (minChar > c && !visited[i]) {
+					minChar = c;
+					minIdx = i;
+				}
+			}
 
-			search(adj[start].get(i), visited, ts, sb);
+			if (minIdx == -1) {
+				break;
+			}
+
+			visited[minIdx] = true;
+
+			for (int i = 0; i < size; i++) {
+				if (visited[i]) {
+					sb.append(input.charAt(i));
+				}
+			}
+			sb.append("\n");
+
+			recur(minIdx + 1, input, size, visited, sb);
 		}
 	}
 }
