@@ -29,9 +29,7 @@ public class Main {
 				board[r][c] = str.charAt(c);
 
 				if (board[r][c] == '@') {
-					for (int i = 0; i < 4; i++) {
-						start.add(new int[] { r, c, 2, i });
-					}
+					start.add(new int[] { r, c, 2 });
 				} else if (board[r][c] == '*' || board[r][c] == '#') {
 					count++;
 				}
@@ -44,8 +42,6 @@ public class Main {
 	private static int simulate(List<int[]> start) {
 		int result = 0;
 
-		boolean[][] visited = new boolean[N][M];
-
 		Queue<int[]> q = new ArrayDeque<>();
 		for (int[] x : start) {
 			q.add(x);
@@ -57,39 +53,29 @@ public class Main {
 			int r = curr[0];
 			int c = curr[1];
 			int depth = curr[2];
-			int dir = curr[3];
 
 			if (depth == 0) {
 				continue;
 			}
 
-			int nr = r + delta[dir][0];
-			int nc = c + delta[dir][1];
+			for (int i = 0; i < 4; i++) {
+				for (int j = 1; j <= depth; j++) {
+					int nr = r + delta[i][0] * j;
+					int nc = c + delta[i][1] * j;
 
-			if (!isRange(nr, nc) || board[nr][nc] == '|') {
-				continue;
-			}
+					if (!isRange(nr, nc) || board[nr][nc] == '|') {
+						break;
+					}
 
-			if (board[nr][nc] == '*') {
+					if (board[nr][nc] == '*') {
+						board[nr][nc] = '.';
+						result++;
+						q.add(new int[] { nr, nc, 1 });
 
-				board[nr][nc] = '.';
-				result++;
-				q.add(new int[] { nr, nc, depth - 1, dir });
-
-				for (int i = 0; i < 4; i++) {
-					int nnr = nr + delta[i][0];
-					int nnc = nc + delta[i][1];
-
-					if (isRange(nnr, nnc) && board[nnr][nnc] != '|') {
-						q.add(new int[] { nr, nc, 1, i });
+					} else if (board[nr][nc] == '#') {
+						board[nr][nc] = '*';
 					}
 				}
-
-			} else if (board[nr][nc] == '#') {
-				board[nr][nc] = '*';
-				q.add(new int[] { nr, nc, depth - 1, dir });
-			} else if (board[nr][nc] == '.') {
-				q.add(new int[] { nr, nc, depth - 1, dir });
 			}
 		}
 
