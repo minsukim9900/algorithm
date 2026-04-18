@@ -1,124 +1,67 @@
 import java.io.*;
-
 import java.util.*;
 
 public class Main {
+	private static int D, N;
 
-    static class Cloth {
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st;
 
-        int low, high, flashy;
+		st = new StringTokenizer(br.readLine());
+		D = Integer.parseInt(st.nextToken());
+		N = Integer.parseInt(st.nextToken());
 
-        Cloth(int low, int high, int flashy) {
+		int[] day = new int[D];
+		for (int i = 0; i < D; i++) {
+			day[i] = Integer.parseInt(br.readLine());
+		}
 
-            this.low = low;
+		int[][] clothes = new int[N][];
 
-            this.high = high;
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			int low = Integer.parseInt(st.nextToken());
+			int high = Integer.parseInt(st.nextToken());
+			int score = Integer.parseInt(st.nextToken());
 
-            this.flashy = flashy;
+			clothes[i] = new int[] { low, high, score };
+		}
 
-        }
+		int[][] dp = new int[D][N];
+		for (int i = 0; i < D; i++) {
+			Arrays.fill(dp[i], -1);
+		}
 
-        boolean canWear(int temp) {
+		for (int i = 0; i < N; i++) {
+			if (clothes[i][0] <= day[0] && day[0] <= clothes[i][1]) {
+				dp[0][i] = 0;
+			}
+		}
 
-            return low <= temp && temp <= high;
+		for (int d = 1; d < D; d++) {
+			for (int curr = 0; curr < N; curr++) {
+				if (clothes[curr][0] <= day[d] && day[d] <= clothes[curr][1]) {
 
-        }
+					for (int prev = 0; prev < N; prev++) {
+						if (dp[d - 1][prev] == -1)
+							continue;
 
-    }
+						if (clothes[prev][0] <= day[d - 1] && day[d - 1] <= clothes[prev][1]) {
 
-    public static void main(String[] args) throws Exception {
+							dp[d][curr] = Math.max(dp[d][curr],
+									dp[d - 1][prev] + Math.abs(clothes[curr][2] - clothes[prev][2]));
+						}
+					}
+				}
+			}
+		}
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-
-        st = new StringTokenizer(br.readLine());
-
-        int D = Integer.parseInt(st.nextToken());
-
-        int N = Integer.parseInt(st.nextToken());
-
-        int[] temp = new int[D];
-
-        for (int i = 0; i < D; i++) {
-
-            temp[i] = Integer.parseInt(br.readLine());
-
-        }
-
-        Cloth[] clothes = new Cloth[N];
-
-        for (int i = 0; i < N; i++) {
-
-            st = new StringTokenizer(br.readLine());
-
-            int a = Integer.parseInt(st.nextToken());
-
-            int b = Integer.parseInt(st.nextToken());
-
-            int c = Integer.parseInt(st.nextToken());
-
-            clothes[i] = new Cloth(a, b, c);
-
-        }
-
-        int[][] dp = new int[D][N];
-
-        for (int i = 0; i < D; i++) {
-
-            Arrays.fill(dp[i], -1);
-
-        }
-
-        // 첫째 날
-
-        for (int j = 0; j < N; j++) {
-
-            if (clothes[j].canWear(temp[0])) {
-
-                dp[0][j] = 0;
-
-            }
-
-        }
-
-        // 둘째 날부터
-
-        for (int day = 1; day < D; day++) {
-
-            for (int cur = 0; cur < N; cur++) {
-
-                if (!clothes[cur].canWear(temp[day])) continue;
-
-                for (int prev = 0; prev < N; prev++) {
-
-                    if (dp[day - 1][prev] == -1) continue;
-
-                    if (!clothes[prev].canWear(temp[day - 1])) continue;
-
-                    dp[day][cur] = Math.max(
-
-                        dp[day][cur],
-
-                        dp[day - 1][prev] + Math.abs(clothes[cur].flashy - clothes[prev].flashy)
-
-                    );
-
-                }
-
-            }
-
-        }
-
-        int answer = 0;
-
-        for (int j = 0; j < N; j++) {
-
-            answer = Math.max(answer, dp[D - 1][j]);
-
-        }
-
-        System.out.println(answer);
-
-    }
-
+		int answer = 0;
+		for (int i = 0; i < N; i++) {
+			answer = Math.max(answer, dp[D - 1][i]);
+		}
+		System.out.println(answer);
+	}
 }
