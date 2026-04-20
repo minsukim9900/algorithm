@@ -7,8 +7,7 @@ int main() {
     char c;
     cin >> c;
 
-    int i = 0;
-    for(i = 0; i < 8; i++) {
+    for(int i = 0; i < 8; i++) {
         cout << c;
     }
 
