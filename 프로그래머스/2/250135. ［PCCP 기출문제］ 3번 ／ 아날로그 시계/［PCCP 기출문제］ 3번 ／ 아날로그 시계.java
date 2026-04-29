@@ -1,33 +1,75 @@
-import java.io.*;
 import java.util.*;
 
 class Solution {
-    private static double ha = 360.0 / (12 * 3600.0);
-    private static double ma = 360.0 / (3600.0);
-    private static double sa = 360.0 / 60.0;
     
-    public int solution(int h1,int m1,int s1,int h2,int m2,int s2) {
-        int ans = 0;
-        // 각도?
-        double start = h1 * 3600.0 + m1 * 60 + s1;
-        double end = h2 * 3600.0 + m2 * 60 + s2;
+    
+    public int solution(int h1, int m1, int s1, int h2, int m2, int s2) {
+        int answer = 0;
         
-        boolean preOverlap = false;
+        int start = getSecond(h1, m1, s1);
+        int end = getSecond(h2, m2, s2);
         
-        for (double t = start; t<=end; t += 0.001) {
-            double ha = ((t % 43200) / 43200) * 360;
-            double ma = ((t % 3600) / 3600) * 360;
-            double sa = ((t % 60) / 60) * 360;
-            
-            boolean overlap = Math.abs(sa - ha ) < 0.01 || Math.abs(sa - ma) < 0.01;
-            
-            if(overlap && !preOverlap) {
-                ans++;
-            }
-            preOverlap = overlap;
+        double hour = hourAngle(start);
+        double minute = minuteAngle(start);
+        double second = secondAngle(start);
+        
+        if(hour == second || minute == second) {
+            answer++;
         }
-        return ans;
+        
+        
+        for(int time = start; time < end; time++) {
+            double preHour = hourAngle(time);
+            double preMin = minuteAngle(time);
+            double preSec = secondAngle(time);
+            
+            double currHour = hourAngle(time + 1);
+            double currMin = minuteAngle(time + 1);
+            double currSec = secondAngle(time + 1);
+            
+            if(isCross(preHour, preSec, currHour, currSec)) {
+                answer++;
+            }
+            
+            if(isCross(preMin, preSec, currMin, currSec)) {
+                answer++;
+            }
+            
+            if(currHour == currSec && currMin == currSec) {
+                answer--;
+            }
+        }
+        
+        return answer;
     }
     
-   
+    
+    private static int getSecond(int h, int m, int s) {
+        return 3600 * h + 60 * m + s;
+    }
+    
+    private static double secondAngle(int time) {
+        return (time % 60) * 6.0;
+    }
+    
+    private static double minuteAngle(int time) {
+        return ((time / 60) % 60) * 6.0 + (time % 60) * 0.1;
+    }
+    
+    private static double hourAngle(int time) {
+        return (time % (12 * 3600)) / 120.0;
+    }
+    
+    private static boolean isCross(double preTarget, double preSec,
+                               double currTarget, double currSec) {
+        if (currSec == 0) {
+            currSec = 360;
+        }
+
+        if (currTarget == 0) {
+            currTarget = 360;
+        }
+
+        return preTarget > preSec && currTarget <= currSec;
+    }   
 }
