@@ -33,13 +33,16 @@ class Solution {
     }
     
     private static void dfs(int depth, boolean[] virus, int sum) {
-        if(depth == K) {
-            answer = Math.max(answer, sum);
+        answer = Math.max(answer, sum);
+        
+        if(depth == K || sum == N) {
             return;
         }
         
         for(int type = 1; type <= 3; type++) {
             List<Integer> nextNode = infectNode(virus, type);
+            
+            if (nextNode.isEmpty()) continue;
             
             dfs(depth + 1, virus, sum + nextNode.size());
             
@@ -51,8 +54,6 @@ class Solution {
     
     private static List<Integer> infectNode(boolean[] virus, int type) {
         Queue<Integer> q = new ArrayDeque<>();
-        
-        
         List<Integer> result = new ArrayList<>();
         
         for(int i = 1; i < N + 1; i++) {
