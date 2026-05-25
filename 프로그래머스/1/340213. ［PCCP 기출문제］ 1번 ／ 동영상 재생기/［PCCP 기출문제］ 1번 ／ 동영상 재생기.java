@@ -21,15 +21,15 @@ class Solution {
                 currTime = opEnd;
         }
         
-        int hour = currTime / 60;
+        int minute = currTime / 60;
         int second = currTime % 60;
         
         StringBuilder sb = new StringBuilder();
         
-        if(hour < 10) {
+        if(minute < 10) {
             sb.append(0);
         }
-        sb.append(hour).append(":");
+        sb.append(minute).append(":");
         
         if(second < 10) {
             sb.append(0);
