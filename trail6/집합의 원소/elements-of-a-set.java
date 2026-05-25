@@ -44,11 +44,10 @@ public class Main {
     }
 
     private static int findParent(int node) {
-        if (node != parent[node]) {
-            return findParent(parent[node]);
+        if (parent[node] == node) {
+            return node;
         }
-
-        return parent[node];
+        return parent[node] = findParent(parent[node]);
     }
 
     private static void union(int x, int y) {
