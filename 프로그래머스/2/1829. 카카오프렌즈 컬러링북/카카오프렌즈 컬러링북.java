@@ -1,51 +1,64 @@
-import java.io.*;
 import java.util.*;
 
 class Solution {
-    private static boolean[][] visited;
-    private static int[][] delta = {{-1, 0}, {1,0},{0, -1}, {0, 1}};
+    private static int N, M;
+    private static int[][] delta = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     
     public int[] solution(int m, int n, int[][] picture) {
-        visited = new boolean[m][n];
+        N = picture.length;
+        M = picture[0].length;
+        
         int numberOfArea = 0;
         int maxSizeOfOneArea = 0;
-
-        for(int r = 0; r < m; r++) {
-            for(int c= 0; c < n; c++) {
+        
+        boolean[][] visited = new boolean[N][M];
+        
+        for(int r = 0; r < N; r++) {
+            for(int c = 0; c < M; c++) {
                 if(picture[r][c] > 0 && !visited[r][c]) {
-                    maxSizeOfOneArea = Math.max(bfs(r, c, picture), maxSizeOfOneArea);
                     numberOfArea++;
+                    maxSizeOfOneArea = Math.max(maxSizeOfOneArea, bfs(r, c, visited, picture));
                 }
             }
         }
-        
+
         int[] answer = new int[2];
         answer[0] = numberOfArea;
         answer[1] = maxSizeOfOneArea;
         return answer;
     }
-
-    private static int bfs(int r, int c, int[][] picture) {
-        visited[r][c] = true;
-        Queue<int[]> q = new ArrayDeque<>();
-        q.add(new int[] {r, c, picture[r][c]});
+    
+    private static int bfs(int sr, int sc, boolean[][] visited, int[][] picture) {
+        visited[sr][sc] = true;
+        int result = 0;
         
-        int result = 1;
+        Queue<int[]> q = new ArrayDeque<>();
+        
+        q.add(new int[] {sr, sc});
+        
         while(!q.isEmpty()) {
             int[] curr = q.poll();
+            result++;
+            
+            int r = curr[0];
+            int c = curr[1];
             
             for(int i = 0; i < 4; i++) {
-                int nr = curr[0] + delta[i][0];
-                int nc = curr[1] + delta[i][1];
+                int nr = r + delta[i][0];
+                int nc = c + delta[i][1];
                 
-                if(nr >= 0 && nr < picture.length && nc >= 0 && nc < picture[0].length 
-                   && !visited[nr][nc] && picture[nr][nc] == curr[2]) {
+                if(isRange(nr, nc) 
+                   && picture[nr][nc] == picture[sr][sc] && !visited[nr][nc]) {
+                    q.add(new int[] {nr, nc});
                     visited[nr][nc] = true;
-                    q.add(new int[] {nr, nc, curr[2]});
-                    result++;
                 }
             }
         }
+        
         return result;
+    }
+    
+    private static boolean isRange(int r, int c) {
+        return r >= 0 && r < N && c >= 0 && c < M;
     }
 }
