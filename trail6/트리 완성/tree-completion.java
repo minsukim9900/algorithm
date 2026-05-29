@@ -41,7 +41,7 @@ public class Main {
             }
         }
 
-        System.out.println(countParentNode(removeOperationCount));
+        System.out.println(countAddEdgeOperation() + removeOperationCount);
     }
 
     private static int findParent(int node) {
@@ -62,11 +62,10 @@ public class Main {
         }
     }
 
-    private static int countParentNode(int removeOperationCount) {
+    private static int countAddEdgeOperation() {
         boolean[] isParent = new boolean[N + 1];
 
-        int result = removeOperationCount;
-        boolean isAddEdge = false;
+        int parentCount = 0;
 
         for (int node = 1; node < N + 1; node++) {
             int parentNode = findParent(node);
@@ -74,11 +73,10 @@ public class Main {
             if (isParent[parentNode])
                 continue;
 
-            result++;
+            parentCount++;
             isParent[parentNode] = true;
-            isAddEdge = true;
         }
 
-        return isAddEdge ? result - 1 : result;
+        return parentCount - 1;
     }
 }
