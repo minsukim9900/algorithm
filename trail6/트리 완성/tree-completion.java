@@ -25,6 +25,8 @@ public class Main {
         }
 
         int removeOperationCount = 0;
+        int addOperationCount = N - 1;
+
         for (int edgeInfo = 0; edgeInfo < M; edgeInfo++) {
             st = new StringTokenizer(br.readLine());
 
@@ -36,12 +38,13 @@ public class Main {
 
             if (parentX != parentY) {
                 union(parentX, parentY);
+                addOperationCount--;
             } else {
                 removeOperationCount++;
             }
         }
 
-        System.out.println(countAddEdgeOperation() + removeOperationCount);
+        System.out.println(addOperationCount + removeOperationCount);
     }
 
     private static int findParent(int node) {
@@ -60,23 +63,5 @@ public class Main {
             parent[nodeX] = nodeY;
             childCount[nodeY] += childCount[nodeX];
         }
-    }
-
-    private static int countAddEdgeOperation() {
-        boolean[] isParent = new boolean[N + 1];
-
-        int parentCount = 0;
-
-        for (int node = 1; node < N + 1; node++) {
-            int parentNode = findParent(node);
-
-            if (isParent[parentNode])
-                continue;
-
-            parentCount++;
-            isParent[parentNode] = true;
-        }
-
-        return parentCount - 1;
     }
 }
