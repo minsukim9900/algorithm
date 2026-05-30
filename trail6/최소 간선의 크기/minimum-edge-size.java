@@ -32,7 +32,7 @@ public class Main {
         A = Integer.parseInt(st.nextToken());
         B = Integer.parseInt(st.nextToken());
 
-        List<int[]> edges = new ArrayList<>();
+        List<Edge> edges = new ArrayList<>();
 
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
@@ -40,25 +40,25 @@ public class Main {
             int nodeY = Integer.parseInt(st.nextToken());
             int satisfaction = Integer.parseInt(st.nextToken());
 
-            edges.add(new int[] { nodeX, nodeY, satisfaction });
+            edges.add(new Edge(nodeX, nodeY, satisfaction));
         }
 
         System.out.println(getEdgeMinsatisfaction(edges));
     }
 
-    private static int getEdgeMinsatisfaction(List<int[]> edges) {
-        edges.sort(new Comparator<int[]>() {
+    private static int getEdgeMinsatisfaction(List<Edge> edges) {
+        edges.sort(new Comparator<Edge>() {
 
             @Override
-            public int compare(int[] edge1, int[] edge2) {
-                return Integer.compare(edge2[2], edge1[2]);
+            public int compare(Edge edge1, Edge edge2) {
+                return Integer.compare(edge2.setisfation, edge1.setisfation);
             }
         });
 
-        for (int[] edge : edges) {
-            int nodeX = edge[0];
-            int nodeY = edge[1];
-            int satisfaction = edge[2];
+        for (Edge edge : edges) {
+            int nodeX = edge.nodeX;
+            int nodeY = edge.nodeY;
+            int satisfaction = edge.setisfation;
 
             int rootX = findParent(nodeX);
             int rootY = findParent(nodeY);
@@ -90,6 +90,16 @@ public class Main {
         } else {
             parent[nodeX] = nodeY;
             size[nodeY] += size[nodeX];
+        }
+    }
+
+    private static class Edge {
+        int nodeX, nodeY, setisfation;
+
+        public Edge(int nodeX, int nodeY, int setisfation) {
+            this.nodeX = nodeX;
+            this.nodeY = nodeY;
+            this.setisfation = setisfation;
         }
     }
 }
