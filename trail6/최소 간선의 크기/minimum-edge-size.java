@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -45,7 +47,13 @@ public class Main {
     }
 
     private static int getEdgeMinsatisfaction(List<int[]> edges) {
-        edges.sort((edge1, edge2) -> Integer.compare(edge2[2], edge1[2]));
+        edges.sort(new Comparator<int[]>() {
+
+            @Override
+            public int compare(int[] edge1, int[] edge2) {
+                return Integer.compare(edge2[2], edge1[2]);
+            }
+        });
 
         for (int[] edge : edges) {
             int nodeX = edge[0];
