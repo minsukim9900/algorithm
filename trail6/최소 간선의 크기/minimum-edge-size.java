@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,36 +36,34 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             int nodeX = Integer.parseInt(st.nextToken());
             int nodeY = Integer.parseInt(st.nextToken());
-            int s = Integer.parseInt(st.nextToken());
+            int satisfaction = Integer.parseInt(st.nextToken());
 
-            edges.add(new int[] { nodeX, nodeY, s });
+            edges.add(new int[] { nodeX, nodeY, satisfaction });
         }
 
-        System.out.println(getEdgeMaxValue(edges));
+        System.out.println(getEdgeMinsatisfaction(edges));
     }
 
-    private static int getEdgeMaxValue(List<int[]> edges) {
+    private static int getEdgeMinsatisfaction(List<int[]> edges) {
         edges.sort((edge1, edge2) -> Integer.compare(edge2[2], edge1[2]));
-
-        int result = Integer.MAX_VALUE;
 
         for (int[] edge : edges) {
             int nodeX = edge[0];
             int nodeY = edge[1];
-            int s = edge[2];
+            int satisfaction = edge[2];
 
-            int px = findParent(nodeX);
-            int py = findParent(nodeY);
+            int rootX = findParent(nodeX);
+            int rootY = findParent(nodeY);
 
-            if (px != py) {
-                union(px, py);
-                result = Math.min(s, result);
+            if (rootX != rootY) {
+                union(rootX, rootY);
 
-                if (findParent(parent[A]) == findParent(parent[B])) {
-                    return result;
+                if (findParent(A) == findParent(B)) {
+                    return satisfaction;
                 }
             }
         }
+
         return -1;
     }
 
