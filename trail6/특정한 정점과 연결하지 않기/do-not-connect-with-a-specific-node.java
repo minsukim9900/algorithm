@@ -50,7 +50,7 @@ public class Main {
         visited[rootA] = true;
         visited[rootB] = true;
 
-        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> Integer.compare(b, a));
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
 
         for (int node = 1; node < N + 1; node++) {
             int rootNode = findParent(node);
@@ -58,13 +58,18 @@ public class Main {
             if (visited[rootNode])
                 continue;
 
-            pq.add(size[rootNode]);
             visited[rootNode] = true;
+            int componentSize = size[rootNode];
+
+            if (pq.size() < K) {
+                pq.add(componentSize);
+            } else if (K > 0 && pq.peek() < componentSize) {
+                pq.poll();
+                pq.add(componentSize);
+            }
         }
 
-        for (int i = 0; i < K; i++) {
-            if(pq.isEmpty()) break;
-            
+        while(!pq.isEmpty()) {
             answer += pq.poll();
         }
         
