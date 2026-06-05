@@ -1,70 +1,93 @@
 import java.util.*;
 
 class Solution {
-    // 속성 조합(key) → 해당 조합을 만족하는 지원자의 점수 리스트
-    private HashMap<String, List<Integer>> map = new HashMap<>();
-
-    public int[] solution(String[] info, String[] query) {
-        // 1) info 전처리: 각 엔트리당 16가지 속성 조합으로 점수 저장
-        for (String entry : info) {
-            String[] tokens = entry.split(" "); // ["언어", "직군", "경력", "음식", "점수"]
-            String lang = tokens[0], job = tokens[1], exp = tokens[2], food = tokens[3];
-            int score = Integer.parseInt(tokens[4]);
-
-            String[] attrs = { lang, job, exp, food };
-            // mask: 0부터 15까지 순회하며 비트가 1인 속성은 "-"로 대체
-            for (int mask = 0; mask < (1 << 4); mask++) {
-                StringBuilder keyBuilder = new StringBuilder();
-                for (int bit = 0; bit < 4; bit++) {
-                    if ((mask & (1 << bit)) != 0) {
-                        keyBuilder.append("-");
-                    } else {
-                        keyBuilder.append(attrs[bit]);
-                    }
-                    if (bit < 3) {
-                        keyBuilder.append(" ");
+    private static int[][][][][] scores, prefix;
+    
+    private static final int MAX_SCORE = 100_001;
+    
+    public int[] solution(String[] infos, String[] querys) {
+        scores = new int[4][3][3][3][MAX_SCORE];
+        prefix = new int[4][3][3][3][MAX_SCORE];
+        
+        // 정보를 어떻게 저장해야 이득일까 0점 이상의 인원은 어떻게 가장 빠르게 알 수 있을까
+        for(String info : infos) {
+            String[] in = info.split(" ");
+            int languageIdx = getLanguageIndex(in[0]);
+            int jobIdx = getJobIndex(in[1]);
+            int historyIdx = getHistoryIndex(in[2]);
+            int foodIdx = getFoodIndex(in[3]);
+            int score = Integer.parseInt(in[4]);
+            
+            for (int mask = 0; mask < 16; mask++) {
+                int lang = (mask & 1) == 0 ? languageIdx : 0;
+                int job = (mask & 2) == 0 ? jobIdx : 0;
+                int history = (mask & 4) == 0 ? historyIdx : 0;
+                int food = (mask & 8) == 0 ? foodIdx : 0;
+                
+                scores[lang][job][history][food][score]++;
+            }
+        }
+        
+        for(int lang = 0; lang < 4; lang++) {
+            for(int job = 0; job < 3; job++) {
+                for(int history = 0; history < 3; history++) {
+                    for(int food = 0; food < 3; food++) {
+                        for(int score = MAX_SCORE - 2; score >= 0; score--) {
+                            scores[lang][job][history][food][score] += 
+                                scores[lang][job][history][food][score + 1];
+                        }
                     }
                 }
-                String key = keyBuilder.toString();
-                map.computeIfAbsent(key, k -> new ArrayList<>()).add(score);
             }
         }
-
-        // 2) 각 키에 대응하는 점수 리스트 정렬
-        for (List<Integer> list : map.values()) {
-            Collections.sort(list);
+        
+        int[] answer = new int[querys.length];
+        for(int i = 0; i < querys.length; i++) {
+            String query = querys[i].replace(" and ", " ");
+            String[] q = query.split(" ");
+            
+            int languageIdx = getLanguageIndex(q[0]);
+            int jobIdx = getJobIndex(q[1]);
+            int historyIdx = getHistoryIndex(q[2]);
+            int foodIdx = getFoodIndex(q[3]);
+            int score = Integer.parseInt(q[4]);
+            
+            answer[i] = scores[languageIdx][jobIdx][historyIdx][foodIdx][score];
         }
-
-        // 3) query 처리
-        int[] answer = new int[query.length];
-        for (int i = 0; i < query.length; i++) {
-            // 예: "java and backend and junior and pizza 100"
-            String[] tokens = query[i].split(" ");
-            String key = tokens[0] + " " + tokens[2] + " " + tokens[4] + " " + tokens[6];
-            int targetScore = Integer.parseInt(tokens[7]);
-
-            List<Integer> list = map.getOrDefault(key, Collections.emptyList());
-            int cnt = 0;
-            if (!list.isEmpty()) {
-                int idx = lowerBound(list, targetScore);
-                cnt = list.size() - idx;
-            }
-            answer[i] = cnt;
-        }
-
+        
         return answer;
     }
-
-    private int lowerBound(List<Integer> arr, int target) {
-        int lo = 0, hi = arr.size();
-        while (lo < hi) {
-            int mid = (lo + hi) / 2;
-            if (arr.get(mid) < target) {
-                lo = mid + 1;
-            } else {
-                hi = mid;
-            }
+    
+    private static int getLanguageIndex(String language) {
+        switch(language) {
+            case "cpp": return 1;
+            case "java": return 2;
+            case "python": return 3;
+            default: return 0;
         }
-        return lo;
+    }
+    
+    private static int getJobIndex(String job) {
+        switch(job) {
+            case "backend": return 1;
+            case "frontend": return 2;
+            default: return 0;
+        }
+    }
+    
+    private static int getHistoryIndex(String history) {
+        switch(history) {
+            case "junior": return 1;
+            case "senior": return 2;
+            default: return 0;
+        }
+    }
+    
+    private static int getFoodIndex(String food) {
+        switch(food) {
+            case "chicken": return 1;
+            case "pizza": return 2;
+            default: return 0;
+        }
     }
 }
