@@ -36,6 +36,10 @@ public class Main {
 
         Arrays.sort(edges, (a, b) -> Integer.compare(a[2], b[2]));
 
+        System.out.println(getTotalWeight());
+    }
+
+    private static int getTotalWeight() {
         int pick = 0;
         int answer = 0;
 
@@ -53,12 +57,12 @@ public class Main {
                 answer += weight;
 
                 if (pick == N - 1) {
-                    break;
+                    return answer;
                 }
             }
         }
 
-        System.out.println(answer);
+        return answer;
     }
 
     private static int findParent(int node) {
