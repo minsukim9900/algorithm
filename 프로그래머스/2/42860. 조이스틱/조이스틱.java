@@ -1,23 +1,34 @@
+import java.util.*;
+
 class Solution {
+    private static int N;
+    private static int[] diff;
+    
     public int solution(String name) {
-        int n = name.length();
-        int answer = 0;
+        N = name.length();
+        diff = new int[N];
+        char[] alphabet = name.toCharArray();
         
-        for(int i = 0; i < n; i++) {
-            char c = name.charAt(i);
-            answer += Math.min(c - 'A', 'Z' - c + 1);
+        
+        int answer = 0;
+        for(int i = 0; i < N; i++) {
+            char c = alphabet[i];
+            diff[i] = Math.min(c - 'A', 'Z' - c + 1);
+            answer += diff[i];
         }
         
-        int count = n - 1;
-        for(int pos = 0; pos < n; pos++) {
-            int next = pos + 1;
+        int move = N - 1;
+        for(int i = 0; i < N; i++) {
+            int next = i + 1;
             
-            while(next < n && name.charAt(next) == 'A') {
+            while(next < N && alphabet[next] == 'A') {
                 next++;
             }
-            count = Math.min(count, Math.min(2 * pos + (n - next), pos + 2 * (n - next)));
+            
+            move = Math.min(move, Math.min(i * 2 + (N - next), i + 2 * (N - next)));
         }
         
-        return answer + count;
+        
+        return answer + move;
     }
 }
