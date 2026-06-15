@@ -1,73 +1,55 @@
-import java.io.*;
 import java.util.*;
 
 class Solution {
-    private static char[] c = {'A', 'C', 'F', 'J', 'M', 'N', 'R', 'T'};
-    private static Map<Character, Integer> map = Map.of('A', 0, 'C', 1, 'F', 2, 'J', 3, 'M', 4
-                                                           , 'N', 5, 'R', 6, 'T', 7);
-    private static int count;
-    
-    private static class Info {
-        int start;
-        int end;
-        int state;
-        int value;
-        
-        public Info(char s, char e, int state, int value) {
-            this.start = map.get(s);
-            this.end = map.get(e);
-            this.state = state;
-            this.value = value;
-        }
-    }
-    
-    private static Info[] infos;
+    private static char[] alphabet;
+    private static int[] alphabetIndex;
+    private static int answer;
     
     public int solution(int n, String[] data) {
-        infos = new Info[data.length];
+        alphabetIndex = new int['z' - 'a' + 1];
+        alphabet = new char[] {'A', 'C', 'F', 'J', 'M', 'N', 'R', 'T'};
+        Arrays.fill(alphabetIndex, -1);
+        answer = 0;
         
-        for(int i = 0; i < data.length; i++) {
-            char tmp = data[i].charAt(3);
-            int num = 0;
-            
-            if(tmp == '>') {
-                num = 1;
-            }else if(tmp == '<') {
-                num = -1;
-            }
-            infos[i] = new Info(data[i].charAt(0), data[i].charAt(2), num, data[i].charAt(4) - '0');
-        }
+        dfs(0, data, new boolean['z' - 'a' + 1]);
         
-        count = 0;
-        perm(0, new int[8], new boolean[8]);
-        
-        int answer = count;
         return answer;
     }
     
-    private static void perm(int idx, int[] pos, boolean[] visited) {
-        if(idx == 8 && isPoss(pos, visited)) {
-            count++;
-        } else {
-            for(int i = 0; i < 8; i++) {
-                if(visited[i]) continue;
-                
-                pos[i] = idx;
-                visited[i] = true;
-                perm(idx + 1, pos, visited);
-                visited[i] = false;
+    private void dfs(int depth, String[] data, boolean[] visited) {
+        if (depth == 8) {
+            answer++;
+            return;
+        }
+        
+        for(int i = 0; i < 8; i++) {
+            int idx = alphabet[i] - 'A';
+            
+            if (visited[idx]) continue;
+            
+            alphabetIndex[idx] = depth;
+            
+            if(check(data)) {
+                visited[idx] = true;
+                dfs(depth + 1, data, visited);
+                visited[idx] = false;
             }
+            
+            alphabetIndex[idx] = -1;
         }
     }
     
-    private static boolean isPoss(int[] pos, boolean[] visited) {
-        for(Info info : infos) {
-            int s = pos[info.start];
-            int e = pos[info.end];
-            int state = info.state;
-            int range = info.value;
+    private boolean check(String[] data) {
+        for(String d : data) {
+            char[] c = d.toCharArray();
+            int x = c[0] - 'A';
+            int y = c[2] - 'A';
+            char condition = c[3];
+            int range = c[4] - '0';
             
-            if(!check(s, e, state, range)) {
+            if(alphabetIndex[x] == -1 || alphabetIndex[y] == -1) continue;
+            
+            if(!isPossible(x, y, condition, range)) {
                 return false;
             }
         }
@@ -75,15 +57,15 @@ class Solution {
         return true;
     }
     
-    private static boolean check(int s, int e, int state, int range) {
-        int tmp = Math.abs(s - e) - 1;
+    private boolean isPossible(int x, int y, char condition, int range) {
+        int distance = Math.abs(alphabetIndex[x] - alphabetIndex[y]) - 1;
         
-        if(state == 0) {
-            return tmp == range;
-        }else if(state == 1) {
-            return tmp > range;
-        }else {
-            return tmp < range;
+        if (condition == '>') {
+            return distance > range;
+        } else if (condition == '<') {
+            return distance < range;
+        } else {
+            return distance == range;
         }
     }
 }
