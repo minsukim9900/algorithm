@@ -1,58 +1,90 @@
-import java.io.*;
 import java.util.*;
 
 class Solution {
-    private static int N, M, K;
-    private static boolean isPoss = false;
-    private static String answer = "impossible";
+    private static int N, M;
     private static int[][] delta = {{1, 0}, {0, -1}, {0, 1}, {-1, 0}};
-    private static char[] ch = {'d', 'l', 'r', 'u'};
     
     public String solution(int n, int m, int x, int y, int r, int c, int k) {
-        int distance = Math.abs(r - x) + Math.abs(c - y);
-        if(distance > k || (k - distance) % 2 == 1) {
-            return answer;
-        }
-        
         N = n;
         M = m;
-        K = k;
-        dfs(x, y, r, c, 0, new StringBuilder());
-        return answer;
+        Node result = bfs(x, y, r, c, k);
+        
+        return result == null ? "impossible" : result.info;
     }
     
-    private static void dfs(int r, int c, int er, int ec, int depth, StringBuilder sb) {
-        if(depth < K && r == er && c == ec && (K - depth) % 2 == 1) {
-            return;
-        }
+    private Node bfs(int sr, int sc, int er, int ec, int k) {
+        boolean[][][] visited = new boolean[k + 1][N + 1][M + 1];
         
-        if(isPoss) return;
+        visited[0][sr][sc] = true;
         
-        if(depth == K) {
-            if(r == er && c == ec) {
-                isPoss = true;
-                answer = sb.toString();
+        Queue<Node> q = new ArrayDeque<>();
+        q.add(new Node(sr, sc, 0, ""));
+        
+        while(!q.isEmpty()) {
+            Node curr = q.poll();
+            
+            int r = curr.r;
+            int c = curr.c;
+            int d = curr.d;
+            String info = curr.info;
+            
+            if(r == er && c == ec && d == k) {
+                return curr;
             }
-            return;
-        } else {
-            for(int i = 0; i < 4; i++) {
-                int nr = r + delta[i][0];
-                int nc = c + delta[i][1];
+            
+            if (d == k) {
+                continue;
+            }
+            
+            for(int dir = 0; dir < 4; dir++) {
+                int nr = r + delta[dir][0];
+                int nc = c + delta[dir][1];
                 
-                if(isRange(nr, nc)) {
-                    int dis = Math.abs(er - nr) + Math.abs(ec - nc);
-                    int remain = K - (depth + 1);
-                    if(dis <= remain && (remain - dis) % 2 == 0) {
-                        dfs(nr, nc, er, ec, depth + 1, sb.append(ch[i]));
-                        break;
-                    }
+                if(isRange(nr, nc) && !visited[d + 1][nr][nc]) {
+                    visited[d + 1][nr][nc] = true;
+                    Node next = new Node(nr, nc, d + 1, info + getDir(dir));
+                    q.add(next);
                 }
             }
         }
+              
+        return null;
+    }
+              
+    private char getDir(int dir) {
+        if(dir == 0) {
+            return 'd';
+        }
+        
+        if(dir == 1) {
+            return 'l';
+        }
+        
+        if(dir == 2) {
+            return 'r';
+        }
+        
+        return 'u';
+    }
+    
+    private class Node {
+        int r, c, d;
+        String info;
+        
+        public Node(int r, int c, int d, String info) {
+            this.r = r;
+            this.c = c;
+            this.d = d;
+            this.info = info;
+        }
+        
+        public String toString() {
+            return "r:" + r + ", c: " + c + ", d: " + d + ", info: " + info;
+        }
     }
     
     
-    private static boolean isRange(int r, int c) {
-        return r >= 1 && r <= N && c >= 1 && c <= M;
+    private boolean isRange(int r, int c) {
+        return r > 0 && r <= N && c > 0 && c <= M;
     }
 }
