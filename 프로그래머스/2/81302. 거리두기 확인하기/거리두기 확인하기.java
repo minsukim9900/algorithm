@@ -35,7 +35,7 @@ class Solution {
                 int[] curr = person.get(i);
                 int sr = curr[0];
                 int sc = curr[1];
-                isPoss = bfs(sr, sc, person, place);
+                isPoss = bfs(sr, sc, place);
                 
                 if(!isPoss) {
                     answer[t] = 0;
@@ -46,45 +46,37 @@ class Solution {
         return answer;
     }
     
-    private static boolean bfs(int sr, int sc, List<int[]> person, char[][] place) {
-        int[][] dist = new int[N][N];
+    private static boolean bfs(int sr, int sc, char[][] place) {
         
-        for(int r = 0; r < N; r++) {
-            Arrays.fill(dist[r], INF);
-        }
-        
-        dist[sr][sc] = 0;
+        boolean[][] visited = new boolean[N][N];
+        visited[sr][sc] = true;
         
         Queue<int[]> q = new ArrayDeque<>();
-        q.add(new int[] {sr, sc});
+        q.add(new int[] {sr, sc, 0});
         
         while(!q.isEmpty()) {
             int[] curr = q.poll();
             int r = curr[0];
             int c = curr[1];
+            int dist = curr[2];
+            
+            if(!(r == sr && c == sc) && place[r][c] == 'P') {
+                return false;
+            }
+            
+            if(dist == 2) {
+                continue;
+            }
+            
             
             for(int i = 0; i < 4; i++) {
                 int nr = r + delta[i][0];
                 int nc = c + delta[i][1];
                 
-                if (isRange(nr, nc) && place[nr][nc] != 'X' && dist[nr][nc] > dist[r][c] + 1) {
-                    dist[nr][nc] = dist[r][c] + 1;
-                    q.add(new int[] {nr, nc});
+                if (isRange(nr, nc) && place[nr][nc] != 'X' && !visited[nr][nc]) {
+                    visited[nr][nc] = true;
+                    q.add(new int[] {nr, nc, dist + 1});
                 }
-            }
-        }
-        
-        for (int i = 0; i < person.size(); i++) {
-            int[] curr = person.get(i);
-            int r = curr[0];
-            int c = curr[1];
-            
-            if(r == sr && c == sc) {
-                continue;
-            }
-            
-            if(dist[r][c] <= 2) {
-                return false;
             }
         }
         
