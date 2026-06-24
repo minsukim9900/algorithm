@@ -29,7 +29,6 @@ public class Main {
             }
         }
 
-        long answer = Math.max(dp[N][1], dp[N][N]);
-        System.out.println(answer);
+        System.out.println(dp[N][N]);
     }
 }
