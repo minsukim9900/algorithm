@@ -47,34 +47,26 @@ public class Main {
 
     private static boolean isPoss(int low, int high) {
         boolean[][] visited = new boolean[N][N];
-        Queue<int[]> q = new ArrayDeque<>();
-        q.add(new int[] {0, 0});
         visited[0][0] = true;
 
-        while(!q.isEmpty()) {
-            int[] curr = q.poll();
-            int r = curr[0];
-            int c = curr[1];
+        for(int r = 0; r < N; r++) {
+            for(int c = 0; c < N; c++) {
+                if(isRange(r, c, low, high)) {
+                    if (r > 0 && visited[r - 1][c]) {
+                        visited[r][c] = true;
+                    }
 
-            if (r == N - 1 && c == N - 1) {
-                return true;
-            }
-
-            for(int i = 0; i < 2; i++) {
-                int nr = r + delta[i][0];
-                int nc = c + delta[i][1];
-
-                if(isRange(nr, nc, low, high) && !visited[nr][nc]) {
-                    visited[nr][nc] = true;
-                    q.add(new int[] {nr, nc});
+                    if (c > 0 && visited[r][c - 1]) {
+                        visited[r][c] = true;
+                    }
                 }
             }
         }
 
-        return false;
+        return visited[N - 1][N - 1];
     }
 
     private static boolean isRange(int r, int c, int low, int high) {
-        return r >= 0 && r < N && c >= 0 && c < N && board[r][c] >= low && board[r][c] <= high;
+        return board[r][c] >= low && board[r][c] <= high;
     }
 }
