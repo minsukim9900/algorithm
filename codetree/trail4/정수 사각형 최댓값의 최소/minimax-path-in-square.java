@@ -25,18 +25,16 @@ public class Main {
 
         int[][] dp = new int[N + 1][N + 1];
 
-        for(int r = 0; r < N + 1; r++) {
-            Arrays.fill(dp[r], INF);
+        for(int i = 0; i < N + 1; i++) {
+            dp[i][0] = INF;
+            dp[0][i] = INF;
         }
 
-        dp[1][1] = board[1][1];
+        dp[0][1] = 0;
+        dp[1][0] = 0;
 
         for(int r = 1; r < N + 1; r++) {
             for(int c = 1; c < N + 1; c++) {
-
-                if(r == 1 && c == 1) {
-                    continue;
-                }
 
                 dp[r][c] = Math.max(Math.min(dp[r - 1][c], dp[r][c - 1]), board[r][c]);
             }
