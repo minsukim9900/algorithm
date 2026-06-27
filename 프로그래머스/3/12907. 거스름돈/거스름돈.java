@@ -4,7 +4,6 @@ class Solution {
     private static final int MOD = 1_000_000_007;
     
     public int solution(int n, int[] money) {
-        Arrays.sort(money);
         int m = money.length;
         
         int[] dp = new int[n + 1];
