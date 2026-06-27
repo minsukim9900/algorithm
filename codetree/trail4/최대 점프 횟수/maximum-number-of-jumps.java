@@ -2,7 +2,9 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+
     public static void main(String[] args) throws Exception {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
@@ -12,26 +14,34 @@ public class Main {
 
         st = new StringTokenizer(br.readLine());
 
-        for(int i = 0; i < N; i++) {
-            int num = Integer.parseInt(st.nextToken());
-
-            nums[i] = num;
+        for (int i = 0; i < N; i++) {
+            nums[i] = Integer.parseInt(st.nextToken());
         }
 
         int[] dp = new int[N];
         dp[0] = 1;
 
-        int answer = 0;
-        for (int i = 1; i < N; i++) {
-            for(int j = 0; j < i; j++) {
-                if (dp[j] <= 0 || nums[j] + j < i) {
-                    continue;
-                }
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> Integer.compare(b[0], a[0]));
 
-                dp[i] = Math.max(dp[i], dp[j] + 1);
+        if (nums[0] > 0) {
+            pq.add(new int[] {dp[0], nums[0]});
+        }
+
+        int answer = 1;
+
+        for (int i = 1; i < N; i++) {
+            while (!pq.isEmpty() && pq.peek()[1] < i) {
+                pq.poll();
             }
 
-            answer = Math.max(answer, dp[i]);
+            if (!pq.isEmpty()) {
+                dp[i] = pq.peek()[0] + 1;
+                answer = Math.max(answer, dp[i]);
+
+                if (nums[i] > 0) {
+                    pq.add(new int[] {dp[i], i + nums[i]});
+                }
+            }
         }
 
         System.out.println(answer - 1);
