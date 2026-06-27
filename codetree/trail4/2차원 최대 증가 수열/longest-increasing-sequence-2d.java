@@ -28,8 +28,8 @@ public class Main {
 
     private static int cal() {
         int[][] dp = new int[N][M];
-        
         dp[0][0] = 1;
+        
         int result = 0;
 
         for(int tr = 0; tr < N; tr++) {
