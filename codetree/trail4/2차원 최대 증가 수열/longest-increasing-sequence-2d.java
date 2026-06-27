@@ -36,10 +36,6 @@ public class Main {
 
         for(int tr = 0; tr < N; tr++) {
             for(int tc = 0; tc < M; tc++) {
-                if(tr == 0 && tc == 0) {
-                    continue;
-                }
-
                 int num = board[tr][tc];
 
                 for(int r = 0; r < tr; r++) {
