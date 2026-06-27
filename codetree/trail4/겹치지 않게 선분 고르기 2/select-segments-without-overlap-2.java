@@ -39,7 +39,7 @@ public class Main {
                 int cx1 = lines[j][0];
                 int cx2 = lines[j][1];
 
-                if((cx1 <= x1 && cx2 >= x1) || (x1 <= cx2 && x2 <= cx2)) {
+                if(cx2 >= x1) {
                     continue;
                 }
 
