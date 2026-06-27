@@ -22,7 +22,7 @@ public class Main {
             if (dp[idx - 1] < nums[i]) {
                 dp[idx++] = nums[i];
             } else {
-                int sIdx= binarySearch(0, idx, nums[i], dp);
+                int sIdx= binarySearch(0, idx - 1, nums[i], dp);
                 dp[sIdx] = nums[i];
             }
         }
