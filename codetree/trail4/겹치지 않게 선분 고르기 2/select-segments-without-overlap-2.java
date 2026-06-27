@@ -5,8 +5,6 @@ public class Main {
     private static int N;
     private static int[][] lines;
 
-    private static final int MAX = 1_001;
-
     private static void init() throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
