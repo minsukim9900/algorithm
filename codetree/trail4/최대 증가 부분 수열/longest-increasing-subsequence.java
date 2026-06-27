@@ -31,7 +31,7 @@ public class Main {
     }
 
     private static int binarySearch(int s, int e, int target, int[] nums) {
-        int result = e;
+        int result = 0;
 
         while(s <= e) {
             int mid = (s + e) / 2;
