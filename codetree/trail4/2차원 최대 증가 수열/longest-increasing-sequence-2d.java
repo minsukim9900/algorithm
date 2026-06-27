@@ -43,11 +43,7 @@ public class Main {
                 int num = board[tr][tc];
 
                 for(int r = 0; r < tr; r++) {
-                    for(int c = 0; c < M; c++) {
-                        if(c >= tc) {
-                            break;
-                        }
-
+                    for(int c = 0; c < tc; c++) {
                         if(dp[r][c] == 0 || board[r][c] >= num) {
                             continue;
                         }
