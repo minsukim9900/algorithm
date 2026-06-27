@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Main {
     private static int N, M;
-    private static int[][] board, dp;
+    private static int[][] board;
 
     private static void init() throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -14,7 +14,6 @@ public class Main {
         M = Integer.parseInt(st.nextToken());
 
         board = new int[N][M];
-        dp = new int[N][M];
 
         for(int r = 0; r < N; r++) {
             st = new StringTokenizer(br.readLine());
@@ -28,10 +27,9 @@ public class Main {
     }
 
     private static int cal() {
-        if(board[0][0] > 0) {
-            dp[0][0] = 1;
-        }
-
+        int[][] dp = new int[N][M];
+        
+        dp[0][0] = 1;
         int result = 0;
 
         for(int tr = 0; tr < N; tr++) {
