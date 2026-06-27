@@ -17,11 +17,11 @@ public class Main {
         }
 
         int[] dp = new int[N];
-        dp[0] = nums[N - 1];
+        dp[0] = nums[0];
         int idx = 1;
 
-        for(int i = N - 2; i >= 0; i--) {
-            if(dp[idx - 1] < nums[i]) {
+        for(int i = 1; i < N; i++) {
+            if(dp[idx - 1] > nums[i]) {
                 dp[idx++] = nums[i];
             } else {
                 int sIdx = binarySearch(0, idx - 1, nums[i], dp);
@@ -38,7 +38,7 @@ public class Main {
         while(s <= e) {
             int mid = (s + e) / 2;
 
-            if(target <= dp[mid]) {
+            if(target >= dp[mid]) {
                 result = mid;
                 e = mid - 1;
             } else {
