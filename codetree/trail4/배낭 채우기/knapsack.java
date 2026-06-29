@@ -24,6 +24,13 @@ public class Main {
         }
     }
 
+    /**
+    * 아이디어 핵심
+    * 부분 수열의 합 문제와 유사하게 생각할 수 있다.
+    * 아이템은 하나씩만 사용할 수 있으므로 0/1 배낭 문제이다.
+    * dp[weight]는 현재까지 고려한 아이템들로 weight 이하의 무게를 사용할 때 얻을 수 있는 최대 가치이다.
+    */
+
     private static int cal() {
         int[] dp = new int[M + 1];
 
