@@ -29,6 +29,8 @@ public class Main {
         Arrays.fill(dp, INF);
         dp[0] = 0;
 
+        int result = INF;
+
         for (int i = 0; i < N; i++) {
             int num = nums[i];
 
@@ -38,17 +40,8 @@ public class Main {
                 }
 
                 dp[j] = Math.min(dp[j], dp[j - num] + 1);
+                result = Math.min(result, Math.abs(j - (total - j)));
             }
-        }
-
-        int result = INF;
-
-        for(int i = 1; i < total + 1; i++) {
-            if(dp[i] == INF) {
-                continue;
-            }
-
-            result = Math.min(result, Math.abs(i - (total - i)));
         }
 
         return result;
