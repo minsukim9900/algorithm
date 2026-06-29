@@ -26,49 +26,41 @@ public class Main {
     }
 
     private static int cal() {
-
-        int[][] dp = new int[N + 1][total + 1];
-
-        for(int i = 0; i < N + 1; i++) {
-            Arrays.fill(dp[i], NOT_EXIST);
-        }
-
-        dp[0][0] = 0;
+        int[] dp = new int[total + 1];
+        Arrays.fill(dp, NOT_EXIST);
+        dp[0] = 0;
 
         for(int i = 0; i < N; i++) {
             int num = nums[i];
 
+            int[] next = Arrays.copyOf(dp, total + 1);
+
             for(int diff = 0; diff < total + 1; diff++) {
-                if(dp[i][diff] == NOT_EXIST) {
+                if(dp[diff] == NOT_EXIST) {
                     continue;
                 }
 
-                int bigSum = dp[i][diff];
+                int bigSum = dp[diff];
                 int smallSum = bigSum - diff;
 
-                // 1. C 그룹에 넣는 경우
-                dp[i + 1][diff] = Math.max(dp[i + 1][diff], bigSum);
+                int addBigSum = bigSum + num;
+                int newDiff = diff + num;
 
-                // 2. 큰 쪽에 num을 넣는 경우
-                int addToBigDiff = diff + num;
-                int addToBigSum = bigSum + num;
+                next[newDiff] = Math.max(next[newDiff], addBigSum);
 
-                dp[i + 1][addToBigDiff] = Math.max(dp[i + 1][addToBigDiff], addToBigSum);
+                int addSmallSum = smallSum + num;
+                newDiff = Math.abs(bigSum - addSmallSum);
 
-                // 3. 작은 쪽에 num을 넣는 경우
-                int addToSmallSum = smallSum + num;
-                int addToSmallDiff = Math.abs(bigSum - addToSmallSum);
-                int addToSmallBigSum = Math.max(bigSum, addToSmallSum);
-
-                dp[i + 1][addToSmallDiff] = Math.max(dp[i + 1][addToSmallDiff], addToSmallBigSum);
+                next[newDiff] = Math.max(next[newDiff], Math.max(addSmallSum, bigSum));
             }
+
+            dp = next;
         }
 
-        return dp[N][0];
+        return dp[0];
     }
 
     public static void main(String[] args) throws Exception {
-
         init();
 
         System.out.println(cal());
