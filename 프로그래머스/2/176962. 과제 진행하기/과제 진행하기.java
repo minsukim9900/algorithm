@@ -1,56 +1,54 @@
-import java.io.*;
 import java.util.*;
 
 class Solution {
-    private static class Info {
-        String subject;
-        int startTime;
-        int time;
-        int runTime;
-        
-        public Info(String subject, int startTime, int time) {
-            this.subject = subject;
-            this.startTime = startTime;
-            this.time = time;
-            this.runTime = 0;
-        }
-    }
-    
+
     public String[] solution(String[][] plans) {
-        int N = plans.length;
-        String[] answer = new String[N];
-        
-        PriorityQueue<Info> pq = new PriorityQueue<>((a, b) -> a.startTime - b.startTime);
-        
-        for(String[] plan : plans) {
-            String subject = plan[0];
-            String[] temp = plan[1].split(":");
-            int startTime = Integer.parseInt(temp[0]) * 60 + Integer.parseInt(temp[1]);
-            int time = Integer.parseInt(plan[2]);
-            Info info = new Info(subject, startTime, time);
-            pq.add(info);
-        }
-        
-        int t = 0;
-        int idx = 0;
-        Stack<Info> stack = new Stack<>();
-        while(idx != N) {
-            if(!pq.isEmpty() && pq.peek().startTime == t) {
-                Info info = pq.poll();
-                stack.add(info);
-            }
-            
-            if(!stack.isEmpty()) {
-                Info info = stack.peek();
-                info.runTime++;
-                
-                if(info.runTime == info.time) {
-                    stack.pop();
-                    answer[idx++] = info.subject;
+
+        Arrays.sort(plans, Comparator.comparingInt(o -> getTime(o[1])));
+
+        Stack<String[]> stack = new Stack<>();
+        List<String> result = new ArrayList<>();
+
+        for (int i = 0; i < plans.length - 1; i++) {
+
+            stack.push(plans[i]);
+
+            int currTime = getTime(plans[i][1]);
+            int nextTime = getTime(plans[i + 1][1]);
+
+            int freeTime = nextTime - currTime;
+
+            while (!stack.isEmpty() && freeTime > 0) {
+
+                String[] task = stack.pop();
+
+                int playTime = Integer.parseInt(task[2]);
+
+                if (playTime <= freeTime) {
+                    freeTime -= playTime;
+                    result.add(task[0]);
+                } else {
+                    task[2] = String.valueOf(playTime - freeTime);
+                    stack.push(task);
+                    break;
                 }
-            }       
-            t++;
-        }     
-        return answer;
+            }
+        }
+
+        stack.push(plans[plans.length - 1]);
+
+        while (!stack.isEmpty()) {
+            result.add(stack.pop()[0]);
+        }
+
+        return result.toArray(new String[0]);
+    }
+
+    private int getTime(String time) {
+
+        String[] split = time.split(":");
+
+        return Integer.parseInt(split[0]) * 60
+                + Integer.parseInt(split[1]);
     }
 }
