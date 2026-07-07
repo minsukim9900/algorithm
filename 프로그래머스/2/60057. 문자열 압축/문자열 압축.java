@@ -2,40 +2,39 @@ import java.io.*;
 import java.util.*;
 
 class Solution {
-    private static int answer, M;
     public int solution(String s) {
-        M = s.length();
-        answer = s.length();
+        int answer = s.length();
+        int max = answer / 2;
         
-        for(int i = 1; i <= M >> 1; i++) {
-            dfs(0, i, s, "", "", 1);   
+        for(int l = 1; l < max + 1; l++) {
+            StringBuilder sb = new StringBuilder();
+            String pre = s.substring(0, l);
+            int count = 1;
+            
+            for(int c = l; c < s.length(); c += l) {
+                String curr = s.substring(c, Math.min(s.length(), c + l));
+                
+                if(pre.equals(curr)) {
+                    count++;
+                } else {
+                    if(count > 1) {
+                        sb.append(count);
+                    }
+                    
+                    
+                    sb.append(pre);
+                    pre = curr;
+                    count = 1;
+                }
+            }
+            
+            if(count > 1) {
+                sb.append(count).append(pre);
+            } else {
+                sb.append(pre);
+            }
+            answer = Math.min(answer, sb.toString().length());
         }
         return answer;
-    }
-    
-    private static void dfs(int preIdx, int increase, String s, String str, String preStr, int count) {
-        if(preIdx >= M) {
-            if(count > 1) {
-                str += count;
-            }
-            str += preStr;
-            answer = Math.min(answer, str.length());
-            return;
-        }
-        int range = preIdx + increase;
-        if(range > M) {
-            range = M;
-        }
-        String tmp = s.substring(preIdx, range);
-        
-        if(preStr.equals(tmp)) {
-            dfs(range, increase, s, str, preStr, count + 1);
-        }else {
-            if(count > 1) {
-                str += count;
-            }
-            str += preStr;
-            dfs(range, increase, s, str, tmp, 1);
-        }
     }
 }
