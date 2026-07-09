@@ -5,78 +5,73 @@ class Solution {
     private static int plusCount, salesAmount;
     private static int[][] users;
     private static int[] emoticons;
-    
+    private static int[] selectedDiscounts;
+
     private static final int[] PERCENTS = {10, 20, 30, 40};
-    
+
     public int[] solution(int[][] userInfos, int[] emoticonInfos) {
-        N = userInfos.length;
-        M = emoticonInfos.length;
-        plusCount = 0;
-        salesAmount = 0;
-        
         users = userInfos;
         emoticons = emoticonInfos;
-        dfs(0, new int[N], new int[N]);
-        
-        int[] answer = new int[] {plusCount, salesAmount};
-        return answer;
+
+        N = users.length;
+        M = emoticons.length;
+
+        plusCount = 0;
+        salesAmount = 0;
+        selectedDiscounts = new int[M];
+
+        dfs(0);
+
+        return new int[] {plusCount, salesAmount};
     }
-    
-    private void dfs(int depth, int[] userPlus, int[] userAmount) {
-        if(depth == M) {
-            int pCount = 0;
-            int sAmount = 0;
-            
-            for(int i = 0; i < N; i++) {
-                pCount += userPlus[i];
-                sAmount += userAmount[i];
-            }
-            
-            if(plusCount < pCount || (plusCount == pCount && salesAmount < sAmount)) {
-                plusCount = pCount;
-                salesAmount = sAmount;
-            }
-            
+
+    private void dfs(int depth) {
+        if (depth == M) {
+            calculate();
             return;
         }
-        
-        int price = emoticons[depth];
-        
-        for(int i = 0; i < 4; i++) {
-            int percent = PERCENTS[i];
-            int productPrice = getDiscountPrice(price, percent);
-            
-            int[] tempPlus = userPlus.clone();
-            int[] tempAmount = userAmount.clone();
-            
-            for(int user = 0; user < N; user++) {
-                int refPercent = users[user][0];
-                int refAmount = users[user][1];
-                
-                
-                if(refPercent > percent) {
-                    continue;
-                }
-                
-                if(userPlus[user] > 0) {
-                    continue;
-                }
-                
-                if (productPrice + userAmount[user] >= refAmount) {
-                    userPlus[user] += 1;
-                    userAmount[user] = 0;
-                }else {
-                    userAmount[user] += productPrice;
-                }
-            }
-            dfs(depth + 1, userPlus, userAmount);
-            
-            userPlus = tempPlus;
-            userAmount = tempAmount;
+
+        for (int percent : PERCENTS) {
+            selectedDiscounts[depth] = percent;
+            dfs(depth + 1);
         }
     }
-    
+
+    private void calculate() {
+        int currentPlusCount = 0;
+        int currentSalesAmount = 0;
+
+        for (int i = 0; i < N; i++) {
+            int requiredPercent = users[i][0];
+            int requiredAmount = users[i][1];
+
+            int totalAmount = 0;
+
+            for (int j = 0; j < M; j++) {
+                int discountPercent = selectedDiscounts[j];
+
+                if (discountPercent < requiredPercent) {
+                    continue;
+                }
+
+                totalAmount += getDiscountPrice(emoticons[j], discountPercent);
+            }
+
+            if (totalAmount >= requiredAmount) {
+                currentPlusCount++;
+            } else {
+                currentSalesAmount += totalAmount;
+            }
+        }
+
+        if (plusCount < currentPlusCount ||
+                (plusCount == currentPlusCount && salesAmount < currentSalesAmount)) {
+            plusCount = currentPlusCount;
+            salesAmount = currentSalesAmount;
+        }
+    }
+
     private int getDiscountPrice(int price, int percent) {
-        return price - (price * percent / 100);
+        return price * (100 - percent) / 100;
     }
 }
