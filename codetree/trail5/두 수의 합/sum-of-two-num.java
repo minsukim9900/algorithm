@@ -4,8 +4,6 @@ import java.util.*;
 public class Main {
     private static int N, K;
     private static int[] nums;
-    private static List<Integer> arr;
-    private static Map<Integer, Integer> map = new HashMap<>();
 
     private static void init() throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -16,54 +14,31 @@ public class Main {
         K = Integer.parseInt(st.nextToken());
 
         nums = new int[N];
-        arr = new ArrayList<>();
-        map = new HashMap<>();
 
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
-            int num = Integer.parseInt(st.nextToken());
-
-            nums[i] = num;
-
-            if(map.containsKey(num)) {
-                int count = map.get(num);
-                map.put(num, count + 1);
-            } else {
-                map.put(num, 1);
-                arr.add(num);
-            }
+            nums[i] = Integer.parseInt(st.nextToken());
         }
     }
 
-    private static int cal() {
-        arr.sort((a, b) -> Integer.compare(a, b));
+    private static long cal() {
+        Map<Integer, Integer> countMap = new HashMap<>();
+        long answer = 0;
 
-        int left = 0;
-        int right = arr.size() - 1;
-        int answer = 0;
+        for (int num : nums) {
+            int target = K - num;
 
-        while(left <= right) {
-            int value = arr.get(left) + arr.get(right);
+            answer += countMap.getOrDefault(target, 0);
 
-            if(value < K) {
-                left++;
-            }else if(value > K) {
-                right--;
-            } else {
-                if(left < right) {
-                    answer += (map.get(arr.get(left)) * map.get(arr.get(right)));
-                } else {
-                    int temp = map.get(arr.get(left));
-
-                    answer += (temp) * (temp - 1) / 2;
-                }
-                left++;
-                right--;
-            }
+            countMap.put(
+                    num,
+                    countMap.getOrDefault(num, 0) + 1
+            );
         }
 
         return answer;
     }
+
     public static void main(String[] args) throws Exception {
         init();
 
