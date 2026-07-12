@@ -45,7 +45,7 @@ public class Main {
             size[rootX] += size[rootY];
         } else {
             parent[rootX] = rootY;
-            size[rootY] = size[rootX];
+            size[rootY] += size[rootX];
         }
     }
 
