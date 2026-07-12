@@ -74,8 +74,6 @@ public class Main {
             if (rootX != rootY) {
                 union(rootX, rootY);
                 pick++;
-                
-                long value = 0;
 
                 if (weight == 0) {
                     danger++;
