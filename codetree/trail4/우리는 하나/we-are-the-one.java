@@ -2,19 +2,9 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    private static int N, K, U, D, index, answer;
-    private static int[][] board, indexBoard;
-    private static Map<Integer, Node> map;
+    private static int N, K, U, D, answer;
+    private static int[][] board;
     private static int[][] delta = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-
-    private static class Node {
-        private int r, c;
-
-        public Node(int r, int c) {
-            this.r = r;
-            this.c = c;
-        }
-    }
     
     private static void init() throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -25,13 +15,9 @@ public class Main {
         K = Integer.parseInt(st.nextToken());
         U = Integer.parseInt(st.nextToken());
         D = Integer.parseInt(st.nextToken());
-        index = 0;
         answer = 0;
 
         board = new int[N][N];
-        indexBoard = new int[N][N];
-
-        map = new HashMap<>();
 
         for (int r = 0; r < N; r++) {
             st = new StringTokenizer(br.readLine());
@@ -40,8 +26,6 @@ public class Main {
                 int num = Integer.parseInt(st.nextToken());
 
                 board[r][c] = num;
-                indexBoard[r][c] = index;
-                map.put(index++, new Node(r, c));
             }
         }
     }
@@ -55,10 +39,10 @@ public class Main {
         boolean[][] visited = new boolean[N][N];
 
         for (int i = 0; i < arr.length; i++) {
-            Node node = map.get(arr[i]);
+            int num = arr[i];
 
-            int r = node.r;
-            int c = node.c;
+            int r = num / N;
+            int c = num % N;
 
             visited[r][c] = true;
             q.add(new int[] {r, c});
@@ -97,7 +81,7 @@ public class Main {
             return;
         }
 
-        for (int i = idx; i < index; i++) {
+        for (int i = idx; i < N * N; i++) {
             arr[depth] = i;
             dfs(depth + 1, i + 1,arr);
         }
