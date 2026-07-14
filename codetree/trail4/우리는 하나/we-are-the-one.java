@@ -22,7 +22,7 @@ public class Main {
 
         st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
-        K = Math.min(N, Integer.parseInt(st.nextToken()));
+        K = Integer.parseInt(st.nextToken());
         U = Integer.parseInt(st.nextToken());
         D = Integer.parseInt(st.nextToken());
         index = 0;
