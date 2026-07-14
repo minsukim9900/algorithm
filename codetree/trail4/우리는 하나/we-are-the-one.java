@@ -89,7 +89,7 @@ public class Main {
         return result;
     }
 
-    private static void dfs(int depth, int[] arr, boolean[] visited) {
+    private static void dfs(int depth, int idx, int[] arr) {
         if (depth == K) {
             int result = bfs(arr);
             answer = Math.max(answer, result);
@@ -97,21 +97,15 @@ public class Main {
             return;
         }
 
-        for (int i = 0; i < index; i++) {
-            if (visited[i]) {
-                continue;
-            }
-
-            visited[i] = true;
+        for (int i = idx; i < index; i++) {
             arr[depth] = i;
-            dfs(depth + 1, arr, visited);
-            visited[i] = false;
+            dfs(depth + 1, i + 1,arr);
         }
     }
 
     public static void main(String[] args) throws Exception {
         init();
-        dfs(0, new int[K], new boolean[index]);
+        dfs(0, 0, new int[K]);
         System.out.println(answer);
     }
 }
