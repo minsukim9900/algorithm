@@ -39,16 +39,10 @@ public class Main {
             double value = curr[1];
             double temp = value / weight;
 
-            int w = (int) weight;
+            int w = Math.min(remain, (int) weight);
 
-            for (int j = 0; j < w; j++) {
-                remain--;
-                result += temp;
-
-                if (remain == 0) {
-                    break out;
-                }
-            }
+            result += (w * temp);
+            remain -= w;
         }
 
 
