@@ -11,18 +11,18 @@ public class Main {
 
         T = br.readLine();
         P = br.readLine();
-        N = T.length() + 1;
-        M = P.length() + 1;
+        N = T.length();
+        M = P.length();
     }
 
     private static int[] getFailure() {
         T = PREFIX + T;
         P = PREFIX + P;
 
-        int[] failure = new int[M];
+        int[] failure = new int[M + 1];
 
         failure[0] = -1;
-        for (int i = 1; i < M; i++) {
+        for (int i = 1; i < M + 1; i++) {
             int j = failure[i - 1];
 
             while (j >= 0 && P.charAt(j + 1) != P.charAt(i)) {
@@ -38,14 +38,14 @@ public class Main {
         int j = 0;
         int result = 0;
 
-        for (int i = 1; i < N; i++) {
+        for (int i = 1; i < N + 1; i++) {
             while (j >= 0 && P.charAt(j + 1) != T.charAt(i)) {
                 j = failure[j];
             }
 
             j++;
 
-            if (j == M - 1) {
+            if (j == M) {
                 result++;
                 j = failure[j];
             }
