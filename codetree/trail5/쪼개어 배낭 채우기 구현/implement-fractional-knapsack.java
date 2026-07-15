@@ -33,7 +33,7 @@ public class Main {
 
         int remain = M;
 
-       out: for (int i = 0; i < N; i++) {
+       for (int i = 0; i < N; i++) {
             double[] curr = items[i];
             double weight = curr[0];
             double value = curr[1];
@@ -43,6 +43,10 @@ public class Main {
 
             result += (w * temp);
             remain -= w;
+
+            if (remain == 0) {
+                break;
+            }
         }
 
 
