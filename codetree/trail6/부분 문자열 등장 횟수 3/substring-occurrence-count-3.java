@@ -45,7 +45,6 @@ public class Main {
 
             if (j == M - 1) {
                 result++;
-                i += f[j];
                 j = 0;
             }
         }
