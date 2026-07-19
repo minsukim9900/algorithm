@@ -1,42 +1,34 @@
-import java.io.*;
 import java.util.*;
 
 class Solution {
-    
     public int solution(int[][] triangle) {
+        int answer = 0;
+        int N = triangle.length;
+        int M = triangle[N - 1].length;
+        int[][] dp = new int[N][M];
         
-        int size = triangle.length;
+        dp[0][0] = triangle[0][0];
         
-        int[][] dp = new int[size + 1][triangle[size-1].length];
-        
-        dp[1][0] = triangle[0][0];
-        
-        if(size >= 2) {
-            dp[2][0] = triangle[1][0];
-            dp[2][1] = triangle[1][1];
-            
-            for (int i = 3; i<= size; i++) {
+        for (int r = 1; r < N; r++) {
+            int max = 0;
+            for (int c = 0; c <= r; c++) {
+                int left = 0;
+                int right = 0;
                 
-                for(int j = 0; j < triangle[i - 1].length; j++) {
-                    int tmp = j - 1;
-                    if(tmp < 0) tmp = 0;
-                    
-                    dp[i][j] = Math.max(dp[i-1][tmp], dp[i-1][j]) + triangle[i-1][j];
-                    
+                if (c != 0) {
+                    left = dp[r - 1][c - 1];
                 }
                 
+                if (c != r) {
+                    right = dp[r - 1][c];
+                }
+                
+                dp[r][c] = Math.max(dp[r][c], Math.max(left, right) + triangle[r][c]);
+                max = Math.max(max, dp[r][c]);
             }
             
+            answer = Math.max(answer, max);
         }
-        
-        int max = 0;
-        for(int m : dp[size]) {
-            max = Math.max(max, m);
-        }
-        
-        return max + triangle[0][0];
-       
+        return answer;
     }
-    
-    
 }
