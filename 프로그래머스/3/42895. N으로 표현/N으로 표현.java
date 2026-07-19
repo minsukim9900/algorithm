@@ -1,50 +1,39 @@
-import java.io.*;
 import java.util.*;
 
 class Solution {
-    
-    private static ArrayList<Set<Integer>> dp = new ArrayList<>();
-    
     public int solution(int N, int number) {
-        
-        for(int i = 0; i<=8; i++) {
-             dp.add(new HashSet<>());
-        }
-        
-        int tmp = 0;
-        for(int i = 0; i<8; i++) {
-            tmp = tmp * 10 + N;
-            dp.get(i+1).add(tmp);
-        }
-        
-        for(int i = 2; i<=8; i++) {
-            for(int j = 1; j<i; j++) {
-                
-                int idx = i - j;
-                
-                for(int x : dp.get(j)) {
-                    for(int y : dp.get(idx)) {
-                        
-                        dp.get(i).add(x + y);
-                        dp.get(i).add(x - y);
-                        dp.get(i).add(x * y);
-                        if(y != 0){
-                         dp.get(i).add(x / y);   
+        Set<Integer>[] dp = new HashSet[9];
+
+        for (int count = 1; count <= 8; count++) {
+            dp[count] = new HashSet<>();
+
+            int repeatedNumber = Integer.parseInt(
+                String.valueOf(N).repeat(count)
+            );
+
+            dp[count].add(repeatedNumber);
+
+            for (int leftCount = 1; leftCount < count; leftCount++) {
+                int rightCount = count - leftCount;
+
+                for (int left : dp[leftCount]) {
+                    for (int right : dp[rightCount]) {
+                        dp[count].add(left + right);
+                        dp[count].add(left - right);
+                        dp[count].add(left * right);
+
+                        if (right != 0) {
+                            dp[count].add(left / right);
                         }
-                        
                     }
                 }
-                
             }
-            
+
+            if (dp[count].contains(number)) {
+                return count;
+            }
         }
-        
-        for(int i = 1; i<=8; i++) {
-            if(dp.get(i).contains(number)) return i;
-        }
-        
-        
+
         return -1;
-        
     }
 }
