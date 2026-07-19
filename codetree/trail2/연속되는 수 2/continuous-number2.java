@@ -21,6 +21,7 @@ public class Main {
 
         int count = 1;
         int pre = nums[0];
+        
         for (int i = 1; i < N; i++) {
             if (pre != nums[i]) {
                 answer = Math.max(answer, count);
