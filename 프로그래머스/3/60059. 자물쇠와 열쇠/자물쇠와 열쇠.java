@@ -1,68 +1,91 @@
-import java.io.*;
-import java.util.*;
-
 class Solution {
-    private static int N, M, cnt;
-    private static int[][] board;
+    private static int N, M, K;
+    private static int[][][] keys;
+    private static int[][] locks;
+
     public boolean solution(int[][] key, int[][] lock) {
-        N = key.length;
-        M = lock.length;
+        M = key.length;
+        N = lock.length;
         
-        int w = 2 * N + M - 2;
-        board = new int[w][w];
-        
-        for(int i = 0; i < M; i++) {
-            for(int j = 0; j < M; j++) {
-                board[N - 1 + i][N - 1 + j] = lock[i][j];
-                
-                if(board[N - 1 + i][N - 1 + j] == 0) {
-                    board[N - 1 + i][N - 1 + j] = -1;
-                    cnt++;
+        K = N + 2 * (M - 1);
+
+        keys = new int[4][M][M];
+
+        int holeCount = 0;
+
+        for (int r = 0; r < N; r++) {
+            for (int c = 0; c < N; c++) {
+                if (lock[r][c] == 0) {
+                    holeCount++;
                 }
             }
-        }      
-        boolean answer = simulate(key);
-        return answer;
-    }
-    
-    private static boolean simulate(int[][] key) {
-        for(int i = 0; i < 4; i++) {
-            key = rotate(key);
-            
-            for(int j = 0; j < N + M - 1; j++) {
-                for(int k = 0; k < N + M - 1; k++) {
-                    int count = 0;
-                
-                    out: for(int r = j; r < j + N; r++) {
-                            for(int c = k; c < k + N; c++) {
-                                if(board[r][c] == 1 && key[r - j][c - k] == 1) {
-                                   break out;
-                                }
-                                if(board[r][c] == -1 && key[r - j][c - k] == 1) {
-                                    count++;
-                                }
+        }
+        
+        locks = new int[K][K];
+
+        for (int r = 0; r < K; r++) {
+            for (int c = 0; c < K; c++) {
+                locks[r][c] = -1;
+
+                if (lockRange(r, c)) {
+                    locks[r][c] = lock[r - (M - 1)][c - (M - 1)];
+                }
+            }
+        }
+
+        for (int r = 0; r < M; r++) {
+            for (int c = 0; c < M; c++) {
+                keys[0][r][c] = key[r][c];
+                keys[1][M - 1 - c][r] = key[r][c];
+                keys[2][M - 1 - r][M - 1 - c] = key[r][c];
+                keys[3][c][M - 1 - r] = key[r][c];
+            }
+        }
+
+        for (int rotation = 0; rotation < 4; rotation++) {
+            int[][] currentKey = keys[rotation];
+
+            for (int r = 0; r <= K - M; r++) {
+                for (int c = 0; c <= K - M; c++) {
+                    int filledHoleCount = 0;
+                    boolean valid = true;
+
+                    for (int keyRow = 0; keyRow < M && valid; keyRow++) {
+                        for (int keyCol = 0; keyCol < M; keyCol++) {
+                            int lockRow = r + keyRow;
+                            int lockCol = c + keyCol;
+
+                            if (locks[lockRow][lockCol] == -1) {
+                                continue;
                             }
+
+                            if (locks[lockRow][lockCol] == 1
+                                    && currentKey[keyRow][keyCol] == 1) {
+                                valid = false;
+                                break;
+                            }
+
+                            if (locks[lockRow][lockCol] == 0
+                                    && currentKey[keyRow][keyCol] == 1) {
+                                filledHoleCount++;
+                            }
+                        }
                     }
-                    System.out.println();
-                    if(count == cnt) {
+
+                    if (valid && filledHoleCount == holeCount) {
                         return true;
                     }
                 }
             }
         }
+
         return false;
     }
-    
-    private static int[][] rotate(int[][] key) {
-        int n = key.length;
-        int[][] result = new int[n][n];
-        
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < n; j++) {
-                result[i][j] = key[n - 1 - j][i];
-            }
-        }
-        
-        return result;
+
+    private static boolean lockRange(int r, int c) {
+        return r >= M - 1
+                && r <= M + N - 2
+                && c >= M - 1
+                && c <= M + N - 2;
     }
 }
