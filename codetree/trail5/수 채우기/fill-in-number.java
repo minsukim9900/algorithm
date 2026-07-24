@@ -13,22 +13,19 @@ public class Main {
     }
 
     private static int cal() {
-        int[] dp = new int[N + 1];
-        Arrays.fill(dp, INF);
-        dp[0] = 0;
+        int fiveCount = N / 5;
 
-        for (int coin = 2; coin <= 5; coin+= 3) {
+        while (fiveCount >= 0) {
+            int remain = N - (fiveCount * 5);
 
-            for (int money = coin; money < N + 1; money++) {
-                if (dp[money - coin] == INF) {
-                    continue;
-                }
-
-                dp[money] = Math.min(dp[money], dp[money - coin] + 1);
+            if (remain % 2 == 0) {
+                return fiveCount + (remain / 2);
             }
+
+            fiveCount--;
         }
 
-        return dp[N] == INF ? -1 : dp[N];
+        return -1;
     }
     public static void main(String[] args) throws Exception {
         init();
