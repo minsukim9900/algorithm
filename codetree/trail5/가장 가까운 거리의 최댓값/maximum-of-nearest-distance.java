@@ -40,17 +40,21 @@ public class Main {
         }
     }
 
-    private static int[] dijkstra(int start) {
+    private static int[] dijkstra() {
         int[] dist = new int[N + 1];
         Arrays.fill(dist, INF);
 
-        dist[start] = 0;
+        dist[A] = 0;
+        dist[B] = 0;
+        dist[C] = 0;
 
         PriorityQueue<int[]> pq = new PriorityQueue<>(
             (a, b) -> Integer.compare(a[1], b[1])
         );
 
-        pq.add(new int[] {start, dist[start]});
+        pq.add(new int[] {A, dist[A]});
+        pq.add(new int[] {B, dist[B]});
+        pq.add(new int[] {C, dist[C]});
 
         while (!pq.isEmpty()) {
             int[] curr = pq.poll();
@@ -77,24 +81,16 @@ public class Main {
     }
 
     private static int cal() {
-        int[] distA = dijkstra(A);
-        int[] distB = dijkstra(B);
-        int[] distC = dijkstra(C);
+        int[] dist = dijkstra();
         
         int answer = 0;
 
         for (int node = 1; node < N + 1; node++) {
-            int dA = distA[node];
-            int dB = distB[node];
-            int dC = distC[node];
-
-            if (dA == INF || dB == INF || dC == INF) {
+            if (dist[node] == INF) {
                 continue;
             }
 
-            int result = Math.min(dA, Math.min(dB, dC));
-
-            answer = Math.max(answer, result);
+            answer = Math.max(answer, dist[node]);
         }
 
         return answer;
