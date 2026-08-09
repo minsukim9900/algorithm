@@ -2,9 +2,9 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    private static int N, K, startR, startC;
+    private static int N, K, startR, startC, visitId;
     private static int[][] board;
-    private static boolean[][] visited;
+    private static int[][] visited;
 
     private static final int[][] DELTA = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
@@ -17,7 +17,7 @@ public class Main {
         K = Integer.parseInt(st.nextToken());
 
         board = new int[N][N];
-        visited = new boolean[N][N];
+        visited = new int[N][N];
 
         for (int r = 0; r < N; r++) {
             st = new StringTokenizer(br.readLine());
@@ -34,23 +34,13 @@ public class Main {
         startR = Integer.parseInt(st.nextToken()) - 1;
         startC = Integer.parseInt(st.nextToken()) - 1;
     }
-
-    private static void initVisited() {
-        for (int r = 0; r < N; r++) {
-            for(int c = 0; c < N; c++) {
-                visited[r][c] = false;
-            }
-        }
-    }
     
     private static boolean isRange(int r, int c) {
         return r >= 0 && r < N && c >= 0 && c < N;
     }
 
     private static int[] bfs(int sr, int sc, int num) {
-        initVisited();
-
-        visited[sr][sc] = true;
+        visited[sr][sc] = visitId;
 
         Queue<int[]> q = new ArrayDeque<>();
 
@@ -74,8 +64,8 @@ public class Main {
                 int nr = r + DELTA[i][0];
                 int nc = c + DELTA[i][1];
 
-                if (isRange(nr, nc) && board[nr][nc] < num && !visited[nr][nc]) {
-                    visited[nr][nc] = true;
+                if (isRange(nr, nc) && board[nr][nc] < num && visited[nr][nc] < visitId) {
+                    visited[nr][nc] = visitId;
                     q.add(new int[] {nr, nc});
                     pq.add(new int[] {nr, nc, board[nr][nc]});
                 }
@@ -90,6 +80,7 @@ public class Main {
         int sc = startC;
 
         for (int k = 0; k < K; k++) {
+            visitId++;
             int[] result = bfs(sr, sc, board[sr][sc]);
 
             if (result == null) {
