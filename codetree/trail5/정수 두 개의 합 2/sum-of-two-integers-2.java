@@ -26,27 +26,19 @@ public class Main {
 
     private static int cal() {
         int result = 0;
+        int right = N - 1;
 
-        for (int i = 0; i < N - 1; i++) {
-            int sum = nums[i];
+        for (int left = 0; left < N - 1; left++) {
+            int sum = nums[left];
 
-            if (sum >= K) {
-                break;
+            while (right > 0 && right > left && nums[left] + nums[right] > K) {
+                right--;
             }
 
-
-            for (int j = i + 1; j < N; j++) {
-                sum += nums[j];
-
-                if (sum <= K) {
-                    result++;
-                }
-
-                if (sum > K) {
-                    break;
-                }
-
-                sum -= nums[j];
+            if (nums[left] + nums[right] <= K) {
+                    result += right - left;
+            } else {
+                break;
             }
         }
 
