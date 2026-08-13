@@ -22,6 +22,7 @@ public class Main {
         orders = new int[2][][];
 
         orders[0] = new int[N][2];
+
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
 
@@ -35,6 +36,7 @@ public class Main {
         }
 
         orders[1] = new int[M][2];
+        
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
 
