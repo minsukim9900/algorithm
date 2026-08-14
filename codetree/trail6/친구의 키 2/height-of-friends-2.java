@@ -34,42 +34,31 @@ public class Main {
     }
 
     private static String simulate() {
-        Queue<int[]> q = new ArrayDeque<>();
-
-        int[] dist = new int[N + 1];
-        Arrays.fill(dist, -1);
+        Queue<Integer> q = new ArrayDeque<>();
 
         for (int node = 1; node < N + 1; node++) {
             if (in[node] == 0) {
-                q.add(new int[] {node, 0});
-                dist[node] = 0;
+                q.add(node);
             }
         }
 
+        int count = 0;
+
         while (!q.isEmpty()) {
-            int[] curr = q.poll();
+            int curr = q.poll();
 
-            int node = curr[0];
-            int d = curr[1];
+            count++;
 
-            for (int next : adj[node]) {
+            for (int next : adj[curr]) {
                 in[next]--;
 
-                if (in[next] == 0 && dist[next] == -1) {
-                    dist[next] = d + 1;
-                    q.add(new int[] {next, d + 1});
+                if (in[next] == 0) {
+                    q.add(next);
                 }
             }
         }
 
-        for (int node = 1; node < N + 1; node++) {
-            if (dist[node] == -1) {
-                return "Inconsistent";
-            }
-        }
-
-        return "Consistent";
-
+        return count == N ? "Consistent" : "Inconsistent";
     }
     public static void main(String[] args) throws Exception {
         init();
