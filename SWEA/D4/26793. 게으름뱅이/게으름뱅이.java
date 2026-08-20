@@ -14,9 +14,7 @@ public class Solution {
 		int result = infos[0][1];
 
 		for (int i = 0; i < N; i++) {
-			int deadLine = Math.min(result, infos[i][1]);
-
-			result = deadLine -= infos[i][0];
+			result = Math.min(result, infos[i][1]) - infos[i][0];
 		}
 
 		return result;
