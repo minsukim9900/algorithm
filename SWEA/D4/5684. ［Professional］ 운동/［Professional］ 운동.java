@@ -59,6 +59,8 @@ public class Solution {
 				result = Math.min(result, dist[node][node]);
 			}
 
+			result = result == INF ? -1 : result;
+
 			sb.append("#").append(t).append(" ").append(result).append("\n");
 		}
 
