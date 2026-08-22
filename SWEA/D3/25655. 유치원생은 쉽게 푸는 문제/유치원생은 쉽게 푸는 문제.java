@@ -2,11 +2,16 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class Solution {
+	private static int[][] nums = new int[3][];
+
+	static {
+		nums[0] = new int[] { 1, 2, 3, 5, 7 };
+		nums[1] = new int[] { 0, 4, 6, 9 };
+		nums[2] = new int[] { 8 };
+	}
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -28,20 +33,20 @@ public class Solution {
 				continue;
 			}
 
-			List<Integer> arr = new ArrayList<>();
-
 			while (X != 0) {
 				if (X % 2 == 0) {
-					X -= 2;
-					arr.add(8);
+					int temp = X / 2;
+
+					for (int i = 0; i < temp; i++) {
+						sb.append(8);
+					}
+
+					X -= (2 * temp);
+
 				} else {
 					X -= 1;
-					arr.add(4);
+					sb.append(4);
 				}
-			}
-
-			for (int i = 0; i < arr.size(); i++) {
-				sb.append(arr.get(i));
 			}
 
 			sb.append("\n");
