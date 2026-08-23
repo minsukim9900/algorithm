@@ -44,8 +44,6 @@ public class Main {
         M = Integer.parseInt(st.nextToken());
 
         board = new int[N][M];
-
-        min = 101;
         max = 0;
 
         for (int r = 0; r < N; r++) {
@@ -57,7 +55,6 @@ public class Main {
                 board[r][c] = num;
 
                 max = Math.max(max, num);
-                min = Math.min(min, num);
             }
         }
 
