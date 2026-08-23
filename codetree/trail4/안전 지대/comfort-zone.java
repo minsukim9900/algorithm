@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    private static int N, M, min, max;
+    private static int N, M, max;
     private static int[][] board;
 
     private static int[][] delta = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
