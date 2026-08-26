@@ -2,56 +2,41 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    private static int N, answer;
+    private static int N;
+    private static long answer;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
         N = Integer.parseInt(br.readLine());
-        answer = 0;
+        answer = 0L;
 
-        dfs(0, new int[N]);
+        for (int i = 1; i < 5; i++) {
+            dfs(1, i, 1);
+        }
 
         System.out.println(answer);
     }
 
-    private static void dfs(int depth, int[] result) {
-
+    private static void dfs(int depth, int pre, int count) {
         if (depth == N) {
-            if (isPoss(depth - 1, result)) {
+            if (count % pre == 0) {
                 answer++;
             }
             return;
         }
 
         for (int num = 1; num < 5; num++) {
-            result[depth] = num;
-            dfs(depth + 1, result);
+
+            if (depth == 0) {
+                dfs(depth + 1, num, 1);
+            }
             
-        }
-    }
-
-    private static boolean isPoss(int depth, int[] result) {
-        int pre = result[0];
-        int count = 1;
-
-        for (int i = 1; i < depth + 1; i++) {
-            if (pre != result[i]) {
-                if (count % pre != 0) {
-                    return false;
-                }
-
-                pre = result[i];
-                count = 1;
-            } else {
-                count++;
+            if (num == pre) {
+                dfs(depth + 1, pre, count + 1);
+            } else if (count % pre == 0) {
+                dfs(depth + 1, num, 1);
             }
         }
-
-        if (count % pre != 0) {
-            return false;
-        }
-
-        return true;
     }
 }
