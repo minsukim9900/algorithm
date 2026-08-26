@@ -67,6 +67,8 @@ public class Solution {
 			q.add(new int[] { r, c, 0 });
 		}
 
+		int result = 0;
+
 		while (!q.isEmpty()) {
 			int[] curr = q.poll();
 
@@ -78,6 +80,8 @@ public class Solution {
 				continue;
 			}
 
+			result += d;
+
 			for (int i = 0; i < 4; i++) {
 				int nr = r + delta[i][0];
 				int nc = c + delta[i][1];
@@ -86,14 +90,6 @@ public class Solution {
 					dist[nr][nc] = d + 1;
 					q.add(new int[] { nr, nc, d + 1 });
 				}
-			}
-		}
-
-		int result = 0;
-
-		for (int r = 0; r < N; r++) {
-			for (int c = 0; c < M; c++) {
-				result += dist[r][c];
 			}
 		}
 
