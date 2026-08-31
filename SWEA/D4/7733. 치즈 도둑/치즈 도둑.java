@@ -43,9 +43,9 @@ public class Solution {
 
 			boolean[][] visited = new boolean[N][N];
 
-			int answer = 0;
+			int answer = 1;
 
-			for (int day = 0; day < maxDay + 1; day++) {
+			for (int day = 1; day < maxDay + 1; day++) {
 				int count = 0;
 
 				for (int r = 0; r < N; r++) {
