@@ -39,10 +39,7 @@ public class Solution {
 
 			for (int r = 0; r < N; r++) {
 				for (int c = 0; c < N; c++) {
-					int[] result = new int[M];
-					result[0] = board[r][c];
-
-					dfs(r, c, 1, result);
+					dfs(r, c, 1, board[r][c]);
 				}
 			}
 
@@ -56,15 +53,8 @@ public class Solution {
 		return r >= 0 && r < N && c >= 0 && c < N;
 	}
 
-	private static void dfs(int r, int c, int depth, int[] result) {
+	private static void dfs(int r, int c, int depth, int num) {
 		if (depth == M) {
-			int num = 0;
-
-			for (int i = 0; i < M; i++) {
-				num = num + result[i];
-				num *= 10;
-			}
-
 			set.add(num);
 			return;
 		}
@@ -74,8 +64,7 @@ public class Solution {
 			int nc = c + delta[i][1];
 
 			if (isRange(nr, nc)) {
-				result[depth] = board[nr][nc];
-				dfs(nr, nc, depth + 1, result);
+				dfs(nr, nc, depth + 1, num * 10 + board[nr][nc]);
 			}
 		}
 	}
