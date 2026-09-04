@@ -50,18 +50,17 @@ public class Solution {
 		System.out.println(sb.toString());
 	}
 
-	private static void checkVisited(int num) {
-		int index = num >> 5;
-		int bit = num & 31;
-
-		visited[index] |= (1 << bit);
-	}
-
 	private static boolean isVisited(int num) {
 		int index = num >> 5;
-		int bit = num & 31;
+		int mask = num & 31;
 
-		return ((visited[index] & (1 << bit)) != 0);
+		boolean result = ((visited[index] & (1 << mask)) != 0);
+
+		if (!result) {
+			visited[index] |= (1 << mask);
+		}
+
+		return result;
 	}
 
 	private static boolean isRange(int r, int c) {
@@ -71,7 +70,6 @@ public class Solution {
 	private static void dfs(int r, int c, int depth, int num) {
 		if (depth == M) {
 			if (!isVisited(num)) {
-				checkVisited(num);
 				answer++;
 			}
 			return;
