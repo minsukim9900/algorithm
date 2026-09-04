@@ -2,17 +2,17 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Solution {
+	private static int answer;
+	private static int[] visited;
 	private static int[][] board;
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
-	private static Set<Integer> set;
 
 	private static final int N = 4;
 	private static final int M = 7;
+	private static final int MAX_NUM = 10_000_000;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -25,7 +25,8 @@ public class Solution {
 			sb.append("#").append(t).append(" ");
 
 			board = new int[N][N];
-			set = new HashSet<>();
+			answer = 0;
+			visited = new int[(MAX_NUM >> 5) + 1];
 
 			for (int r = 0; r < N; r++) {
 				st = new StringTokenizer(br.readLine());
@@ -43,10 +44,24 @@ public class Solution {
 				}
 			}
 
-			sb.append(set.size()).append("\n");
+			sb.append(answer).append("\n");
 		}
 
 		System.out.println(sb.toString());
+	}
+
+	private static void checkVisited(int num) {
+		int index = num >> 5;
+		int bit = num & 31;
+
+		visited[index] |= (1 << bit);
+	}
+
+	private static boolean isVisited(int num) {
+		int index = num >> 5;
+		int bit = num & 31;
+
+		return ((visited[index] & (1 << bit)) != 0);
 	}
 
 	private static boolean isRange(int r, int c) {
@@ -55,7 +70,10 @@ public class Solution {
 
 	private static void dfs(int r, int c, int depth, int num) {
 		if (depth == M) {
-			set.add(num);
+			if (!isVisited(num)) {
+				checkVisited(num);
+				answer++;
+			}
 			return;
 		}
 
