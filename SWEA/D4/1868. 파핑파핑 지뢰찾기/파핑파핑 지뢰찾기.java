@@ -1,117 +1,110 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Solution {
-	private static int N, min;
-	private static char[][] infos;
-	private static int[][] board;
-	private static boolean[][] visited;
+	private static int N;
+	private static char[][] board;
+	private static int[][] state;
+
 	private static int[][] delta = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, -1 }, { -1, 1 }, { 1, -1 },
 			{ 1, 1 } };
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
+		StringTokenizer st = null;
 		StringBuilder sb = new StringBuilder();
 
 		int T = Integer.parseInt(br.readLine());
+		for (int t = 1; t < T + 1; t++) {
+			sb.append("#").append(t).append(" ");
 
-		for (int t = 1; t <= T; t++) {
 			N = Integer.parseInt(br.readLine());
-			min = Integer.MAX_VALUE;
-			infos = new char[N][N];
-			board = new int[N][N];
 
-			ArrayList<int[]> arr = new ArrayList<>();
+			board = new char[N][N];
+			state = new int[N][N];
+
+			boolean[][] visited = new boolean[N][N];
 
 			for (int r = 0; r < N; r++) {
-				String str = br.readLine();
+				board[r] = br.readLine().toCharArray();
+			}
+
+			for (int r = 0; r < N; r++) {
 				for (int c = 0; c < N; c++) {
-					infos[r][c] = str.charAt(c);
+					if (board[r][c] == '*') {
+						state[r][c] = -1;
 
-					if (infos[r][c] == '.') {
-						arr.add(new int[] { r, c });
+						for (int i = 0; i < 8; i++) {
+							int nr = r + delta[i][0];
+							int nc = c + delta[i][1];
+
+							if (isRange(nr, nc) && board[nr][nc] == '.') {
+								state[nr][nc]++;
+							}
+						}
+					}
+				}
+			}
+
+			int answer = 0;
+
+			for (int r = 0; r < N; r++) {
+				for (int c = 0; c < N; c++) {
+					if (board[r][c] == '*' || state[r][c] > 0 || visited[r][c]) {
+						continue;
 					}
 
-					if (infos[r][c] == '*') {
-						board[r][c] = 9;
+					bfs(r, c, visited);
+					answer++;
+				}
+			}
+
+			for (int r = 0; r < N; r++) {
+				for (int c = 0; c < N; c++) {
+					if (!visited[r][c] && state[r][c] != -1) {
+						answer++;
 					}
 				}
 			}
 
-			ArrayList<int[]> start = new ArrayList<>();
-			for (int[] curr : arr) {
-				board[curr[0]][curr[1]] = countBomb(curr);
-
-				if (board[curr[0]][curr[1]] == 0) {
-					start.add(curr);
-				}
-			}
-			
-			int cnt = 0;
-			visited = new boolean[N][N];
-			
-			for (int[] curr : start) {
-				if(visited[curr[0]][curr[1]]) {
-					continue;
-				}
-				
-				visited[curr[0]][curr[1]] = true;
-				cnt++;
-				bfs(curr);
-			}
-
-			for (int[] w : arr) {
-				if(visited[w[0]][w[1]]) {
-					continue;
-				}
-				
-				visited[w[0]][w[1]] = true;
-				cnt++;
-			}
-
-			sb.append("#" + t + " ").append(cnt).append("\n");
+			sb.append(answer).append("\n");
 		}
+
 		System.out.println(sb.toString());
 	}
 
-	private static void bfs(int[] node) {
+	private static boolean isRange(int r, int c) {
+		return r >= 0 && r < N && c >= 0 && c < N;
+	}
+
+	private static void bfs(int sr, int sc, boolean[][] visited) {
 		Queue<int[]> q = new ArrayDeque<>();
-		q.add(node);
+		visited[sr][sc] = true;
+
+		q.add(new int[] { sr, sc });
 
 		while (!q.isEmpty()) {
 			int[] curr = q.poll();
+			int r = curr[0];
+			int c = curr[1];
 
 			for (int i = 0; i < 8; i++) {
-				int nr = curr[0] + delta[i][0];
-				int nc = curr[1] + delta[i][1];
+				int nr = r + delta[i][0];
+				int nc = c + delta[i][1];
 
-				if (isRange(nr, nc) && !visited[nr][nc]) {
-					if (board[nr][nc] == 0) {
+				if (isRange(nr, nc) && state[nr][nc] != -1 && !visited[nr][nc]) {
+					visited[nr][nc] = true;
+
+					if (state[nr][nc] == 0) {
 						q.add(new int[] { nr, nc });
 					}
-					visited[nr][nc] = true;
 				}
 			}
 		}
-	}
-
-	private static int countBomb(int[] curr) {
-		int count = 0;
-
-		for (int i = 0; i < 8; i++) {
-			int nr = curr[0] + delta[i][0];
-			int nc = curr[1] + delta[i][1];
-
-			if (isRange(nr, nc) && infos[nr][nc] == '*') {
-				count++;
-			}
-		}
-
-		return count;
-	}
-
-	private static boolean isRange(int r, int c) {
-		return (r >= 0 && r < N && c >= 0 && c < N);
 	}
 }
