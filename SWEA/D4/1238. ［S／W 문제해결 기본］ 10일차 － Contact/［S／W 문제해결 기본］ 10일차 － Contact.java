@@ -3,13 +3,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
-import java.util.TreeSet;
 
 public class Solution {
 	private static int N, M;
-	private static TreeSet<Integer>[] adj;
+	private static List<Integer>[] adj;
 
 	private static final int MAX_NODE = 101;
 
@@ -28,10 +29,10 @@ public class Solution {
 			N = Integer.parseInt(st.nextToken());
 			M = Integer.parseInt(st.nextToken());
 
-			adj = new TreeSet[MAX_NODE];
+			adj = new ArrayList[MAX_NODE];
 
 			for (int node = 1; node < MAX_NODE; node++) {
-				adj[node] = new TreeSet<>();
+				adj[node] = new ArrayList<>();
 			}
 
 			st = new StringTokenizer(br.readLine());
@@ -49,36 +50,37 @@ public class Solution {
 	}
 
 	private static int bfs() {
-		Queue<int[]> q = new ArrayDeque<>();
+		Queue<Integer> q = new ArrayDeque<>();
 		boolean[] visited = new boolean[MAX_NODE];
 
 		visited[M] = true;
 
-		q.add(new int[] { M, 0 });
-
-		int result = 0;
-		int d = 0;
+		q.add(M);
 
 		while (!q.isEmpty()) {
-			int[] curr = q.poll();
-			int node = curr[0];
-			int depth = curr[1];
+			int size = q.size();
+			int maxNode = 0;
 
-			if (d < depth || (d == depth && node > result)) {
-				result = node;
-				d = depth;
+			for (int i = 0; i < size; i++) {
+				int curr = q.poll();
+
+				maxNode = Math.max(maxNode, curr);
+
+				for (int next : adj[curr]) {
+					if (visited[next]) {
+						continue;
+					}
+
+					visited[next] = true;
+					q.add(next);
+				}
 			}
 
-			for (int next : adj[node]) {
-				if (visited[next]) {
-					continue;
-				}
-
-				visited[next] = true;
-				q.add(new int[] { next, depth + 1 });
+			if (q.isEmpty()) {
+				return maxNode;
 			}
 		}
 
-		return result;
+		return 1;
 	}
 }
