@@ -1,70 +1,71 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 public class Solution {
-
-	private static int N, result;
+	private static int N, M, answer;
 	private static char[] nums;
+	private static Set<String>[] visited;
 
 	public static void main(String[] args) throws IOException {
-
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = null;
 		StringBuilder sb = new StringBuilder();
-		StringTokenizer st;
 
 		int T = Integer.parseInt(br.readLine());
 
-		for (int t = 1; t <= T; t++) {
+		for (int t = 1; t < T + 1; t++) {
 			st = new StringTokenizer(br.readLine());
-			result = 0;
-			String str = st.nextToken();
 
-			N = Integer.parseInt(st.nextToken());
-			if(N > 5) {
-				
-				int tmp = (N - 5) %2;
-				if (tmp == 1) N = 6;
-				else N = 5;
+			nums = st.nextToken().toCharArray();
+			N = nums.length;
+			M = Integer.parseInt(st.nextToken());
+			answer = 0;
+
+			visited = new HashSet[M + 1];
+			for (int i = 0; i < M + 1; i++) {
+				visited[i] = new HashSet<>();
 			}
-			
-			nums = new char[str.length()];
 
-			for (int i = 0; i < nums.length; i++) {
-				nums[i] = str.charAt(i);
-			}
-			
+			dfs(0);
 
-			dfs(0, 0);
-			sb.append("#").append(t).append(" ").append(result).append("\n");
-
+			sb.append("#").append(t).append(" ").append(answer).append("\n");
 		}
+
 		System.out.println(sb.toString());
-
 	}
 
-	private static void dfs(int st, int depth) {
+	private static void swap(int a, int b) {
+		char temp = nums[a];
+		nums[a] = nums[b];
+		nums[b] = temp;
+	}
 
-		if (depth == N) {
-			int tmp = Integer.parseInt(new String(nums));
-			result = Math.max(result, tmp);
-		} else {
+	private static void dfs(int depth) {
+		String current = String.valueOf(nums);
 
-			for (int i = st; i < nums.length - 1; i++) {
+		if (visited[depth].contains(current)) {
+			return;
+		}
 
-				for (int j = i + 1; j < nums.length; j++) {
-					swap(i, j);
-					dfs(i, depth + 1);
-					swap(i, j);
-				}
+		visited[depth].add(current);
 
+		if (depth == M) {
+			int result = Integer.parseInt(String.valueOf(nums));
+			answer = Math.max(answer, result);
+			return;
+		}
+
+		for (int a = 0; a < N - 1; a++) {
+			for (int b = a + 1; b < N; b++) {
+				swap(a, b);
+				dfs(depth + 1);
+				swap(a, b);
 			}
 		}
 	}
-
-	private static void swap(int x, int y) {
-		char tmp = nums[x];
-		nums[x] = nums[y];
-		nums[y] = tmp;
-	}
-
 }
