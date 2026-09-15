@@ -24,6 +24,10 @@ public class Solution {
 			nums = st.nextToken().toCharArray();
 			N = nums.length;
 			M = Integer.parseInt(st.nextToken());
+
+			if (M > 6) {
+				M = (M % 2 == 0) ? 6 : 5;
+			}
 			answer = 0;
 
 			visited = new HashSet[M + 1];
@@ -31,7 +35,7 @@ public class Solution {
 				visited[i] = new HashSet<>();
 			}
 
-			dfs(0);
+			dfs(0, 0);
 
 			sb.append("#").append(t).append(" ").append(answer).append("\n");
 		}
@@ -45,7 +49,7 @@ public class Solution {
 		nums[b] = temp;
 	}
 
-	private static void dfs(int depth) {
+	private static void dfs(int sIdx, int depth) {
 		String current = String.valueOf(nums);
 
 		if (visited[depth].contains(current)) {
@@ -60,10 +64,10 @@ public class Solution {
 			return;
 		}
 
-		for (int a = 0; a < N - 1; a++) {
+		for (int a = sIdx; a < N - 1; a++) {
 			for (int b = a + 1; b < N; b++) {
 				swap(a, b);
-				dfs(depth + 1);
+				dfs(a, depth + 1);
 				swap(a, b);
 			}
 		}
