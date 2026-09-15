@@ -2,14 +2,11 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Solution {
 	private static int N, M, answer;
 	private static char[] nums;
-	private static Set<String>[] visited;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -30,11 +27,6 @@ public class Solution {
 			}
 			answer = 0;
 
-			visited = new HashSet[M + 1];
-			for (int i = 0; i < M + 1; i++) {
-				visited[i] = new HashSet<>();
-			}
-
 			dfs(0, 0);
 
 			sb.append("#").append(t).append(" ").append(answer).append("\n");
@@ -50,14 +42,6 @@ public class Solution {
 	}
 
 	private static void dfs(int sIdx, int depth) {
-		String current = String.valueOf(nums);
-
-		if (visited[depth].contains(current)) {
-			return;
-		}
-
-		visited[depth].add(current);
-
 		if (depth == M) {
 			int result = Integer.parseInt(String.valueOf(nums));
 			answer = Math.max(answer, result);
