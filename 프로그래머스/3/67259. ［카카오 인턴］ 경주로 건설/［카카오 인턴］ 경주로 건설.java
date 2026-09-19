@@ -20,15 +20,15 @@ class Solution {
             }
         }
         
-        Queue<int[]> q = new ArrayDeque<>();
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> Integer.compare(a[2], b[2]));
         
         for (int i = 0; i < 4; i++) {
-            q.add(new int[] {0, 0, 0, i});
+            pq.add(new int[] {0, 0, 0, i});
             dist[i][0][0] = 0;
         }
         
-        while (!q.isEmpty()) {
-            int[] curr = q.poll();
+        while (!pq.isEmpty()) {
+            int[] curr = pq.poll();
             
             int r = curr[0];
             int c = curr[1];
@@ -39,33 +39,31 @@ class Solution {
                 continue;
             }
             
+            if (r == N - 1 && c == N - 1) {
+                return cost * 100;
+            }
+            
             for (int i = 0; i < 4; i++) {
                 int nr = r + delta[i][0];
                 int nc = c + delta[i][1];
                 
                 if (isRange(nr, nc) && board[nr][nc] != 1) {
-                    if (i == dir) {
-                       if (dist[i][nr][nc] > dist[dir][r][c] + 1) {
-                           dist[i][nr][nc] = dist[dir][r][c] + 1;
-                           q.add(new int[] {nr, nc, dist[i][nr][nc], i});
-                       }
-                    } else {
-                        if (dist[i][nr][nc] > dist[dir][r][c] + 6) {
-                            dist[i][nr][nc] = dist[dir][r][c] + 6;
-                            q.add(new int[] {nr, nc, dist[i][nr][nc], i});
-                        }
+                    
+                    int nextCost = 1;
+                    
+                    if (i != dir) {
+                        nextCost = 6;
+                    }
+                    
+                    if (dist[i][nr][nc] > dist[dir][r][c] + nextCost) {
+                        dist[i][nr][nc] = dist[dir][r][c] + nextCost;
+                        pq.add(new int[] {nr, nc, dist[i][nr][nc], i});
                     }
                 }
             }
         }
         
-        int answer = INF;
-        
-        for (int i = 0; i < 4; i++) {
-            answer = Math.min(answer, dist[i][N - 1][N - 1]);
-        }
-        
-        return answer * 100;
+        return -1;
     }
     
     public int solution(int[][] b) {
