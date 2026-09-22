@@ -2,10 +2,10 @@ import java.io.*;
 import java.util.*;
 
 public class Solution {
-
+	
 	private static int[][] tobni;
 	private static int[] currIdx;
-	private static int M;
+	private static int N, M;
 
 	public static void main(String[] args) throws IOException {
 
