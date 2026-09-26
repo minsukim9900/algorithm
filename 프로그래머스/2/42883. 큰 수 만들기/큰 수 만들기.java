@@ -1,31 +1,36 @@
-import java.io.*;
 import java.util.*;
 
 class Solution {
     public String solution(String number, int k) {
         StringBuilder sb = new StringBuilder();
+        
         char[] nums = number.toCharArray();
         
-        int s = 0;
-        int e = k;
-        while(e < number.length()) {
-            int maxNumber = -1;
-            int maxNumberIndex = 0;
+        Deque<Integer> dq = new ArrayDeque<>();
+        
+        int count = 0;
+        
+        for (int i = 0; i < nums.length; i++) {
+            int num = nums[i] - '0';
             
-            for(int i = s; i <= e; i++) {
-                if(maxNumber < nums[i] - '0') {
-                    maxNumber = nums[i] - '0';
-                    maxNumberIndex = i;
-                }
-                
-                if(maxNumber == 9) {
-                    break;
-                }
+            while (count < k && !dq.isEmpty() && dq.peekLast() < num) {
+                count++;
+                dq.pollLast();
             }
-            sb.append(maxNumber);
-            s = maxNumberIndex + 1;
-            e++;
+            
+            dq.add(num);
         }
-        return sb.toString().equals("") ? "0" : sb.toString();
+        
+        while (count < k && !dq.isEmpty()) {
+                count++;
+                dq.pollLast();
+        }
+        
+        while (!dq.isEmpty()) {
+            sb.append(dq.poll());
+        }
+        
+        String answer = sb.toString();
+        return answer;
     }
 }
