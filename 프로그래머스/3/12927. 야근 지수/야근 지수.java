@@ -10,17 +10,19 @@ class Solution {
         }
         
         for (int i = 0; i < n; i++) {
-            pq.add(pq.poll() - 1);
+            int max = pq.poll();
+            
+            if (max == 0) {
+                return 0;
+            }
+            
+            pq.add(max - 1);
         }
         
         long answer = 0L;
         
         while (!pq.isEmpty()) {
             int curr = pq.poll();
-            
-            if (curr <= 0) {
-                continue;
-            }
             
             answer += (curr * curr);
         }
