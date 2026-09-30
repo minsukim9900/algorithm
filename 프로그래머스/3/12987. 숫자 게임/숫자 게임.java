@@ -2,27 +2,27 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] A, int[] B) {
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
-        
         Arrays.sort(A);
+        Arrays.sort(B);
         
         int n = B.length;
         int answer = 0;
         
-        for (int i = 0; i < n; i++) {
-            pq.add(B[i]);
-        }
+        int aIdx = 0;
+        int bIdx = 0;
         
-        int idx = 0;
-        while (!pq.isEmpty()) {
-            int a = A[idx];
-            int b = pq.poll();
+        while (aIdx < n && bIdx < n) {
+            int a = A[aIdx];
+            int b = B[bIdx];
             
             if (b > a) {
+                aIdx++;
                 answer++;
-                idx++;
             }
+            
+            bIdx++;
         }
+        
         return answer;
     }
 }
