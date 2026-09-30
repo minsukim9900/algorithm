@@ -1,18 +1,33 @@
-import java.io.*;
 import java.util.*;
 
 class Solution {
     public int solution(int[][] routes) {
-        Arrays.sort(routes, (a, b) -> a[1] == b[1] ? a[0] - b[0] : a[1] - b[1]);
-        int answer = 0;
-        int endPoint = -30_001;
+        PriorityQueue<int[]> pq = new PriorityQueue<>(
+            (a, b) -> a[0] == b[0] ? Integer.compare(b[1], a[1]) : Integer.compare(a[0], b[0]));
         
-        for(int[] curr : routes) {
-            if(curr[0] > endPoint) {
-                answer++;
-                endPoint = curr[1];
-            }
+        int answer = 1;
+        
+        for (int i = 0; i < routes.length; i++) {
+            pq.add(routes[i]);
         }
+        
+        int end = pq.poll()[1];
+        
+        while (!pq.isEmpty()) {
+            int[] curr = pq.poll();
+            
+            int currStart = curr[0];
+            int currEnd = curr[1];
+            
+            if (end >= currStart) {
+                end = Math.min(end, currEnd);
+                continue;
+            }
+            
+            end = currEnd;
+            answer++;
+        }
+        
         return answer;
     }
 }
