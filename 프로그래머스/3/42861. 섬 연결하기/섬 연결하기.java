@@ -1,77 +1,60 @@
-import java.io.*;
 import java.util.*;
 
 class Solution {
+    private static int[] parent, size;
     
-    private static Edge[] edge;
-    private static int[] p;
-    private static boolean[] visited;
+    private static int findParent(int nodeX) {
+        if (nodeX == parent[nodeX]) {
+            return nodeX;
+        }
+        
+        return parent[nodeX] = findParent(parent[nodeX]);
+    }
     
+    private static void union(int rootX, int rootY) {
+        if (size[rootX] >= size[rootY]) {
+            parent[rootY] = rootX;
+            size[rootX] += size[rootY];
+        } else {
+            parent[rootX] = rootY;
+            size[rootY] += size[rootX];
+        }
+    }
     public int solution(int n, int[][] costs) {
+        parent = new int[n];
+        size = new int[n];
         
-        p = new int[n];
-        visited = new boolean[n];
-        
-        for(int i = 0; i<n; i++) {
-            p[i] = i;
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            size[i] = 1;
         }
         
-        int M = costs.length;
+        Arrays.sort(costs, (a, b) -> Integer.compare(a[2], b[2]));
         
-        edge = new Edge[M];
-        
-        for(int i = 0; i<M; i++) {
-            int from = costs[i][0];
-            int to = costs[i][1];
-            int w = costs[i][2];
-            
-            edge[i] = new Edge(from, to, w);
-        }
-        
-        Arrays.sort(edge);
-        
-        
+        int pick = 0;
         int answer = 0;
         
-        for(int i = 0; i<M; i++) {
-            Edge curr = edge[i];
+        for (int i = 0; i < costs.length; i++) {
+            int[] curr = costs[i];
             
-            if(findP(curr.from) != findP(curr.to)) {
-                union(findP(curr.from), findP(curr.to));
-                answer += curr.w;
+            int nodeX = curr[0];
+            int nodeY = curr[1];
+            int weight = curr[2];
+            
+            int rootX = findParent(nodeX);
+            int rootY = findParent(nodeY);
+            
+            if (rootX != rootY) {
+                pick++;
+                union(rootX, rootY);
+                answer += weight;
+                
+                if (pick == n - 1) {
+                    break;
+                }
             }
-            
         }
-        
         
         return answer;
     }
-    
-    private static class Edge implements Comparable<Edge> {
-        int from, to, w;
-        
-        public Edge(int from, int to, int w) {
-            this.from = from;
-            this.to = to;
-            this.w = w;
-        }
-        
-        public int compareTo(Edge o) {
-            return this.w - o.w;
-        }
-        
-    }
-    
-    private static int findP(int x) {
-        if (x != p[x]) {
-            p[x] = findP(p[x]);
-        }
-        
-        return p[x];
-    }
-    
-    private static void union(int x, int y) {
-        p[y] = x;
-    }
-    
 }
