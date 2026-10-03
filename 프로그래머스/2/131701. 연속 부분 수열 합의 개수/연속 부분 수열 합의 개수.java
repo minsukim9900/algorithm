@@ -4,22 +4,16 @@ class Solution {
     public int solution(int[] elements) {
         int n = elements.length;
         
-        Set<Long> nums = new HashSet<>();
+        Set<Integer> nums = new HashSet<>();
+        
+        int[] dp = new int[n];
         
         for (int length = 1; length < n + 1; length++) {
-            long sum = 0L;
-            
-            for (int i = 0; i < length; i++) {
-                sum += elements[i];
-            }
-            nums.add(sum);
-            
-            for (int left = 1; left < n; left++) {
+            for (int left = 0; left < n; left++) {
                 int right = (left + length - 1) % n;
                 
-                sum -= elements[left];
-                sum += elements[right];
-                nums.add(sum);
+                dp[left] += elements[right];
+                nums.add(dp[left]);
             }
         }
         return nums.size();
