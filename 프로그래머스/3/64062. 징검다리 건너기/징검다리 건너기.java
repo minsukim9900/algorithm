@@ -1,40 +1,61 @@
 import java.util.*;
 
 class Solution {
-    private boolean check(int[] stones, int k, int people) {
-        int count = 0;
-        
-        for (int stone : stones) {
-            if (stone - people < 0) {
-                count++;
-            } else {
-                count = 0;
-            }
-            
-            if (count == k) {
-                return false;
-            }
+    private int N;
+    private int[] stones;
+    private int[] maxTree;
+    
+    private int init(int node, int nodeLeft, int nodeRight) {
+        if (nodeLeft == nodeRight) {
+            return maxTree[node] = stones[nodeLeft];
         }
         
-        return true;
+        int mid = (nodeLeft + nodeRight) >> 1;
+        int nextNode = node << 1;
+        
+        int leftValue = init(nextNode, nodeLeft, mid);
+        int rightValue = init(nextNode + 1, mid + 1, nodeRight);
+        
+        return maxTree[node] = Math.max(leftValue, rightValue);
     }
     
-    public int solution(int[] stones, int k) {
-        int s = 0;
-        int e = 1 << 30;
-        int answer = 0;
-        
-        while (s <= e) {
-            int mid = s + (e - s) / 2;
-            
-            if (check(stones, k, mid)) {
-                answer = mid;
-                s = mid + 1;
-            } else {
-                e = mid - 1;
-            }
+    private int queryMax(int node, int nodeLeft, int nodeRight, int queryLeft, int queryRight) {
+        if (queryRight < nodeLeft || nodeRight < queryLeft) {
+            return 0;
         }
+        
+        if (queryLeft <= nodeLeft && nodeRight <= queryRight) {
+            return maxTree[node];
+        }
+        
+        int mid = (nodeLeft + nodeRight) >> 1;
+        int nextNode = node << 1;
+        
+        int leftMax = queryMax(nextNode, nodeLeft, mid, queryLeft, queryRight);
+        int rightMax = queryMax(nextNode + 1, mid + 1, nodeRight, queryLeft, queryRight);
+        
+        return Math.max(leftMax, rightMax);
+    }
+    
+    public int solution(int[] stone, int k) {
+        N = stone.length;
+        maxTree = new int[N * 4];
+        stones = stone;
+        
+        init(1, 0, N - 1);
+        
+        int answer = Integer.MAX_VALUE;
+        
+        for (int queryLeft = 0; queryLeft + k - 1 < N; queryLeft++) {
+            int queryRight = queryLeft + k - 1;
+            
+            int result = queryMax(1, 0, N - 1, queryLeft, queryRight);
+            
+            answer = Math.min(answer, result);
+        }
+        
         
         return answer;
     }
+    
 }
