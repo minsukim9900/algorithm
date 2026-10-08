@@ -5,7 +5,7 @@ class Solution {
         int n = order.length;
         int answer = 0;
         
-        Stack<Integer> stack = new Stack<>();
+        Deque<Integer> stack = new ArrayDeque<>();
         int boxNum = 1;
         
         for (int i = 0; i < n; i++) {
