@@ -14,7 +14,7 @@ class Solution {
         return Math.max(max1, max2);
     }
     
-    public int getMaxValue(int prev2, int prev1, int end, int[] sticker) {
+    private int getMaxValue(int prev2, int prev1, int end, int[] sticker) {
         for (int i = 2; i < end; i++) {
             int curr = Math.max(prev1, prev2 + sticker[i]);
             
