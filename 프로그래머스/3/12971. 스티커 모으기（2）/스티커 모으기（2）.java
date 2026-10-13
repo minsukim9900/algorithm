@@ -8,13 +8,13 @@ class Solution {
             return sticker[0];
         }
         
-        int max1 = getMaxValue(sticker[0], sticker[0], n - 1, sticker);
-        int max2 = getMaxValue(0, sticker[1], n, sticker);
+        int max1 = getMaxValue(sticker, sticker[0], sticker[0], n - 1);
+        int max2 = getMaxValue(sticker, 0, sticker[1], n);
         
         return Math.max(max1, max2);
     }
     
-    private int getMaxValue(int prev2, int prev1, int end, int[] sticker) {
+    private int getMaxValue(int[] sticker, int prev2, int prev1, int end) {
         for (int i = 2; i < end; i++) {
             int curr = Math.max(prev1, prev2 + sticker[i]);
             
