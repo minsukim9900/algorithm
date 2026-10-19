@@ -20,8 +20,6 @@ class Solution {
         long e = 1L << 61;
         long answer = 0L;
         
-        Arrays.sort(times);
-        
         while (s <= e) {
             long mid = s + (e - s) / 2;
             
