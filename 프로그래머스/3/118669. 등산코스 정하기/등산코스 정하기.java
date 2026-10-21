@@ -1,79 +1,94 @@
-import java.io.*;
 import java.util.*;
 
 class Solution {
-    private static int N;
-    private static List<int[]>[] adj;
-    private static final int INF = 10_000_001;
+    private List<int[]>[] adj;
+    private boolean[] isGates, isSummits;
     
-    public int[] solution(int n, int[][] paths, int[] gates, int[] summits) {
+    private int[] dijkstra(int n, int[] gates, int[] summits) {
+        int[] dist = new int[n + 1];
         
-        N = n;
-        adj = new ArrayList[N + 1];
-        for(int i = 1; i <= N; i++) {
-            adj[i] = new ArrayList<>();
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> Integer.compare(a[1], b[1]));
+        
+        for (int i = 0; i < gates.length; i++) {
+            dist[gates[i]] = 0;
+            pq.add(new int[] {gates[i], 0});
         }
         
-        for(int i = 0; i < paths.length; i++) {
-            int x = paths[i][0];
-            int y = paths[i][1];
-            int w = paths[i][2];
-            
-            adj[x].add(new int[] {y, w});
-            adj[y].add(new int[] {x, w});
-        }
-        
-        int[] answer = simulate(gates, summits);
-        return answer;
-    }
-    
-    private static int[] simulate(int[] gates, int[] summits) {
-        boolean[] isGate = new boolean[N + 1];
-        boolean[] isSummit = new boolean[N + 1];
-        
-        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
-        
-        int[] dist = new int[N + 1];
-        Arrays.fill(dist, INF);
-        
-        for(int gate : gates) {
-            isGate[gate] = true;
-            dist[gate] = 0;
-            pq.add(new int[] {gate, dist[gate]});
-        }
-        
-        for(int summit : summits) {
-            isSummit[summit] = true;
-        }
-        
-        while(!pq.isEmpty()) {
+        while (!pq.isEmpty()) {
             int[] curr = pq.poll();
+            
             int node = curr[0];
-            int intensity = curr[1];
+            int weight = curr[1];
             
-            if(intensity != dist[node]) continue;
-            if(isSummit[node]) continue;
+            if (weight != dist[node]) {
+                continue;
+            }
             
-            for(int[] next : adj[node]) {
-                if(isGate[next[0]]) continue;
+            if (isSummits[node]) {
+                continue;
+            }
+            
+            for (int[] edge : adj[node]) {
+                int next = edge[0];
+                int nextWeight = edge[1];
                 
-                int newIntensity = Math.max(intensity, next[1]);
-                if(newIntensity < dist[next[0]]) {
-                    dist[next[0]] = newIntensity;
-                    pq.add(new int[] {next[0], newIntensity});
+                int intensity = Math.max(weight, nextWeight);
+                
+                if (dist[next] > intensity) {
+                    dist[next] = intensity;
+                    pq.add(new int[] {next, intensity});
                 }
             }
         }
         
-        Arrays.sort(summits);
-        int index = 0;
-        int ans = INF;
-        for(int summit : summits) {
-            if(dist[summit] < ans) {
-                ans = dist[summit];
-                index = summit;
+        return dist;
+    }
+    
+    public int[] solution(int n, int[][] paths, int[] gates, int[] summits) {
+        adj = new ArrayList[n + 1];
+        
+        for (int node = 1; node < n + 1; node++) {
+            adj[node] = new ArrayList<>();
+        }
+        
+        isGates = new boolean[n + 1];
+        
+        for (int i = 0; i < gates.length; i++) {
+            isGates[gates[i]] = true;
+        }
+        
+        isSummits = new boolean[n + 1];
+        
+        for (int i = 0; i < summits.length; i++) {
+            isSummits[summits[i]] = true;
+        }
+        
+        
+        for (int i = 0; i < paths.length; i++) {
+            int[] path = paths[i];
+            
+            int nodeX = path[0];
+            int nodeY = path[1];
+            int weight = path[2];
+                
+            adj[nodeX].add(new int[] {nodeY, weight});
+            adj[nodeY].add(new int[] {nodeX, weight});
+        }
+        
+        int[] dist = dijkstra(n, gates, summits);
+        
+        int[] answer = new int[] {0, Integer.MAX_VALUE};
+        
+        for (int i = 1; i < n + 1; i++) {
+            if (isSummits[i] && answer[1] > dist[i]) {
+                answer[1] = dist[i];
+                answer[0] = i;
             }
         }
-        return new int[] {index, ans};
+        
+        
+        return answer;
     }
 }
