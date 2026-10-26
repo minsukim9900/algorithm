@@ -93,28 +93,26 @@ class Solution {
     public String[] solution(String[] orders, int[] course) {
         init(orders, course);
         
+        List<String> answer = new ArrayList<>();
+        
         for (int i = 0; i < M; i++) {
             int limit = course[i];
             
             dfs(0, 0, 0, limit);
-        }
-        
-        List<String> answer = new ArrayList<>();
-
-        for (int limit : course) {
-            for (int count = N; count >= 2; count--) {
-
-                if (buffer[limit][count].isEmpty()) {
+            
+            for (int j = 20; j >= 2; j--) {
+                if (buffer[limit][j].isEmpty()) {
                     continue;
                 }
-
-                for (int comb : buffer[limit][count]) {
-                    answer.add(changeBitToAlpha(comb));
+                
+                for (int x : buffer[limit][j]) {
+                    answer.add(changeBitToAlpha(x));
                 }
-
+                
                 break;
             }
         }
+        
 
         Collections.sort(answer);
         
