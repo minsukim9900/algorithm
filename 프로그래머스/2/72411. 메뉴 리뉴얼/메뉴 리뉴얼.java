@@ -1,46 +1,37 @@
 import java.util.*;
 
 class Solution {
-    private int N;
     private int[] bitMenu;
+    private int[] combinations;
+    private int size;
 
     private void init(String[] orders) {
-        N = orders.length;
+        int N = orders.length;
+
         bitMenu = new int[N];
+        combinations = new int[N * (1 << 10)];
 
         for (int i = 0; i < N; i++) {
-            int num = 0;
+            int mask = 0;
 
             for (char c : orders[i].toCharArray()) {
-                num |= (1 << (c - 'A'));
+                mask |= (1 << (c - 'A'));
             }
 
-            bitMenu[i] = num;
+            bitMenu[i] = mask;
         }
     }
 
-    private void dfs(
-        int[] menu,
-        int sIdx,
-        int depth,
-        int comb,
-        int limit,
-        Map<Integer, Integer> countMap
-    ) {
+    private void dfs(int[] menu, int sIdx, int depth,
+                     int comb, int limit) {
         if (depth == limit) {
-            countMap.merge(comb, 1, Integer::sum);
+            combinations[size++] = comb;
             return;
         }
 
         for (int i = sIdx; i <= menu.length - (limit - depth); i++) {
-            dfs(
-                menu,
-                i + 1,
-                depth + 1,
-                comb | menu[i],
-                limit,
-                countMap
-            );
+            dfs(menu, i + 1, depth + 1,
+                comb | menu[i], limit);
         }
     }
 
@@ -66,18 +57,18 @@ class Solution {
         List<String> answer = new ArrayList<>();
 
         for (int limit : course) {
-            Map<Integer, Integer> countMap = new HashMap<>();
+            size = 0;
 
-            for (int bit : bitMenu) {
-                int size = Integer.bitCount(bit);
+            for (int mask : bitMenu) {
+                int len = Integer.bitCount(mask);
 
-                if (size < limit) {
+                if (len < limit) {
                     continue;
                 }
 
-                int[] menu = new int[size];
-
+                int[] menu = new int[len];
                 int idx = 0;
+                int bit = mask;
 
                 while (bit != 0) {
                     int lowBit = bit & -bit;
@@ -85,20 +76,37 @@ class Solution {
                     bit &= (bit - 1);
                 }
 
-                dfs(menu, 0, 0, 0, limit, countMap);
+                dfs(menu, 0, 0, 0, limit);
             }
+
+            Arrays.sort(combinations, 0, size);
 
             int max = 2;
+            List<String> temp = new ArrayList<>();
 
-            for (int count : countMap.values()) {
-                max = Math.max(max, count);
-            }
+            for (int i = 0; i < size;) {
+                int j = i + 1;
 
-            for (Map.Entry<Integer, Integer> entry : countMap.entrySet()) {
-                if (entry.getValue() == max) {
-                    answer.add(changeBitToAlpha(entry.getKey()));
+                while (j < size &&
+                       combinations[i] == combinations[j]) {
+                    j++;
                 }
+
+                int count = j - i;
+
+                if (count > max) {
+                    max = count;
+                    temp.clear();
+                }
+
+                if (count == max) {
+                    temp.add(changeBitToAlpha(combinations[i]));
+                }
+
+                i = j;
             }
+
+            answer.addAll(temp);
         }
 
         Collections.sort(answer);
