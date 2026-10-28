@@ -1,119 +1,101 @@
 import java.util.*;
 
 class Solution {
-    private final int N = 51;
+    private final int N = 2501;
     
-    private String[][] board;
-    private List<int[]>[][] adj;
+    private int[] parent;
+    private String[] values;
+    
     
     private void init() {
-        board = new String[N][N];
+        parent = new int[N];
+        values = new String[N];
         
-        adj = new ArrayList[N][N];
-        
-        for (int r = 1; r < N; r++) {
-            for (int c = 1; c < N; c++) {
-                board[r][c] = "";
-                adj[r][c] = new ArrayList<>();
-            }
+        for (int i = 0; i < N; i++) {
+            parent[i] = i;
+            values[i] = "";
         }
+    }
+    
+    private int findParent(int node) {
+        if (node == parent[node]) {
+            return node;
+        }
+        
+        return parent[node] = findParent(parent[node]);
+    }
+    
+    private int[] getCoordinate(int idx) {
+        return new int[] {idx / 50, idx % 50};
+    }
+    
+    private int getIdx(int r, int c) {
+        return ((r - 1) * 50) + ((c - 1) % 50);
+    }
+    
+    private void union(int rootX, int rootY) {
+        parent[rootY] = rootX;
+        values[rootY] = values[rootX];
     }
     
     private void update(String value1, String value2) {
-        for (int r = 1; r < N; r++) {
-            for (int c = 1; c < N; c++) {
-                if (value1.equals(board[r][c])) {
-                    board[r][c] = value2;
-                }
+        for (int i = 0; i < N; i++) {
+            if (value1.equals(values[i])) {
+                values[i] = value2;
             }
         }
     }
     
-    private void update(int sr, int sc, String value) {
-        boolean[][] visited = new boolean[N][N];
+    private void update(int r, int c, String value) {
+        int node = getIdx(r, c);
         
-        visited[sr][sc] = true;
-        Queue<int[]> q = new ArrayDeque<>();
+        int rootNode = findParent(node);
         
-        q.add(new int[] {sr, sc});
-        
-        while (!q.isEmpty()) {
-            int[] curr = q.poll();
-            
-            int r = curr[0];
-            int c = curr[1];
-            
-            board[r][c] = value;
-            
-            for (int[] next : adj[r][c]) {
-                int nr = next[0];
-                int nc = next[1];
-                
-                if (visited[nr][nc]) {
-                    continue;
-                }
-                
-                visited[nr][nc] = true;
-                q.add(new int[] {nr, nc});
-            }
-        }
+        values[rootNode] = value;
     }
     
     private void merge(int r1, int c1, int r2, int c2) {
-        adj[r1][c1].add(new int[] {r2, c2});
-        adj[r2][c2].add(new int[] {r1, c1});
+        int nodeX = getIdx(r1, c1);
+        int nodeY = getIdx(r2, c2);
         
-        if (!board[r1][c1].isEmpty()) {
-            update(r1, c1, board[r1][c1]);
-            
-            return;
-        }
+        int rootX = findParent(nodeX);
+        int rootY = findParent(nodeY);
         
-        if (!board[r2][c2].isEmpty()) {
-            update(r2, c2, board[r2][c2]);
-            
-            return;
+        if (!values[rootX].isEmpty()) {
+            union(rootX, rootY);
+        } else {
+            union(rootY, rootX);
         }
     }
     
-    private void unmerge(int sr, int sc) {
-        String text = board[sr][sc];
+    private void unmerge(int r, int c) {
+        int nodeX = getIdx(r, c);
+        int rootX = findParent(nodeX);
+        String text = values[rootX];
         
-        boolean[][] visited = new boolean[N][N];
+        List<Integer> members = new ArrayList<>();
         
-        visited[sr][sc] = true;
-        Queue<int[]> q = new ArrayDeque<>();
-        
-        q.add(new int[] {sr, sc});
-        
-        while (!q.isEmpty()) {
-            int[] curr = q.poll();
+        for (int i = 0; i < N; i++) {
+            int parentX = findParent(i);
             
-            int r = curr[0];
-            int c = curr[1];
-            
-            board[r][c] = "";
-            
-            for (int[] next : adj[r][c]) {
-                int nr = next[0];
-                int nc = next[1];
-                
-                if (visited[nr][nc]) {
-                    continue;
-                }
-                
-                visited[nr][nc] = true;
-                q.add(new int[] {nr, nc});
+            if (rootX == parentX) {
+                members.add(i);
             }
-            
-            adj[r][c].clear();
         }
         
-        board[sr][sc] = text;
+        for (int member : members) {
+            parent[member] = member;
+            values[member] = "";
+        }
+        
+        values[nodeX] = text;
     }
     
     private String print(int r, int c) {
-        return board[r][c].isEmpty() ? "EMPTY" : board[r][c];
+        int nodeX = getIdx(r, c);
+        int rootX = findParent(nodeX); 
+        
+        return values[rootX].isEmpty() ? "EMPTY" : values[rootX];
     }
     
     public String[] solution(String[] commands) {
