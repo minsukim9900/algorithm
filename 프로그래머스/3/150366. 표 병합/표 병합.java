@@ -35,7 +35,7 @@ class Solution {
     
     private void update(String value1, String value2) {
         for (int i = 0; i < N; i++) {
-            if (value1.equals(values[i])) {
+            if (i == parent[i] && value1.equals(values[i])) {
                 values[i] = value2;
             }
         }
