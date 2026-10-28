@@ -30,12 +30,7 @@ class Solution {
     }
     
     private int getIdx(int r, int c) {
-        return ((r - 1) * 50) + ((c - 1) % 50);
-    }
-    
-    private void union(int rootX, int rootY) {
-        parent[rootY] = rootX;
-        values[rootY] = values[rootX];
+        return (r - 1) * 50 + c - 1;
     }
     
     private void update(String value1, String value2) {
@@ -48,7 +43,6 @@ class Solution {
     
     private void update(int r, int c, String value) {
         int node = getIdx(r, c);
-        
         int rootNode = findParent(node);
         
         values[rootNode] = value;
@@ -61,11 +55,14 @@ class Solution {
         int rootX = findParent(nodeX);
         int rootY = findParent(nodeY);
         
-        if (!values[rootX].isEmpty()) {
-            union(rootX, rootY);
-        } else {
-            union(rootY, rootX);
+        if (rootX == rootY) {
+            return;
         }
+        
+        String text = !values[rootX].isEmpty() ? values[rootX] : values[rootY];
+        
+        parent[rootY] = rootX;
+        values[rootX] = text;
     }
     
     private void unmerge(int r, int c) {
