@@ -13,7 +13,6 @@ class Solution {
         
         for (int r = 1; r < N; r++) {
             for (int c = 1; c < N; c++) {
-                board[r][c] = "";
                 adj[r][c] = new ArrayList<>();
             }
         }
@@ -63,13 +62,13 @@ class Solution {
         adj[r1][c1].add(new int[] {r2, c2});
         adj[r2][c2].add(new int[] {r1, c1});
         
-        if (!board[r1][c1].isEmpty()) {
+        if (board[r1][c1] != null && !board[r1][c1].isEmpty()) {
             update(r1, c1, board[r1][c1]);
             
             return;
         }
         
-        if (!board[r2][c2].isEmpty()) {
+        if (board[r2][c2] != null && !board[r2][c2].isEmpty()) {
             update(r2, c2, board[r2][c2]);
             
             return;
@@ -113,7 +112,7 @@ class Solution {
     }
     
     private String print(int r, int c) {
-        return board[r][c].isEmpty() ? "EMPTY" : board[r][c];
+        return (board[r][c] == null || board[r][c].isEmpty()) ? "EMPTY" : board[r][c];
     }
     
     public String[] solution(String[] commands) {
