@@ -5,18 +5,13 @@ class Solution {
     public int solution(int n) {
         int answer = 0;
         
-        int sum = 0;
-        int left = 0;
+        while (n % 2 == 0) {
+            n /= 2;
+        }
         
-        for (int i = 1; i < n + 1; i++) {
-            sum += i;
-            
-            while (sum > n) {
-                sum -= left++;
-            }
-            
-            if (sum == n) {
-                answer++;
+        for (int i = 1; (long) i * i <= n; i += 2) {
+            if (n % i == 0) {
+                answer += ((long) i * i == n ? 1 : 2);
             }
         }
         
