@@ -79,7 +79,7 @@ class Solution {
         List<List<int[]>[]> candidates,
         List<int[]> shape
     ) {
-        for (int i = 0; i < candidates.size(); i++) {
+        for (int i = candidates.size() - 1; i >= 0; i--) {
             List<int[]>[] rotations = candidates.get(i);
 
             for (int d = 0; d < 4; d++) {
