@@ -11,9 +11,9 @@ class Solution {
             
             if (comp != curr) {
                 continue;
-            } else {
-                return i;
             }
+            
+            return i;
         }
         
         return -1;
