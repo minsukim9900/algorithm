@@ -1,21 +1,13 @@
-import java.util.*;
-
 class Solution {
-    private final int MAX = 2_000_000;
-    
+    private int getNextNumber(int n) {
+        int lowestSetBit = n & -n;
+        int nextHigher = n + lowestSetBit;
+        int remainingBits = ((nextHigher ^ n) >>> 2) / lowestSetBit;
+
+        return nextHigher | remainingBits;
+    }
+
     public int solution(int n) {
-        int comp = Integer.bitCount(n);
-        
-        for (int i = n + 1; i < MAX; i++) {
-            int curr = Integer.bitCount(i);
-            
-            if (comp != curr) {
-                continue;
-            }
-            
-            return i;
-        }
-        
-        return -1;
+        return getNextNumber(n);
     }
 }
