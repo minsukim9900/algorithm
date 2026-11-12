@@ -1,7 +1,7 @@
 import java.util.*;
 
 class Solution {
-    private final int MAX = 100_000_000;
+    private final int MAX = 2_000_000;
     
     public int solution(int n) {
         int comp = Integer.bitCount(n);
