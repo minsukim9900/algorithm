@@ -1,15 +1,15 @@
+
 class Solution {
     public int[] solution(int brown, int yellow) {
-        
-        for (int w = 1; w < 1_000_000; w++) {
-            for (int h = 1; h < w + 1; h++) {
-                if ((w + h) == (brown + 4) / 2 && (w * h) == yellow + brown) {
-                    return new int[] {w, h};
-                }
-            }
-        }
-        
-        
-        return null;
+        int sum = (brown + 4) / 2;
+        int area = brown + yellow;
+
+        int discriminant = sum * sum - 4 * area;
+        int sqrt = (int) Math.sqrt(discriminant);
+
+        int w = (sum + sqrt) / 2;
+        int h = (sum - sqrt) / 2;
+
+        return new int[] {w, h};
     }
 }
