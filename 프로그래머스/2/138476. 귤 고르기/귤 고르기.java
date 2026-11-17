@@ -1,26 +1,36 @@
 import java.util.*;
 
 class Solution {
-    private int[] count;
-    
-    private final int MAX = 10_000_001;
     
     public int solution(int k, int[] tangerine) {
-        count = new int[MAX];
+        Map<Integer, Integer> map = new HashMap<>();
         
         for (int i = 0; i < tangerine.length; i++) {
-            count[tangerine[i]]++;
+            int size = tangerine[i];
+            
+            int count = map.getOrDefault(size, 0);
+            
+            map.put(size, count + 1);
         }
         
-        Arrays.sort(count);
+        int[] buffer = new int[map.size()];
+        int idx = 0;
         
-        int sum = 0;
+        for (int count : map.values()) {
+            buffer[idx++] = count;
+        }
         
-        for (int i = MAX - 1; i >= 0; i--) {
-            sum += count[i];
+        Arrays.sort(buffer);
+        
+        int answer = 0;
+        
+        for (int i = buffer.length - 1; i >= 0; i--) {
+            answer++;
             
-            if (sum >= k) {
-                return MAX - i;
+            k -= buffer[i];
+            
+            if (k <= 0) {
+                return answer;
             }
         }
         
