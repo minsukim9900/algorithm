@@ -1,115 +1,126 @@
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-	private static int N;
-	private static char[][] board;
+    private static int N;
+    private static char[][] board;
 
-	private static final int[][][] DELTA = { { { -1, 0 }, { 1, 0 } }, { { 0, -1 }, { 0, 1 } } };
-	private static final int INF = 100_000_000;
+    private static int[][] horizontal;
+    private static int[][] vertical;
 
-	private static boolean isRange(int r, int c) {
-		return r >= 0 && r < N && c >= 0 && c < N;
-	}
+    private static int segmentCount;
 
-	private static int bfs(int sr, int sc, int er, int ec) {
-		Deque<int[]> dq = new ArrayDeque<>();
-		int[][][] dist = new int[4][N][N];
+    private static void buildSegments() {
+        horizontal = new int[N][N];
+        vertical = new int[N][N];
 
-		for (int dir = 0; dir < 4; dir++) {
-			for (int r = 0; r < N; r++) {
-				Arrays.fill(dist[dir][r], INF);
-			}
-		}
+        for (int r = 0; r < N; r++) {
+            for (int c = 0; c < N; c++) {
+                if (board[r][c] == '*') continue;
 
-		for (int index = 0; index < 2; index++) {
-			for (int dir = 0; dir < 2; dir++) {
-				dist[index * 2 + dir][sr][sc] = 0;
-				dq.add(new int[] { sr, sc, index, dir, 0 });
-			}
-		}
+                if (c == 0 || board[r][c - 1] == '*') {
+                    segmentCount++;
+                }
 
-		while (!dq.isEmpty()) {
-			int[] curr = dq.poll();
+                horizontal[r][c] = segmentCount - 1;
+            }
+        }
 
-			int r = curr[0];
-			int c = curr[1];
-			int index = curr[2];
-			int dir = curr[3];
-			int step = curr[4];
+        for (int c = 0; c < N; c++) {
+            for (int r = 0; r < N; r++) {
+                if (board[r][c] == '*') continue;
 
-			if (dist[index * 2 + dir][r][c] != step) {
-				continue;
-			}
+                if (r == 0 || board[r - 1][c] == '*') {
+                    segmentCount++;
+                }
 
-			if (r == er && c == ec) {
-				return step;
-			}
+                vertical[r][c] = segmentCount - 1;
+            }
+        }
+    }
 
-			int nr = r + DELTA[index][dir][0];
-			int nc = c + DELTA[index][dir][1];
+    private static int bfs(int sr, int sc, int er, int ec) {
+        buildSegments();
 
-			if (!isRange(nr, nc) || board[nr][nc] == '*') {
-				continue;
-			}
+        List<Integer>[] adj = new ArrayList[segmentCount];
 
-			if (dist[index * 2 + dir][nr][nc] > step) {
-				dist[index * 2 + dir][nr][nc] = step;
+        for (int i = 0; i < segmentCount; i++) {
+            adj[i] = new ArrayList<>();
+        }
 
-				dq.addFirst(new int[] { nr, nc, index, dir, step });
-			}
+        for (int r = 0; r < N; r++) {
+            for (int c = 0; c < N; c++) {
+                if (board[r][c] != '!') continue;
 
-			if (board[nr][nc] == '!') {
-				int nextIndex = index ^ 1;
+                int h = horizontal[r][c];
+                int v = vertical[r][c];
 
-				for (int nextDir = 0; nextDir < 2; nextDir++) {
-					int nextState = nextIndex * 2 + nextDir;
+                adj[h].add(v);
+                adj[v].add(h);
+            }
+        }
 
-					if (dist[nextState][nr][nc] > step + 1) {
-						dist[nextState][nr][nc] = step + 1;
+        int[] dist = new int[segmentCount];
+        Arrays.fill(dist, -1);
 
-						dq.addLast(new int[] { nr, nc, nextIndex, nextDir, step + 1 });
-					}
-				}
-			}
-		}
+        Queue<Integer> q = new ArrayDeque<>();
 
-		return INF;
-	}
+        int startH = horizontal[sr][sc];
+        int startV = vertical[sr][sc];
 
-	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
-		StringTokenizer st;
+        dist[startH] = 0;
+        dist[startV] = 0;
 
-		N = Integer.parseInt(br.readLine());
+        q.add(startH);
+        q.add(startV);
 
-		board = new char[N][N];
+        int endH = horizontal[er][ec];
+        int endV = vertical[er][ec];
 
-		int[][] location = new int[2][2];
-		int count = 0;
+        while (!q.isEmpty()) {
+            int curr = q.poll();
 
-		for (int r = 0; r < N; r++) {
-			String str = br.readLine();
-			for (int c = 0; c < N; c++) {
-				char state = str.charAt(c);
+            if (curr == endH || curr == endV) {
+                return dist[curr];
+            }
 
-				board[r][c] = state;
+            for (int next : adj[curr]) {
+                if (dist[next] != -1) continue;
 
-				if (state == '#') {
-					location[count][0] = r;
-					location[count][1] = c;
+                dist[next] = dist[curr] + 1;
+                q.add(next);
+            }
+        }
 
-					count++;
-				}
-			}
-		}
+        return -1;
+    }
 
-		System.out.println(bfs(location[0][0], location[0][1], location[1][0], location[1][1]));
-	}
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(
+            new InputStreamReader(System.in)
+        );
+
+        N = Integer.parseInt(br.readLine());
+        board = new char[N][N];
+
+        int[][] location = new int[2][2];
+        int count = 0;
+
+        for (int r = 0; r < N; r++) {
+            board[r] = br.readLine().toCharArray();
+
+            for (int c = 0; c < N; c++) {
+                if (board[r][c] == '#') {
+                    location[count][0] = r;
+                    location[count][1] = c;
+                    count++;
+                }
+            }
+        }
+
+        System.out.println(bfs(
+            location[0][0], location[0][1],
+            location[1][0], location[1][1]
+        ));
+    }
 }
