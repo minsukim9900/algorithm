@@ -43,6 +43,14 @@ public class Main {
 			int dir = curr[3];
 			int step = curr[4];
 
+			if (dist[index * 2 + dir][r][c] != step) {
+				continue;
+			}
+
+			if (r == er && c == ec) {
+				return step;
+			}
+
 			int nr = r + DELTA[index][dir][0];
 			int nc = c + DELTA[index][dir][1];
 
@@ -71,13 +79,7 @@ public class Main {
 			}
 		}
 
-		int result = INF;
-
-		for (int i = 0; i < 4; i++) {
-			result = Math.min(result, dist[i][er][ec]);
-		}
-
-		return result;
+		return INF;
 	}
 
 	public static void main(String[] args) throws Exception {
